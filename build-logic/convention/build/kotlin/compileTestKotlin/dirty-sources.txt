@@ -1,0 +1,1 @@
+/Users/andriiserbeniuk/AndroidStudioProjects/Bookstore/build-logic/convention/src/test/java/com/linc/convention/ExampleUnitTest.kt
