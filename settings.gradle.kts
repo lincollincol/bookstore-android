@@ -15,10 +15,11 @@ dependencyResolutionManagement {
 }
 rootProject.name = "bookstore"
 include("app")
-include(":core:")
 include(":core:database")
 include(":core:network")
 include(":core:data")
 include(":core:model")
 include(":core:common")
 include(":core:domain")
+include(":feature:books")
+include(":core:designsystem")

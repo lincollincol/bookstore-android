@@ -9,7 +9,7 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.kotlin.coroutines)
 
 }

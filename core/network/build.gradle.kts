@@ -19,7 +19,7 @@ dependencies {
 
     implementation(project(":core:common"))
 
-    implementation(libs.androidx.core)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.kotlin.coroutines)
     implementation(libs.bundles.retrofit)
     implementation(libs.bundles.okhttp)

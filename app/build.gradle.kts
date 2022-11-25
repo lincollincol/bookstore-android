@@ -1,11 +1,11 @@
 plugins {
     id("bookstore.android.application")
+    id("bookstore.android.application.compose")
     id("bookstore.android.hilt")
 }
 
 android {
     namespace = "com.linc.bookstore"
-
     defaultConfig {
         applicationId = "com.linc.bookstore"
         versionCode = 1
@@ -16,18 +16,11 @@ android {
             useSupportLibrary = true
         }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.ui.get()
     }
     packagingOptions {
         resources {
@@ -41,18 +34,12 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:data"))
     implementation(project(":core:model"))
+    implementation(project(":core:designsystem"))
 
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.lifecycle)
-    implementation(libs.androidx.lifecycle.compose)
-    implementation(libs.bundles.retrofit)
-    implementation(libs.bundles.okhttp)
-    implementation(libs.bundles.kotlin.coroutines)
-    implementation(libs.bundles.compose.ui)
-    debugImplementation(libs.bundles.compose.debug)
-
-    implementation(libs.bundles.room)
-    kapt(libs.room.compiler)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
 
 }
