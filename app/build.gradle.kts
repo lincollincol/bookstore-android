@@ -38,6 +38,7 @@ dependencies {
 
     implementation(project(":feature:books"))
     implementation(project(":feature:bookdetails"))
+    implementation(project(":feature:cart"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

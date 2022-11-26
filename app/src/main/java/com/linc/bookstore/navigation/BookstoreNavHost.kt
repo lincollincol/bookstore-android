@@ -10,6 +10,7 @@ import com.linc.bookdetails.navigation.navigateToBookDetails
 import com.linc.books.navigation.booksGraph
 import com.linc.books.navigation.booksGraphRoute
 import com.linc.books.navigation.booksScreen
+import com.linc.cart.navigation.cartGraph
 
 @Composable
 fun BookstoreNavHost(
@@ -26,5 +27,6 @@ fun BookstoreNavHost(
                 bookDetailsScreen()
             }
         )
+        cartGraph()
     }
 }
