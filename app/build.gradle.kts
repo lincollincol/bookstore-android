@@ -36,6 +36,9 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
 
+    implementation(project(":feature:books"))
+    implementation(project(":feature:bookdetails"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.runtime)
