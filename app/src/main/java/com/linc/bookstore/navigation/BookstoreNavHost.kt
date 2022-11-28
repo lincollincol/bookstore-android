@@ -1,6 +1,7 @@
 package com.linc.bookstore.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,10 +15,12 @@ import com.linc.cart.navigation.cartGraph
 
 @Composable
 fun BookstoreNavHost(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = booksGraphRoute
 ) {
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = startDestination
     ) {

@@ -1,6 +1,6 @@
 package com.linc.network.model
 
-data class BookApiModel(
+data class BookApiModel2(
     val image: String,
     val isbn13: String,
     val price: String,

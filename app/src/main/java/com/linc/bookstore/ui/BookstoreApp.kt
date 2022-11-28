@@ -1,7 +1,10 @@
 package com.linc.bookstore.ui
 
 import android.view.Menu
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,7 +23,7 @@ import com.linc.cart.navigation.navigateToCart
 import com.linc.designsystem.component.SimpleIcon
 import com.linc.designsystem.icon.IconWrapper
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun BookstoreApp() {
     val navController = rememberNavController()
@@ -59,7 +62,11 @@ fun BookstoreApp() {
             )
         }
     ) { paddings ->
-        BookstoreNavHost(navController)
+        BookstoreNavHost(
+            navController = navController,
+            modifier = Modifier.padding(paddings)
+                .consumedWindowInsets(paddings)
+        )
         paddings.calculateTopPadding()
     }
 
@@ -78,7 +85,7 @@ internal fun BookstoreNavigationBar(
         destinations.forEach {
             NavigationBarItem(
                 selected = it == currentDestination,
-                icon = { SimpleIcon(it.icon, contentDescription = null) },
+                icon = { SimpleIcon(icon = it.icon) },
                 label = { Text(stringResource(it.iconTextId)) },
                 onClick = { onNavigateToDestination(it) }
             )

@@ -11,9 +11,9 @@ import com.linc.designsystem.icon.IconWrapper
 
 @Composable
 fun SimpleIcon(
-    icon: IconWrapper,
-    contentDescription: String?,
     modifier: Modifier = Modifier,
+    icon: IconWrapper,
+    contentDescription: String? = null,
     tint: Color = LocalContentColor.current
 ) {
     when(icon) {

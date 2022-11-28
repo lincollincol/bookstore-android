@@ -28,3 +28,7 @@ sealed interface IconWrapper {
     data class Vector(val imageVector: ImageVector) : IconWrapper
     data class Drawable(@DrawableRes val id: Int) : IconWrapper
 }
+
+fun ImageVector.asIconWrapper() = IconWrapper.Vector(this)
+
+fun Int.asIconWrapper() = IconWrapper.Drawable(this)
