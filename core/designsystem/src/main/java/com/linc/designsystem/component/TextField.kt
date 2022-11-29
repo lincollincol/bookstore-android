@@ -17,6 +17,7 @@ fun BookstoreTextField(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String = "",
+    maxLines: Int = 1,
     trailingIcon: IconWrapper? = null,
     leadingIcon: IconWrapper? = null,
 ) {
@@ -25,14 +26,15 @@ fun BookstoreTextField(
         value = value,
         onValueChange = onValueChange,
         shape = MaterialTheme.shapes.medium,
-        placeholder = { Text(text = hint) },
+        placeholder = { Text(text = hint, maxLines = maxLines) },
         trailingIcon = trailingIcon?.let{ { SimpleIcon(icon = it) } },
         leadingIcon = leadingIcon?.let{ { SimpleIcon(icon = it) } },
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
-        )
+        ),
+        maxLines = maxLines
     )
 }
 

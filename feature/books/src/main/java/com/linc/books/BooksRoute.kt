@@ -41,16 +41,15 @@ internal fun BooksRoute(
     val searchState by viewModel.searchState.collectAsStateWithLifecycle()
     BooksScreen(
         searchState,
-        navigateToBookDetails,
+        { navigateToBookDetails(it.id) },
         viewModel::updateSearchQuery
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun BooksScreen(
     searchFieldState: SearchFieldState,
-    navigateToBookDetails: (String) -> Unit,
+    onBookClick: (Book) -> Unit,
     onSearchValueChange: (String) -> Unit
 ) {
     Box(
@@ -75,21 +74,21 @@ internal fun BooksScreen(
             BooksSection(
                 title = stringResource(id = R.string.new_books_title),
                 books = mockBooks + mockBooks,
-                onBookClick = {},
+                onBookClick = onBookClick,
                 titlePadding = PaddingValues(horizontal = 32.dp),
                 listPadding = PaddingValues(horizontal = 32.dp)
             )
             BooksSection(
                 title = stringResource(id = R.string.for_you_title),
                 books = mockBooks,
-                onBookClick = {},
+                onBookClick = onBookClick,
                 titlePadding = PaddingValues(horizontal = 32.dp),
                 listPadding = PaddingValues(horizontal = 32.dp)
             )
             BooksSection(
                 title = stringResource(id = R.string.for_you_title),
                 books = mockBooks,
-                onBookClick = {},
+                onBookClick = onBookClick,
                 titlePadding = PaddingValues(horizontal = 32.dp),
                 listPadding = PaddingValues(horizontal = 32.dp)
             )
@@ -97,7 +96,6 @@ internal fun BooksScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BooksSection(
     modifier: Modifier = Modifier,
@@ -124,7 +122,6 @@ private fun BooksSection(
                 items = books
             ) {
                 BookItem(
-                    modifier = Modifier.padding(8.dp),
                     book = it,
                     onBookClick = onBookClick
                 )
@@ -160,7 +157,7 @@ private fun BookItem(
 //                        width = Dimension.fillToConstraints
                     }
                     .width(128.dp)
-                    .aspectRatio(2f/3f)
+                    .aspectRatio(2f / 3f)
                     .background(Color.Green),
                 model = book.image,
                 contentDescription = book.title,
