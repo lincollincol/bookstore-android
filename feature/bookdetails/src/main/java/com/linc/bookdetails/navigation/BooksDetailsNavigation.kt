@@ -13,7 +13,10 @@ internal class BookDetailsArgs(val bookId: String) {
             : this(checkNotNull(savedStateHandle.get<String>(bookIdArg)))
 }
 
-fun NavController.navigateToBookDetails(bookId: String, navOptions: NavOptions? = null) {
+fun NavController.navigateToBookDetails(
+    bookId: String,
+    navOptions: NavOptions? = null
+) {
     this.navigate("$bookDetailsRoute/$bookId", navOptions)
 }
 

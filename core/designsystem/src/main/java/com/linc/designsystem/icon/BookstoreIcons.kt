@@ -5,12 +5,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.BookOnline
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.linc.designsystem.R
 
 object BookstoreIcons {
     val Add = Icons.Rounded.Add
+    val Star = Icons.Default.Star
     val ArrowBack = Icons.Rounded.ArrowBack
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
     val ArrowDropUp = Icons.Rounded.ArrowDropUp

@@ -12,7 +12,8 @@ fun BookApiModel2.asExternalModel() = Book(
     title = title,
     url = url,
     ratingsCount = 0,
-    averageRating = 0
+    averageRating = 0,
+    author = ""
 )
 
 fun BookApiModel.asExternalModel() = Book(
@@ -23,5 +24,6 @@ fun BookApiModel.asExternalModel() = Book(
     title = volumeInfo.title,
     url = "",
     ratingsCount = volumeInfo.ratingsCount,
-    averageRating = volumeInfo.averageRating
+    averageRating = volumeInfo.averageRating,
+    author = volumeInfo.authors.joinToString()
 )

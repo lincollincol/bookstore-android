@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.linc.books.BooksRoute
 
-const val booksGraphRoute = "books_graph_route"
+const val booksRouteGraph = "books_route_graph"
 const val booksRoute = "books_route"
 
 fun NavController.navigateToBooks(navOptions: NavOptions? = null) {
@@ -27,7 +27,7 @@ fun NavGraphBuilder.booksGraph(
     nestedGraphs: NavGraphBuilder.() -> Unit = {}
 ) {
     navigation(
-        route = booksGraphRoute,
+        route = booksRouteGraph,
         startDestination = booksRoute
     ) {
         booksScreen(navigateToBookDetails)

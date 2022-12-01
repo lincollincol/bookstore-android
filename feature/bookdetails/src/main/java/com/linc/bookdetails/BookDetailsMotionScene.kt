@@ -1,16 +1,19 @@
 package com.linc.bookdetails
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.*
 
 const val IMAGE_MOTION_ID: String = "image_id"
 const val CONTENT_MOTION_ID: String = "content_id"
+const val BUY_BUTTON_MOTION_ID: String = "buy_button_id"
 
 @OptIn(ExperimentalMotionApi::class)
 @Composable
 fun bookDetailsMotionScene() = MotionScene {
     val image = createRefFor(IMAGE_MOTION_ID)
     val content = createRefFor(CONTENT_MOTION_ID)
+    val buyButton = createRefFor(BUY_BUTTON_MOTION_ID)
     defaultTransition(
         from = constraintSet {
             constrain(image) {
@@ -24,6 +27,10 @@ fun bookDetailsMotionScene() = MotionScene {
                 linkTo(start = parent.start, end = parent.end)
                 height = Dimension.percent(0.5f)
                 width = Dimension.fillToConstraints
+            }
+            constrain(buyButton) {
+                bottom.linkTo(parent.bottom)
+                end.linkTo(parent.end)
             }
         },
         to = constraintSet {
@@ -42,6 +49,11 @@ fun bookDetailsMotionScene() = MotionScene {
                 )
                 height = Dimension.fillToConstraints
                 width = Dimension.fillToConstraints
+            }
+            constrain(buyButton) {
+                bottom.linkTo(parent.bottom, 16.dp)
+                end.linkTo(parent.end)
+                start.linkTo(parent.start)
             }
         }
     ) {

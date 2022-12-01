@@ -7,6 +7,7 @@ data class Book(
     val averageRating: Int,
     val ratingsCount: Int,
     val subtitle: String,
+    val author: String,
     val title: String,
     val url: String
 )
@@ -20,7 +21,8 @@ val mockBooks: List<Book> = listOf(
         image = "https://books.google.com/books/content?id=7JKw5FYA4GgC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
         url = "https://itbook.store/books/9781491954249",
         averageRating = 5,
-        ratingsCount = 1
+        ratingsCount = 1,
+        author = "Joe Baiden"
     ),
     Book(
         id = "9781491985571",
@@ -30,7 +32,8 @@ val mockBooks: List<Book> = listOf(
         image = "https://books.google.com/books/content?id=o9jCywEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
         url = "https://itbook.store/books/9781491985571",
         averageRating = 4,
-        ratingsCount = 1
+        ratingsCount = 1,
+        author = "Joe Baiden"
     ),
     Book(
         id = "9781491954249",
@@ -40,6 +43,7 @@ val mockBooks: List<Book> = listOf(
         image = "https://books.google.com/books/content?id=p9oItAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
         url = "https://itbook.store/books/9781491999226",
         averageRating = 0,
-        ratingsCount = 0
+        ratingsCount = 0,
+        author = "Joe Baiden"
     )
 )

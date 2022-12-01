@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.linc.cart.CartRoute
 
-const val cartGraphRoute: String = "cart_graph_route"
+const val cartRouteGraph: String = "cart_route_graph"
 const val cartRoute: String = "cart_route"
 
 fun NavController.navigateToCart(navOptions: NavOptions? = null) {
@@ -24,7 +24,7 @@ fun NavGraphBuilder.cartGraph(
     nestedGraphs: NavGraphBuilder.() -> Unit = {}
 ) {
     navigation(
-        route = cartGraphRoute,
+        route = cartRouteGraph,
         startDestination = cartRoute
     ) {
         cartScreen()
