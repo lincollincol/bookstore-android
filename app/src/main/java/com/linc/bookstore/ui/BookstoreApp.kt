@@ -3,10 +3,8 @@ package com.linc.bookstore.ui
 import android.view.Menu
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,9 +28,11 @@ import com.linc.bookstore.navigation.BookstoreNavHost
 import com.linc.bookstore.navigation.MenuDestinations
 import com.linc.cart.navigation.navigateToCart
 import com.linc.designsystem.component.SimpleIcon
-import com.linc.designsystem.icon.IconWrapper
+import soup.compose.material.motion.MaterialFadeThrough
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun BookstoreApp() {
     val navController = rememberNavController()
@@ -44,8 +44,9 @@ fun BookstoreApp() {
         bottomBar = {
             AnimatedVisibility(
                 visible = MenuDestinations.isTopLevelDestination(backStackEntry?.destination?.route),
-                enter = slideInVertically { it },
-                exit = slideOutVertically { it }
+//                visible = true,
+                enter = slideInVertically(animationSpec = tween(200)) { it },
+                exit = slideOutVertically(animationSpec = tween(100)) { it }
             ) {
                 BookstoreNavigationBar(
                     destinations = menuDestinations,

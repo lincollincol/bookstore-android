@@ -5,7 +5,7 @@ data class BookApiModel(
     val etag: String,
     val id: String,
     val kind: String,
-    val saleInfo: SaleInfo,
+    val saleInfo: SaleInfo?,
     val searchInfo: SearchInfo,
     val selfLink: String,
     val volumeInfo: VolumeInfo

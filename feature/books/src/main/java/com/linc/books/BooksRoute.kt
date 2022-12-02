@@ -2,16 +2,13 @@ package com.linc.books
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -25,12 +22,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.linc.books.navigation.BooksNavigationState
 import com.linc.designsystem.component.BookstoreTextField
 import com.linc.designsystem.icon.BookstoreIcons
 import com.linc.designsystem.icon.asIconWrapper
 import com.linc.designsystem.theme.BookstoreTheme
 import com.linc.model.Book
 import com.linc.model.mockBooks
+import com.linc.navigation.observeNavigation
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -39,17 +38,23 @@ internal fun BooksRoute(
     viewModel: BooksViewModel = hiltViewModel()
 ) {
     val searchState by viewModel.searchState.collectAsStateWithLifecycle()
+    val booksUiState by viewModel.booksUiState.collectAsStateWithLifecycle()
+    viewModel.observeNavigation {
+        when(it) {
+            is BooksNavigationState.NavigateToBook -> navigateToBookDetails(it.id)
+        }
+    }
     BooksScreen(
         searchState,
-        { navigateToBookDetails(it.id) },
+        booksUiState,
         viewModel::updateSearchQuery
     )
 }
 
 @Composable
 internal fun BooksScreen(
-    searchFieldState: SearchFieldState,
-    onBookClick: (Book) -> Unit,
+    searchFieldState: SearchFieldUiState,
+    booksUiState: BooksUiState,
     onSearchValueChange: (String) -> Unit
 ) {
     Box(
@@ -73,22 +78,13 @@ internal fun BooksScreen(
             )
             BooksSection(
                 title = stringResource(id = R.string.new_books_title),
-                books = mockBooks + mockBooks,
-                onBookClick = onBookClick,
+                books = booksUiState.newBooks,
                 titlePadding = PaddingValues(horizontal = 32.dp),
                 listPadding = PaddingValues(horizontal = 32.dp)
             )
             BooksSection(
                 title = stringResource(id = R.string.for_you_title),
-                books = mockBooks,
-                onBookClick = onBookClick,
-                titlePadding = PaddingValues(horizontal = 32.dp),
-                listPadding = PaddingValues(horizontal = 32.dp)
-            )
-            BooksSection(
-                title = stringResource(id = R.string.for_you_title),
-                books = mockBooks,
-                onBookClick = onBookClick,
+                books = booksUiState.recommendedBooks,
                 titlePadding = PaddingValues(horizontal = 32.dp),
                 listPadding = PaddingValues(horizontal = 32.dp)
             )
@@ -100,8 +96,7 @@ internal fun BooksScreen(
 private fun BooksSection(
     modifier: Modifier = Modifier,
     title: String,
-    books: List<Book>,
-    onBookClick: (Book) -> Unit,
+    books: List<BookItemUiState>,
     titlePadding: PaddingValues = PaddingValues(0.dp),
     listPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -121,10 +116,7 @@ private fun BooksSection(
             items(
                 items = books
             ) {
-                BookItem(
-                    book = it,
-                    onBookClick = onBookClick
-                )
+                BookItem(book = it)
             }
         }
     }
@@ -134,13 +126,12 @@ private fun BooksSection(
 @Composable
 private fun BookItem(
     modifier: Modifier = Modifier,
-    book: Book,
-    onBookClick: (Book) -> Unit
+    book: BookItemUiState
 ) {
     Surface(
         modifier = Modifier
             .then(modifier),
-        onClick = { onBookClick(book) },
+        onClick = { book.onClick() },
         shape = MaterialTheme.shapes.medium
     ) {
         ConstraintLayout {
@@ -159,7 +150,7 @@ private fun BookItem(
                     .width(128.dp)
                     .aspectRatio(2f / 3f)
                     .background(Color.Green),
-                model = book.image,
+                model = book.imageUrl,
                 contentDescription = book.title,
                 contentScale = ContentScale.FillWidth,
                 onError = {
@@ -209,7 +200,7 @@ private fun BooksScreenPreview() {
     BookstoreTheme {
         Column {
 //            BooksScreen({})
-            BooksSection(title = "New books", books = mockBooks, onBookClick = {})
+//            BooksSection(title = "New books", books = mockBooks, onBookClick = {})
 //            BookItem(book = mockBooks.first())
         }
     }

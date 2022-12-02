@@ -13,7 +13,7 @@ interface BooksApiService {
 
     //https://developers.google.com/books/docs/v1/using
 
-    @GET("/v1/volumes")
+    @GET("v1/volumes")
     suspend fun getNewBooks(
         @Query("q") query: String = "fantasy",
         @Query("maxResults") maxResults: Int = 3,

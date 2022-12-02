@@ -6,9 +6,14 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.linc.books.BooksRoute
+import com.linc.navigation.NavigationState
 
 const val booksRouteGraph = "books_route_graph"
 const val booksRoute = "books_route"
+
+sealed interface BooksNavigationState : NavigationState{
+    data class NavigateToBook(val id: String) : BooksNavigationState
+}
 
 fun NavController.navigateToBooks(navOptions: NavOptions? = null) {
     this.navigate(booksRoute, navOptions)

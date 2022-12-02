@@ -1,13 +1,17 @@
 package com.linc.bookdetails
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -28,6 +32,8 @@ import coil.compose.AsyncImage
 import com.linc.designsystem.component.RatingBar
 import com.linc.model.Book
 import com.skydoves.cloudy.Cloudy
+import soup.compose.material.motion.MaterialMotion
+import soup.compose.material.motion.animation.*
 import kotlin.math.abs
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -43,21 +49,29 @@ fun BookDetailsRoute(
     )
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun BookDetailsScreen(
     bookUiState: BookUiState,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(modifier),
-        contentAlignment = Alignment.Center
+    MaterialMotion(
+        targetState = bookUiState,
+        transitionSpec = {
+            slideInVertically(tween(500)) { it } with slideOutVertically { it }
+        }
     ) {
-        when(bookUiState) {
-            is BookUiState.Success -> BookDetails(book = bookUiState.book)
-            is BookUiState.Loading -> CircularProgressIndicator()
-            else -> {}
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .then(modifier),
+            contentAlignment = Alignment.Center
+        ) {
+            when(bookUiState) {
+                is BookUiState.Success -> BookDetails(book = bookUiState.book)
+                is BookUiState.Loading -> CircularProgressIndicator()
+                else -> {}
+            }
         }
     }
 }
@@ -99,22 +113,40 @@ internal fun BookDetails(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(24.dp)
             ) {
-                Text(text = book.title)
-                Text(text = book.author)
-                RatingBar(
-                    maxRate = 5,
-                    rating = book.averageRating
+                Text(
+                    text = book.title,
+                    style = MaterialTheme.typography.titleLarge
                 )
-                Text(text = "About the book")
-                Text(text = book.subtitle)
+                Text(
+                    text = book.author,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Row {
+                    RatingBar(
+                        maxRate = 5,
+                        rating = book.averageRating
+                    )
+                    Text(
+                        text = "(${book.ratingsCount})",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Text(
+                    text = "About the book",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = book.subtitle,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
         Surface(
             modifier = Modifier
                 .layoutId(BUY_BUTTON_MOTION_ID),
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.secondary,
             onClick = { /*TODO*/ },
             shape = buttonShape
         ) {
