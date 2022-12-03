@@ -7,6 +7,7 @@ data class Book(
     val averageRating: Int,
     val ratingsCount: Int,
     val subtitle: String,
+    val description: String,
     val author: String,
     val title: String,
     val url: String
@@ -22,7 +23,38 @@ val mockBooks: List<Book> = listOf(
         url = "https://itbook.store/books/9781491954249",
         averageRating = 5,
         ratingsCount = 1,
-        author = "Joe Baiden"
+        author = "Joe Baiden",
+        description = """
+            A Multimodal Approach to Product Design A Multimodal Approach to Product Design A Multimodal Approach to Product Design <br/>
+            Web Scraping with Python, 2nd Edition <br/>
+            <b>Web Scraping with Python, 2nd Edition Web Scraping with Python, 2nd Edition</b>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd Edition<br/>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            <br/>A Multimodal Approach to Product Design A Multimodal Approach to Product Design A Multimodal Approach to Product Design <br/>
+            Web Scraping with Python, 2nd Edition <br/>
+            <b>Web Scraping with Python, 2nd Edition Web Scraping with Python, 2nd Edition</b>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd Edition<br/>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            <br/>A Multimodal Approach to Product Design A Multimodal Approach to Product Design A Multimodal Approach to Product Design <br/>
+            Web Scraping with Python, 2nd Edition <br/>
+            <b>Web Scraping with Python, 2nd Edition Web Scraping with Python, 2nd Edition</b>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd Edition<br/>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            <br/>A Multimodal Approach to Product Design A Multimodal Approach to Product Design A Multimodal Approach to Product Design <br/>
+            Web Scraping with Python, 2nd Edition <br/>
+            <b>Web Scraping with Python, 2nd Edition Web Scraping with Python, 2nd Edition</b>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            Web Scraping with Python, 2nd Edition<br/>
+            Web Scraping with Python, 2nd EditionWeb Scraping with Python, 2nd Edition
+            <br/>
+        """.trimIndent()
     ),
     Book(
         id = "9781491985571",
@@ -33,7 +65,8 @@ val mockBooks: List<Book> = listOf(
         url = "https://itbook.store/books/9781491985571",
         averageRating = 4,
         ratingsCount = 1,
-        author = "Joe Baiden"
+        author = "Joe Baiden",
+        description = ""
     ),
     Book(
         id = "9781491954249",
@@ -44,6 +77,7 @@ val mockBooks: List<Book> = listOf(
         url = "https://itbook.store/books/9781491999226",
         averageRating = 0,
         ratingsCount = 0,
-        author = "Joe Baiden"
+        author = "Joe Baiden",
+        description = ""
     )
 )

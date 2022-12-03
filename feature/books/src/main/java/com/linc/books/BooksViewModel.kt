@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.linc.books.navigation.BooksNavigationState
 import com.linc.data.repository.BooksRepository
 import com.linc.model.Book
+import com.linc.model.mockBooks
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +32,8 @@ class BooksViewModel @Inject constructor(
     private fun getBooks() {
         viewModelScope.launch {
             try {
-                val books = booksRepository.getBooks()
+//                val books = booksRepository.getBooks()
+                val books = mockBooks
                     .map {
                         it.toUiState { selectBook(it) }
                     }

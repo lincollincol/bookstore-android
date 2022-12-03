@@ -13,17 +13,19 @@ fun BookApiModel2.asExternalModel() = Book(
     url = url,
     ratingsCount = 0,
     averageRating = 0,
-    author = ""
+    author = "",
+    description = ""
 )
 
 fun BookApiModel.asExternalModel() = Book(
     id = id,
     image = volumeInfo.imageLinks.thumbnail,
     price = saleInfo?.listPrice?.productPrice.toString(),
-    subtitle = searchInfo.textSnippet,
+    subtitle = searchInfo?.textSnippet.orEmpty(),
     title = volumeInfo.title,
     url = "",
     ratingsCount = volumeInfo.ratingsCount,
     averageRating = volumeInfo.averageRating,
-    author = volumeInfo.authors.joinToString()
+    author = volumeInfo.authors.joinToString(),
+    description = volumeInfo.description
 )

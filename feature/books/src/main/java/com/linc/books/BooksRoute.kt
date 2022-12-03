@@ -135,7 +135,7 @@ private fun BookItem(
         shape = MaterialTheme.shapes.medium
     ) {
         ConstraintLayout {
-        val (image, title, rating, price) = createRefs()
+            val (image, title, rating, price) = createRefs()
             AsyncImage(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
@@ -152,7 +152,7 @@ private fun BookItem(
                     .background(Color.Green),
                 model = book.imageUrl,
                 contentDescription = book.title,
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Crop,
                 onError = {
                     it.result.throwable.printStackTrace()
                 }

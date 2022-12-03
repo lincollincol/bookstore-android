@@ -22,4 +22,8 @@ class BooksRepository @Inject constructor(
             .map(BookApiModel::asExternalModel)
     }
 
+    suspend fun getBook(id: String): Book? = withContext(dispatcher) {
+        return@withContext booksApiService.getBook(id)?.asExternalModel()
+    }
+
 }
