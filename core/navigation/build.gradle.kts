@@ -9,5 +9,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.lifecycle.runtime.compose)
+    compileOnly(libs.androidx.lifecycle.runtime.compose)
 }

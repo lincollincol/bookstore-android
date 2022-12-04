@@ -32,10 +32,10 @@ class BooksViewModel @Inject constructor(
     private fun getBooks() {
         viewModelScope.launch {
             try {
-//                val books = booksRepository.getBooks()
-                val books = mockBooks
+                val books = booksRepository.getBooks()
+//                val books = mockBooks
                     .map {
-                        it.toUiState { selectBook(it) }
+                        it.toUiState()
                     }
                 _booksUiState.update {
                     it.copy(
@@ -49,8 +49,8 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-    private fun selectBook(book: Book) {
-        navigateTo(BooksNavigationState.NavigateToBook(book.id))
+    fun selectBook(bookId: String) {
+        navigateTo(BooksNavigationState.NavigateToBook(bookId))
     }
 
     fun updateSearchQuery(query: String) {
@@ -71,27 +71,17 @@ data class BooksUiState(
 data class BookItemUiState(
     val id: String,
     val imageUrl: String,
-    val price: String,
-    val averageRating: Int,
-    val ratingsCount: Int,
-    val subtitle: String,
-    val author: String,
-    val title: String,
-    val url: String,
-    val onClick: () -> Unit
+    val price: Double,
+    val averageRating: Float,
+    val ratingsCount: Float,
+    val title: String
 )
 
-fun Book.toUiState(
-    onClick: () -> Unit
-) = BookItemUiState(
+fun Book.toUiState() = BookItemUiState(
     id = id,
-    imageUrl = image,
+    imageUrl = imageUrl,
     price = price,
     averageRating = averageRating,
     ratingsCount = ratingsCount,
-    subtitle = subtitle,
-    author = author,
-    title = title,
-    url = url,
-    onClick = onClick
+    title = title
 )

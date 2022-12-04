@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linc.bookdetails.navigation.BookDetailsArgs
 import com.linc.data.repository.BooksRepository
+import com.linc.data.repository.OrdersRepository
 import com.linc.model.Book
 import com.linc.model.mockBooks
 import com.linc.navigation.DefaultRouteNavigator
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class BookDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     defaultRouteNavigator: DefaultRouteNavigator,
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
+    private val ordersRepository: OrdersRepository,
 ) : ViewModel(), RouteNavigator by defaultRouteNavigator {
 
     private val bookDetailsArgs: BookDetailsArgs = BookDetailsArgs(savedStateHandle)
@@ -37,11 +39,11 @@ class BookDetailsViewModel @Inject constructor(
     private fun getBook() {
         viewModelScope.launch {
             try {
-//                _bookUiState.update { it.copy(isLoading = true) }
-//                val book = booksRepository.getBook(bookDetailsArgs.bookId)
-//                    ?: return@launch
-                val book = mockBooks.first()
-                _bookUiState.update { book.toUiState { buyBook(book) } }
+                _bookUiState.update { it.copy(isLoading = true) }
+                val book = booksRepository.getBook(bookDetailsArgs.bookId)
+                    ?: return@launch
+//                val book = mockBooks.first()
+                _bookUiState.update { book.toUiState() }
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
@@ -50,7 +52,13 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun buyBook(book: Book) {
-
+    fun addToCart(id: String) {
+        viewModelScope.launch {
+            try {
+                ordersRepository.createOrder(id)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

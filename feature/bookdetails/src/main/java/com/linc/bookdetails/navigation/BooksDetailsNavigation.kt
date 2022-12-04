@@ -20,7 +20,9 @@ fun NavController.navigateToBookDetails(
     this.navigate("$bookDetailsRoute/$bookId", navOptions)
 }
 
-fun NavGraphBuilder.bookDetailsScreen() {
+fun NavGraphBuilder.bookDetailsScreen(
+    navigateBack: () -> Unit
+) {
     composable(
         route = "$bookDetailsRoute/{$bookIdArg}",
         arguments = listOf(
@@ -28,6 +30,8 @@ fun NavGraphBuilder.bookDetailsScreen() {
         )
     ) {
         NavBackStackEntry
-        BookDetailsRoute()
+        BookDetailsRoute(
+            navigateBack = navigateBack
+        )
     }
 }

@@ -47,7 +47,8 @@ internal fun BooksRoute(
     BooksScreen(
         searchState,
         booksUiState,
-        viewModel::updateSearchQuery
+        viewModel::updateSearchQuery,
+        viewModel::selectBook
     )
 }
 
@@ -55,7 +56,8 @@ internal fun BooksRoute(
 internal fun BooksScreen(
     searchFieldState: SearchFieldUiState,
     booksUiState: BooksUiState,
-    onSearchValueChange: (String) -> Unit
+    onSearchValueChange: (String) -> Unit,
+    onBook: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -80,13 +82,15 @@ internal fun BooksScreen(
                 title = stringResource(id = R.string.new_books_title),
                 books = booksUiState.newBooks,
                 titlePadding = PaddingValues(horizontal = 32.dp),
-                listPadding = PaddingValues(horizontal = 32.dp)
+                listPadding = PaddingValues(horizontal = 32.dp),
+                onBook = onBook
             )
             BooksSection(
                 title = stringResource(id = R.string.for_you_title),
                 books = booksUiState.recommendedBooks,
                 titlePadding = PaddingValues(horizontal = 32.dp),
-                listPadding = PaddingValues(horizontal = 32.dp)
+                listPadding = PaddingValues(horizontal = 32.dp),
+                onBook = onBook
             )
         }
     }
@@ -98,7 +102,8 @@ private fun BooksSection(
     title: String,
     books: List<BookItemUiState>,
     titlePadding: PaddingValues = PaddingValues(0.dp),
-    listPadding: PaddingValues = PaddingValues(0.dp)
+    listPadding: PaddingValues = PaddingValues(0.dp),
+    onBook: (String) -> Unit
 ) {
     Column(modifier = Modifier.then(modifier)) {
         Text(
@@ -116,7 +121,7 @@ private fun BooksSection(
             items(
                 items = books
             ) {
-                BookItem(book = it)
+                BookItem(book = it, onBook = onBook)
             }
         }
     }
@@ -126,12 +131,13 @@ private fun BooksSection(
 @Composable
 private fun BookItem(
     modifier: Modifier = Modifier,
-    book: BookItemUiState
+    book: BookItemUiState,
+    onBook: (String) -> Unit
 ) {
     Surface(
         modifier = Modifier
             .then(modifier),
-        onClick = { book.onClick() },
+        onClick = { onBook(book.id) },
         shape = MaterialTheme.shapes.medium
     ) {
         ConstraintLayout {
@@ -187,7 +193,7 @@ private fun BookItem(
                         top.linkTo(title.bottom)
                         start.linkTo(parent.start)
                     },
-                text = book.price
+                text = book.price.toString()
             )
         }
     }

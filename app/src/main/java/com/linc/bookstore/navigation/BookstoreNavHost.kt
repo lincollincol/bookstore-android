@@ -25,7 +25,7 @@ fun BookstoreNavHost(
         booksGraph(
             navigateToBookDetails = navController::navigateToBookDetails,
             nestedGraphs = {
-                bookDetailsScreen()
+                bookDetailsScreen(navigateBack = { navController.navigateUp() })
             }
         )
         cartGraph()
