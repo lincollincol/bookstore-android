@@ -52,6 +52,7 @@ import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.google.accompanist.flowlayout.FlowRow
 import com.linc.common.coroutines.extension.toAnnotatedString
 import com.linc.designsystem.component.RatingBar
 import com.linc.designsystem.component.SimpleIcon
@@ -142,10 +143,6 @@ internal fun BookDetails(
     val lazyListState = rememberLazyListState()
     var scrolledY by remember { mutableStateOf(0f) }
     var previousOffset by remember { mutableStateOf(0) }
-    val shape by animateDpAsState(
-        targetValue = 16.dp
-//        targetValue = 16.dp * abs(motionState.currentProgress - 1f)
-    )
     val buttonAlignment by animateAlignmentAsState(
         targetAlignment = when {
             lazyListState.firstVisibleItemIndex > 0 -> Alignment.BottomCenter
@@ -233,6 +230,14 @@ internal fun BookDetails(
                             ).toAnnotatedString(),
                             style = MaterialTheme.typography.bodyMedium
                         )
+                        FlowRow(modifier = Modifier.fillMaxWidth()) {
+                            book.categories.forEach {
+                                AssistChip(
+                                    onClick = { /*TODO*/ },
+                                    label = { Text(text = it) }
+                                )
+                            }
+                        }
                         Spacer(modifier = Modifier.fillParentMaxSize(0.5f))
                     }
                 }

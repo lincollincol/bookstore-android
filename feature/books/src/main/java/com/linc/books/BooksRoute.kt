@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -38,7 +39,7 @@ internal fun BooksRoute(
     viewModel: BooksViewModel = hiltViewModel()
 ) {
     val searchState by viewModel.searchState.collectAsStateWithLifecycle()
-    val booksUiState by viewModel.booksUiState.collectAsStateWithLifecycle()
+    val newBooksUiState by viewModel.newBooksUiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
             is BooksNavigationState.NavigateToBook -> navigateToBookDetails(it.id)
@@ -46,7 +47,7 @@ internal fun BooksRoute(
     }
     BooksScreen(
         searchState,
-        booksUiState,
+        newBooksUiState,
         viewModel::updateSearchQuery,
         viewModel::selectBook
     )
@@ -55,7 +56,7 @@ internal fun BooksRoute(
 @Composable
 internal fun BooksScreen(
     searchFieldState: SearchFieldUiState,
-    booksUiState: BooksUiState,
+    newBooksUiState: BooksUiState,
     onSearchValueChange: (String) -> Unit,
     onBook: (String) -> Unit
 ) {
@@ -63,12 +64,18 @@ internal fun BooksScreen(
         modifier = Modifier
             .fillMaxSize(),
     ) {
+        /*LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+        )*/
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
             BookstoreTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,14 +87,14 @@ internal fun BooksScreen(
             )
             BooksSection(
                 title = stringResource(id = R.string.new_books_title),
-                books = booksUiState.newBooks,
+                booksUiState = newBooksUiState,
                 titlePadding = PaddingValues(horizontal = 32.dp),
                 listPadding = PaddingValues(horizontal = 32.dp),
                 onBook = onBook
             )
             BooksSection(
                 title = stringResource(id = R.string.for_you_title),
-                books = booksUiState.recommendedBooks,
+                booksUiState = newBooksUiState,
                 titlePadding = PaddingValues(horizontal = 32.dp),
                 listPadding = PaddingValues(horizontal = 32.dp),
                 onBook = onBook
@@ -100,28 +107,32 @@ internal fun BooksScreen(
 private fun BooksSection(
     modifier: Modifier = Modifier,
     title: String,
-    books: List<BookItemUiState>,
+    booksUiState: BooksUiState,
     titlePadding: PaddingValues = PaddingValues(0.dp),
     listPadding: PaddingValues = PaddingValues(0.dp),
     onBook: (String) -> Unit
 ) {
-    Column(modifier = Modifier.then(modifier)) {
-        Text(
-            modifier = Modifier.padding(titlePadding),
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
-        LazyRow(
-            modifier = Modifier.padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = listPadding
-        ) {
-            // TODO: add item key
-            items(
-                items = books
+    if(booksUiState is BooksUiState.Loading) {
+        CircularProgressIndicator()
+    } else if(booksUiState is BooksUiState.Success) {
+        Column(modifier = Modifier.then(modifier)) {
+            Text(
+                modifier = Modifier.padding(titlePadding),
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            LazyRow(
+                modifier = Modifier.padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = listPadding
             ) {
-                BookItem(book = it, onBook = onBook)
+                // TODO: add item key
+                items(
+                    items = booksUiState.books
+                ) {
+                    BookItem(book = it, onBook = onBook)
+                }
             }
         }
     }

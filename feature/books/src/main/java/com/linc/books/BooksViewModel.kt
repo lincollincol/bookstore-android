@@ -9,6 +9,7 @@ import com.linc.model.mockBooks
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,33 +23,39 @@ class BooksViewModel @Inject constructor(
     private val _searchState = MutableStateFlow(SearchFieldUiState())
     val searchState: StateFlow<SearchFieldUiState> = _searchState.asStateFlow()
 
-    private val _booksUiState: MutableStateFlow<BooksUiState> = MutableStateFlow(BooksUiState())
-    val booksUiState: StateFlow<BooksUiState> = _booksUiState.asStateFlow()
+    val newBooksUiState: StateFlow<BooksUiState> = newBooksUiState()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = BooksUiState.Loading
+        )
 
     init {
-        getBooks()
+//        fetchBooks()
     }
 
-    private fun getBooks() {
+    private fun fetchBooks() {
         viewModelScope.launch {
             try {
-                val books = booksRepository.getBooks()
-//                val books = mockBooks
-                    .map {
-                        it.toUiState()
-                    }
-                _booksUiState.update {
-                    it.copy(
-                        books,
-                        books
-                    )
-                }
+                booksRepository.fetchBooks()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
+    private fun newBooksUiState() : Flow<BooksUiState> {
+        return booksRepository.getBooksStream()
+            .onStart { println(Thread.currentThread().name) }
+            .map { BooksUiState.Success(it.map(Book::toUiState)) }
+//            .flowOn(Dispatchers.IO)
+//            .onEmpty {
+//                emit()
+//            }
+//            .onStart {  }
+//            .catch { BooksUiState.Error }
+    }
+// https://www.google.com/search?q=android+ui+freeze+while+using+flow&sxsrf=ALiCzsYWgzcwFxwGKkB-zjBzagccrH51Nw%3A1670268816965&ei=kEeOY8S-OtSI9u8P7vanqAk&oq=android+ui+freeze+while+using+&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAxgAMgUIIRCgAToKCAAQRxDWBBCwAzoGCCMQJxATOgQIIxAnOgQIABBDOggIABCABBCxAzoICAAQgAQQywE6BQgAEIAEOgsIABCABBCxAxCDAToICC4QgAQQywE6BggAEBYQHjoICAAQFhAeEA86CAghEBYQHhAdOgoIIRAWEB4QDxAdOgcIIRCgARAKSgQIQRgASgQIRhgAULAIWOM0YPM-aAJwAXgAgAGAAYgBzBGSAQQyMC41mAEAoAEByAEIwAEB&sclient=gws-wiz-serp#fpstate=ive&vld=cid:bf3451dc,vid:ksstsMCDEmk
     fun selectBook(bookId: String) {
         navigateTo(BooksNavigationState.NavigateToBook(bookId))
     }
@@ -63,10 +70,11 @@ data class SearchFieldUiState(
     val query: String = ""
 )
 
-data class BooksUiState(
-    val newBooks: List<BookItemUiState> = emptyList(),
-    val recommendedBooks: List<BookItemUiState> = emptyList()
-)
+sealed interface BooksUiState {
+    data class Success(val books: List<BookItemUiState>) : BooksUiState
+    object Loading : BooksUiState
+    object Error : BooksUiState
+}
 
 data class BookItemUiState(
     val id: String,

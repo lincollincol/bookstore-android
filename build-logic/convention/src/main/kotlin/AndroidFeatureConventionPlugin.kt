@@ -36,6 +36,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("motion-compose-navigation").get())
                 add("implementation", libs.findLibrary("coil").get())
                 add("implementation", libs.findLibrary("coil-compose").get())
+                add("implementation", libs.findLibrary("accompanist-flowlayout").get())
                 add("implementation", libs.findLibrary("androidx-constraintlayout-compose").get())
                 add("implementation", libs.findLibrary("androidx-lifecycle-runtime-compose").get())
                 add("implementation", libs.findLibrary("androidx-lifecycle-viewmodel-compose").get())
