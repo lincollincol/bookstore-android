@@ -8,15 +8,23 @@ import androidx.room.TypeConverters
 import com.linc.database.converters.StringListConverter
 import com.linc.database.dao.BookOrdersDao
 import com.linc.database.dao.BooksDao
-import com.linc.database.entity.BookEntity
-import com.linc.database.entity.BookOrderEntity
+import com.linc.database.dao.SubjectDao
+import com.linc.database.entity.book.BookEntity
+import com.linc.database.entity.book.BookOrderEntity
+import com.linc.database.entity.subject.SubjectBookCrossRef
+import com.linc.database.entity.subject.SubjectEntity
 
 private const val BOOKSTORE_DATABASE = "bookstore_database"
 
 @Database(
     version = 1,
     exportSchema = false,
-    entities = [BookEntity::class, BookOrderEntity::class]
+    entities = [
+        BookEntity::class,
+        BookOrderEntity::class,
+        SubjectEntity::class,
+        SubjectBookCrossRef::class
+    ]
 )
 @TypeConverters(
     StringListConverter::class
@@ -24,6 +32,7 @@ private const val BOOKSTORE_DATABASE = "bookstore_database"
 abstract class BookstoreDatabase : RoomDatabase() {
     abstract val bookOrdersDao: BookOrdersDao
     abstract val booksDao: BooksDao
+    abstract val subjectDao: SubjectDao
 
     companion object {
         @JvmStatic

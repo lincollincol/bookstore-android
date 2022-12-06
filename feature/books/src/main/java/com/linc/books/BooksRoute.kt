@@ -64,18 +64,17 @@ internal fun BooksScreen(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        /*LinearProgressIndicator(
+        LinearProgressIndicator(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-        )*/
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             BookstoreTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,6 +102,7 @@ internal fun BooksScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun BooksSection(
     modifier: Modifier = Modifier,
@@ -127,12 +127,15 @@ private fun BooksSection(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = listPadding
             ) {
-                // TODO: add item key
-                items(
-                    items = booksUiState.books
+                /*items(
+                    items = booksUiState.books,
+                    key = { it.id }
                 ) {
-                    BookItem(book = it, onBook = onBook)
-                }
+                    BookItem(
+                        book = it,
+                        onBook = onBook
+                    )
+                }*/
             }
         }
     }

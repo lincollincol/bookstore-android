@@ -16,7 +16,7 @@ interface BooksApiService {
 
     @GET("v1/volumes")
     suspend fun getNewBooks(
-        @Query("q") query: String = "fantasy",
+        @Query("q") query: String = "science",
         @Query("maxResults") maxResults: Int = 3,
         @Query("printType") printType: String = "books",
         @Query("key") key: String = "AIzaSyCa-Wb313sPl3192qPVn5cyAE9b4GXcgEE",

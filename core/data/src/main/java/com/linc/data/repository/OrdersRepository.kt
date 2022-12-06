@@ -5,8 +5,7 @@ import com.linc.common.coroutines.Dispatcher
 import com.linc.data.model.asExternalModel
 import com.linc.database.dao.BookOrdersDao
 import com.linc.database.dao.BooksDao
-import com.linc.database.entity.BookOrderEntity
-import com.linc.model.Book
+import com.linc.database.entity.book.BookOrderEntity
 import com.linc.model.BookOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

@@ -4,8 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
-import com.linc.database.entity.BookOrderEntity
+import com.linc.database.entity.book.BookOrderEntity
 
 @Dao
 interface BookOrdersDao {
@@ -13,7 +12,7 @@ interface BookOrdersDao {
     @Query("SELECT * FROM BookOrderEntity")
     suspend fun getBookOrders(): List<BookOrderEntity>
 
-    @Query("SELECT * FROM BookOrderEntity WHERE BookOrderEntity.id = :id")
+    @Query("SELECT * FROM BookOrderEntity WHERE BookOrderEntity.bookId = :id")
     suspend fun getBookOrder(id: String): BookOrderEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

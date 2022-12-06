@@ -1,4 +1,4 @@
-package com.linc.database.entity
+package com.linc.database.entity.book
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 class BookEntity(
     @PrimaryKey
-    val id: String,
+    val bookId: String,
     val title: String,
     val description: String,
     val imageUrl: String,

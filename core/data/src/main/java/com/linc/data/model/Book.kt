@@ -1,16 +1,14 @@
 package com.linc.data.model
 
-import com.linc.database.entity.BookEntity
-import com.linc.database.entity.BookOrderEntity
+import com.linc.database.entity.book.BookEntity
+import com.linc.database.entity.book.BookOrderEntity
 import com.linc.model.Book
-import com.linc.model.Book2
 import com.linc.model.BookOrder
-import com.linc.network.model.BookApiModel2
 import com.linc.network.model.book.BookApiModel
 import com.linc.network.model.book.Saleability
 
 fun BookApiModel.asEntity() = BookEntity(
-    id = id,
+    bookId = id,
     title = volumeInfo.title,
     description = volumeInfo.description,
     imageUrl = volumeInfo.imageLinks.thumbnail,
@@ -33,7 +31,7 @@ fun BookApiModel.asEntity() = BookEntity(
 )
 
 fun BookEntity.asExternalModel() = Book(
-    id = id,
+    id = bookId,
     title = title,
     description = description,
     imageUrl = imageUrl,
