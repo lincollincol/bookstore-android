@@ -10,6 +10,8 @@ import com.linc.bookdetails.navigation.navigateToBookDetails
 import com.linc.books.navigation.booksGraph
 import com.linc.books.navigation.booksRouteGraph
 import com.linc.cart.navigation.cartGraph
+import com.linc.preferences.navigation.preferencesGraph
+import com.linc.preferences.navigation.preferencesScreen
 
 @Composable
 fun BookstoreNavHost(
@@ -29,5 +31,10 @@ fun BookstoreNavHost(
             }
         )
         cartGraph()
+        preferencesGraph(
+            nestedGraphs = {
+
+            }
+        )
     }
 }

@@ -28,11 +28,10 @@ import com.linc.bookstore.navigation.BookstoreNavHost
 import com.linc.bookstore.navigation.MenuDestinations
 import com.linc.cart.navigation.navigateToCart
 import com.linc.designsystem.component.SimpleIcon
+import com.linc.preferences.navigation.navigateToPreferences
 import soup.compose.material.motion.MaterialFadeThrough
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
-    ExperimentalAnimationApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun BookstoreApp() {
     val navController = rememberNavController()
@@ -68,6 +67,7 @@ fun BookstoreApp() {
                         when (it) {
                             MenuDestinations.BOOKS -> navController.navigateToBooks(topLevelNavOptions)
                             MenuDestinations.CART -> navController.navigateToCart(topLevelNavOptions)
+                            MenuDestinations.PREFERENCES -> navController.navigateToPreferences(topLevelNavOptions)
                         }
                     }
                 )

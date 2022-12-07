@@ -1,7 +1,7 @@
 package com.linc.network.model.book
 
 data class VolumeInfo(
-    val authors: List<String>,
+    val authors: List<String>?,
     val averageRating: Int,
     val canonicalVolumeLink: String,
     val categories: List<String>,

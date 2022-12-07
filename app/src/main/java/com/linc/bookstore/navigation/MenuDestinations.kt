@@ -7,6 +7,7 @@ import com.linc.cart.navigation.cartRouteGraph
 import com.linc.designsystem.icon.BookstoreIcons
 import com.linc.designsystem.icon.IconWrapper
 import com.linc.designsystem.icon.asIconWrapper
+import com.linc.preferences.navigation.preferencesRoute
 
 enum class MenuDestinations(
     val icon: IconWrapper,
@@ -22,6 +23,11 @@ enum class MenuDestinations(
         icon = BookstoreIcons.Cart.asIconWrapper(),
         iconTextId = com.linc.cart.R.string.cart,
         route = cartRoute
+    ),
+    PREFERENCES(
+        icon = BookstoreIcons.StarOutlined.asIconWrapper(),
+        iconTextId = com.linc.preferences.R.string.preferences,
+        route = preferencesRoute
     );
     companion object {
         @JvmStatic

@@ -12,7 +12,7 @@ fun BookApiModel.asEntity() = BookEntity(
     title = volumeInfo.title,
     description = volumeInfo.description,
     imageUrl = volumeInfo.imageLinks.thumbnail,
-    authors = volumeInfo.authors,
+    authors = volumeInfo.authors ?: emptyList(),
     categories = volumeInfo.categories
         .map { it.split("/") }
         .flatten()

@@ -9,4 +9,5 @@ data class SubjectEntity(
     @PrimaryKey
     val subjectId: String,
     val name: String,
+    val isPrimary: Boolean
 )

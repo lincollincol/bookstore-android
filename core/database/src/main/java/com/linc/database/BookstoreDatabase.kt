@@ -14,7 +14,9 @@ import com.linc.database.entity.book.BookOrderEntity
 import com.linc.database.entity.subject.SubjectBookCrossRef
 import com.linc.database.entity.subject.SubjectEntity
 
-private const val BOOKSTORE_DATABASE = "bookstore_database"
+private const val BOOKSTORE_DATABASE = "bookstore_database.db"
+//private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.db"
+private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.db"
 
 @Database(
     version = 1,
@@ -42,6 +44,7 @@ abstract class BookstoreDatabase : RoomDatabase() {
                 BookstoreDatabase::class.java,
                 BOOKSTORE_DATABASE
             )
+            .createFromAsset(INITIAL_ASSET_DATABASE)
             .build()
     }
 }

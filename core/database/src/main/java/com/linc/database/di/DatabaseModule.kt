@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import com.linc.database.BookstoreDatabase
 import com.linc.database.dao.BookOrdersDao
 import com.linc.database.dao.BooksDao
+import com.linc.database.dao.SubjectDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,5 +34,11 @@ object DatabaseModule {
     fun provideBooksDao(
         database: BookstoreDatabase
     ): BooksDao = database.booksDao
+
+    @Singleton
+    @Provides
+    fun provideSubjectDao(
+        database: BookstoreDatabase
+    ): SubjectDao = database.subjectDao
 
 }
