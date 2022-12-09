@@ -3,7 +3,6 @@ package com.linc.books
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,8 +27,6 @@ import com.linc.designsystem.component.BookstoreTextField
 import com.linc.designsystem.icon.BookstoreIcons
 import com.linc.designsystem.icon.asIconWrapper
 import com.linc.designsystem.theme.BookstoreTheme
-import com.linc.model.Book
-import com.linc.model.mockBooks
 import com.linc.navigation.observeNavigation
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -42,7 +39,7 @@ internal fun BooksRoute(
     val newBooksUiState by viewModel.newBooksUiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
-            is BooksNavigationState.NavigateToBook -> navigateToBookDetails(it.id)
+            is BooksNavigationState.BookDetails -> navigateToBookDetails(it.id)
         }
     }
     BooksScreen(

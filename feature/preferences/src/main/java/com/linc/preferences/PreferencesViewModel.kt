@@ -7,6 +7,7 @@ import com.linc.model.Subject
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.NavigationState
 import com.linc.navigation.RouteNavigator
+import com.linc.preferences.navigation.PreferenceNavigationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +32,7 @@ class PreferencesViewModel @Inject constructor(
     private fun getSubjects() {
         viewModelScope.launch {
             try {
-                val subjects = subjectsRepository.getSubjects()
+                val subjects = subjectsRepository.getPrimarySubjects()
                     .map { it.toUiState() }
                 _preferencesUiState.update { it.copy(subjects = subjects) }
             } catch (e: Exception) {
@@ -45,7 +46,7 @@ class PreferencesViewModel @Inject constructor(
     }
 
     fun addNewSubject() {
-//        navigateTo()
+        navigateTo(PreferenceNavigationState.SubjectsEditor)
     }
 
 }

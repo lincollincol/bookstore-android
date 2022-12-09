@@ -15,17 +15,25 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.linc.designsystem.component.SimpleIcon
 import com.linc.designsystem.icon.BookstoreIcons
 import com.linc.designsystem.icon.asIconWrapper
+import com.linc.navigation.observeNavigation
+import com.linc.preferences.navigation.PreferenceNavigationState
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun PreferencesRoute(
-    viewModel: PreferencesViewModel = hiltViewModel()
+    viewModel: PreferencesViewModel = hiltViewModel(),
+    navigateToSubjectsEditor: () -> Unit
 ) {
     val preferencesUiState by viewModel.preferencesUiState.collectAsStateWithLifecycle()
+    viewModel.observeNavigation {
+        when(it) {
+            PreferenceNavigationState.SubjectsEditor -> navigateToSubjectsEditor()
+        }
+    }
     PreferencesScreen(
         preferencesUiState = preferencesUiState,
         onSubject = viewModel::selectSubject,
-        onNew = {}
+        onNew = viewModel::addNewSubject
     )
 }
 
@@ -61,7 +69,7 @@ fun SubjectsComponent(
                 )
             }
             AssistChip(
-                onClick = { /*TODO*/ },
+                onClick = onNew,
                 leadingIcon = { SimpleIcon(icon = BookstoreIcons.Add.asIconWrapper()) },
                 label = { Text("new") }
             )

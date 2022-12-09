@@ -2,55 +2,75 @@ package com.linc.editsubjects
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.linc.common.coroutines.AppDispatchers
+import com.linc.common.coroutines.Dispatcher
 import com.linc.data.repository.SubjectsRepository
 import com.linc.model.Subject
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.NavigationState
 import com.linc.navigation.RouteNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class EditSubjectsViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
-    private val subjectsRepository: SubjectsRepository
+    private val subjectsRepository: SubjectsRepository,
+    @Dispatcher(AppDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel(), RouteNavigator by defaultRouteNavigator {
 
     private val _editSubjectUiStateUiState = MutableStateFlow(EditSubjectUiState())
     val editSubjectUiStateUiState = _editSubjectUiStateUiState.asStateFlow()
 
+
+    val primarySubjectsUiState: StateFlow<SubjectsUiState> = subjectsUiState(true)
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            SubjectsUiState.Loading
+        )
+
+    val availableSubjectsUiState: StateFlow<SubjectsUiState> = subjectsUiState(false)
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            SubjectsUiState.Loading
+        )
+
     init {
         getSubjects()
+    }
+
+    private fun subjectsUiState(primary: Boolean): Flow<SubjectsUiState> {
+        return when {
+            primary -> subjectsRepository.getPrimarySubjectsStream()
+            else -> subjectsRepository.getNonPrimarySubjectsStream()
+        }
+            .map { SubjectsUiState.Success(it.map(Subject::toUiState)) }
+            .onStart { SubjectsUiState.Loading }
+            .catch { SubjectsUiState.Error }
+            .flowOn(ioDispatcher)
     }
 
     private fun getSubjects() {
         viewModelScope.launch {
             try {
-//                val subjects = subjectsRepository.getNonPrimarySubjects()
-//                    .map { it.toUiState() }
-//                val primarySubjects = subjectsRepository.getPrimarySubjects()
-
-
                 val (primarySubjects, availableSubjects) = awaitAll(
                     async { subjectsRepository.getPrimarySubjects() },
                     async { subjectsRepository.getNonPrimarySubjects() }
                 ).map { it.map(Subject::toUiState) }
-
-
                 _editSubjectUiStateUiState.update {
                     it.copy(
                         primarySubjects = primarySubjects,
                         availableSubjects = availableSubjects
                     )
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
             }
         }
@@ -62,10 +82,19 @@ class EditSubjectsViewModel @Inject constructor(
         }
     }
 
-    fun selectSubject(id: String) {
-
+    fun selectAvailableSubject(id: String) {
+        makeSubjectPrimary(id, true)
     }
 
+    fun selectPrimarySubject(id: String) {
+        makeSubjectPrimary(id, false)
+    }
+
+    private fun makeSubjectPrimary(id: String, isPrimary: Boolean) {
+        viewModelScope.launch {
+            subjectsRepository.updateSubjectPrimary(id, isPrimary)
+        }
+    }
 
 }
 
@@ -80,6 +109,11 @@ data class EditSubjectUiState(
 val EditSubjectUiState.isMaxPrimarySubjects: Boolean get() =
     primarySubjects.count() >= MAX_PRIMARY_SUBJECTS
 
+sealed interface SubjectsUiState {
+    data class Success(val subjects: List<SubjectItemUiState>) : SubjectsUiState
+    object Loading : SubjectsUiState
+    object Error : SubjectsUiState
+}
 
 data class SubjectItemUiState(
     val id: String,

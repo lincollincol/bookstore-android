@@ -15,7 +15,6 @@ import com.linc.database.entity.subject.SubjectBookCrossRef
 import com.linc.database.entity.subject.SubjectEntity
 
 private const val BOOKSTORE_DATABASE = "bookstore_database.db"
-//private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.db"
 private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.db"
 
 @Database(

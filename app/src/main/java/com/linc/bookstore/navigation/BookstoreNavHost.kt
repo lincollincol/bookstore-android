@@ -9,7 +9,10 @@ import com.linc.bookdetails.navigation.bookDetailsScreen
 import com.linc.bookdetails.navigation.navigateToBookDetails
 import com.linc.books.navigation.booksGraph
 import com.linc.books.navigation.booksRouteGraph
+import com.linc.books.navigation.navigateToBooks
 import com.linc.cart.navigation.cartGraph
+import com.linc.editsubjects.navigation.editSubjectsScreen
+import com.linc.editsubjects.navigation.navigateToEditSubjects
 import com.linc.preferences.navigation.preferencesGraph
 import com.linc.preferences.navigation.preferencesScreen
 
@@ -32,8 +35,9 @@ fun BookstoreNavHost(
         )
         cartGraph()
         preferencesGraph(
+            navigateToSubjectsEditor = navController::navigateToEditSubjects,
             nestedGraphs = {
-
+                editSubjectsScreen()
             }
         )
     }

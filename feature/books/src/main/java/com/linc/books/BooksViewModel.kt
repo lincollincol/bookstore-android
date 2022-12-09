@@ -7,12 +7,10 @@ import com.linc.common.coroutines.AppDispatchers
 import com.linc.common.coroutines.Dispatcher
 import com.linc.data.repository.BooksRepository
 import com.linc.model.Book
-import com.linc.model.mockBooks
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,7 +47,6 @@ class BooksViewModel @Inject constructor(
     }
 
     private fun newBooksUiState() : Flow<BooksUiState> {
-
         return merge(
             booksRepository.getBooksStream(listOf("music")),
             booksRepository.getBooksStream(listOf("friction")),
@@ -64,9 +61,9 @@ class BooksViewModel @Inject constructor(
             .catch { BooksUiState.Error }
             .flowOn(ioDispatcher)
     }
-// https://www.google.com/search?q=android+ui+freeze+while+using+flow&sxsrf=ALiCzsYWgzcwFxwGKkB-zjBzagccrH51Nw%3A1670268816965&ei=kEeOY8S-OtSI9u8P7vanqAk&oq=android+ui+freeze+while+using+&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAxgAMgUIIRCgAToKCAAQRxDWBBCwAzoGCCMQJxATOgQIIxAnOgQIABBDOggIABCABBCxAzoICAAQgAQQywE6BQgAEIAEOgsIABCABBCxAxCDAToICC4QgAQQywE6BggAEBYQHjoICAAQFhAeEA86CAghEBYQHhAdOgoIIRAWEB4QDxAdOgcIIRCgARAKSgQIQRgASgQIRhgAULAIWOM0YPM-aAJwAXgAgAGAAYgBzBGSAQQyMC41mAEAoAEByAEIwAEB&sclient=gws-wiz-serp#fpstate=ive&vld=cid:bf3451dc,vid:ksstsMCDEmk
+
     fun selectBook(bookId: String) {
-        navigateTo(BooksNavigationState.NavigateToBook(bookId))
+        navigateTo(BooksNavigationState.BookDetails(bookId))
     }
 
     fun updateSearchQuery(query: String) {

@@ -12,7 +12,7 @@ const val booksRouteGraph = "books_route_graph"
 const val booksRoute = "books_route"
 
 sealed interface BooksNavigationState : NavigationState{
-    data class NavigateToBook(val id: String) : BooksNavigationState
+    data class BookDetails(val id: String) : BooksNavigationState
 }
 
 fun NavController.navigateToBooks(navOptions: NavOptions? = null) {
