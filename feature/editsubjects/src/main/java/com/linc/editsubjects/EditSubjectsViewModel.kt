@@ -27,54 +27,20 @@ class EditSubjectsViewModel @Inject constructor(
     private val _editSubjectUiStateUiState = MutableStateFlow(EditSubjectUiState())
     val editSubjectUiStateUiState = _editSubjectUiStateUiState.asStateFlow()
 
-
-    val primarySubjectsUiState: StateFlow<SubjectsUiState> = subjectsUiState(true)
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            SubjectsUiState.Loading
+    val uiState: StateFlow<EditSubjectUiState> = combine(
+        subjectsRepository.getPrimarySubjectsStream(),
+        subjectsRepository.getNonPrimarySubjectsStream(),
+    ) { primarySubjects, availableSubjects ->
+        EditSubjectUiState(
+            primarySubjects = primarySubjects.map(Subject::toUiState),
+            availableSubjects = availableSubjects.map(Subject::toUiState)
         )
-
-    val availableSubjectsUiState: StateFlow<SubjectsUiState> = subjectsUiState(false)
+    }
         .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            SubjectsUiState.Loading
-        )
-
-    init {
-        getSubjects()
-    }
-
-    private fun subjectsUiState(primary: Boolean): Flow<SubjectsUiState> {
-        return when {
-            primary -> subjectsRepository.getPrimarySubjectsStream()
-            else -> subjectsRepository.getNonPrimarySubjectsStream()
-        }
-            .map { SubjectsUiState.Success(it.map(Subject::toUiState)) }
-            .onStart { SubjectsUiState.Loading }
-            .catch { SubjectsUiState.Error }
-            .flowOn(ioDispatcher)
-    }
-
-    private fun getSubjects() {
-        viewModelScope.launch {
-            try {
-                val (primarySubjects, availableSubjects) = awaitAll(
-                    async { subjectsRepository.getPrimarySubjects() },
-                    async { subjectsRepository.getNonPrimarySubjects() }
-                ).map { it.map(Subject::toUiState) }
-                _editSubjectUiStateUiState.update {
-                    it.copy(
-                        primarySubjects = primarySubjects,
-                        availableSubjects = availableSubjects
-                    )
-                }
-            } catch (e: Throwable) {
-                e.printStackTrace()
-            }
-        }
-    }
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        EditSubjectUiState()
+    )
 
     fun updateCustomSubjectName(value: String) {
         _editSubjectUiStateUiState.update {
@@ -108,12 +74,6 @@ data class EditSubjectUiState(
 
 val EditSubjectUiState.isMaxPrimarySubjects: Boolean get() =
     primarySubjects.count() >= MAX_PRIMARY_SUBJECTS
-
-sealed interface SubjectsUiState {
-    data class Success(val subjects: List<SubjectItemUiState>) : SubjectsUiState
-    object Loading : SubjectsUiState
-    object Error : SubjectsUiState
-}
 
 data class SubjectItemUiState(
     val id: String,

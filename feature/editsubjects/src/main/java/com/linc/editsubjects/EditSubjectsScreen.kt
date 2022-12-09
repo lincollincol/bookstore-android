@@ -20,20 +20,18 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 import com.linc.designsystem.component.BookstoreTextField
+import com.linc.model.Subject
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun EditSubjectsRoute(
     viewModel: EditSubjectsViewModel = hiltViewModel()
 ) {
-    val editSubjectUiState by viewModel.editSubjectUiStateUiState
-        .collectAsStateWithLifecycle()
-    val primarySubjectsUiState by viewModel.primarySubjectsUiState.collectAsStateWithLifecycle()
-    val availableSubjectsUiState by viewModel.availableSubjectsUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     EditSubjectsScreen(
-        editSubjectUiState = editSubjectUiState,
-        primarySubjectsUiState = primarySubjectsUiState,
-        availableSubjectsUiState = availableSubjectsUiState,
+        primarySubjects = uiState.primarySubjects,
+        availableSubjects = uiState.availableSubjects,
         onPrimarySubjectClick = viewModel::selectPrimarySubject,
         onAvailableSubjectClick = viewModel::selectAvailableSubject
     )
@@ -41,9 +39,8 @@ fun EditSubjectsRoute(
 
 @Composable
 fun EditSubjectsScreen(
-    editSubjectUiState: EditSubjectUiState,
-    primarySubjectsUiState: SubjectsUiState,
-    availableSubjectsUiState: SubjectsUiState,
+    primarySubjects: List<SubjectItemUiState>,
+    availableSubjects: List<SubjectItemUiState>,
     onPrimarySubjectClick: (String) -> Unit,
     onAvailableSubjectClick: (String) -> Unit,
 ) {
@@ -55,12 +52,12 @@ fun EditSubjectsScreen(
         )
         SubjectsComponent(
             title = "Primary subjects",
-            subjectsUiState = primarySubjectsUiState,
+            subjects = primarySubjects,
             onSubject = onPrimarySubjectClick
         )
         SubjectsComponent(
             title = "Available subjects",
-            subjectsUiState = availableSubjectsUiState,
+            subjects = availableSubjects,
             onSubject = onAvailableSubjectClick
         )
     }
@@ -70,24 +67,20 @@ fun EditSubjectsScreen(
 @Composable
 fun SubjectsComponent(
     title: String,
-    subjectsUiState: SubjectsUiState,
+    subjects: List<SubjectItemUiState>,
     onSubject: (String) -> Unit
 ) {
-    if(subjectsUiState is SubjectsUiState.Loading) {
-        CircularProgressIndicator()
-    } else if(subjectsUiState is SubjectsUiState.Success) {
-        Text(text = title)
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            mainAxisAlignment = MainAxisAlignment.Center,
-            mainAxisSpacing = 8.dp
-        ) {
-            subjectsUiState.subjects.forEach {
-                AssistChip(
-                    label = { Text(text = it.name) },
-                    onClick = { onSubject(it.id) }
-                )
-            }
+    Text(text = title)
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        mainAxisAlignment = MainAxisAlignment.Center,
+        mainAxisSpacing = 8.dp
+    ) {
+        subjects.forEach {
+            AssistChip(
+                label = { Text(text = it.name) },
+                onClick = { onSubject(it.id) }
+            )
         }
     }
 }
