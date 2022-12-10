@@ -3,6 +3,7 @@ package com.linc.books
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,16 +36,15 @@ internal fun BooksRoute(
     navigateToBookDetails: (String) -> Unit,
     viewModel: BooksViewModel = hiltViewModel()
 ) {
-    val searchState by viewModel.searchState.collectAsStateWithLifecycle()
-    val newBooksUiState by viewModel.newBooksUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
             is BooksNavigationState.BookDetails -> navigateToBookDetails(it.id)
         }
     }
     BooksScreen(
-        searchState,
-        newBooksUiState,
+        searchQuery = uiState.searchQuery,
+        booksSections = uiState.books,
         viewModel::updateSearchQuery,
         viewModel::selectBook
     )
@@ -52,8 +52,8 @@ internal fun BooksRoute(
 
 @Composable
 internal fun BooksScreen(
-    searchFieldState: SearchFieldUiState,
-    newBooksUiState: BooksUiState,
+    searchQuery: String,
+    booksSections: List<BooksSectionItemUiState>,
     onSearchValueChange: (String) -> Unit,
     onBook: (String) -> Unit
 ) {
@@ -77,62 +77,52 @@ internal fun BooksScreen(
                     .fillMaxWidth()
                     .padding(start = 32.dp, end = 32.dp, top = 32.dp),
                 hint = stringResource(id = R.string.search_books_hint),
-                value = searchFieldState.query,
+                value = searchQuery,
                 onValueChange = onSearchValueChange,
                 trailingIcon = BookstoreIcons.Search.asIconWrapper()
             )
-            BooksSection(
-                title = stringResource(id = R.string.new_books_title),
-                booksUiState = newBooksUiState,
-                titlePadding = PaddingValues(horizontal = 32.dp),
-                listPadding = PaddingValues(horizontal = 32.dp),
-                onBook = onBook
-            )
-            BooksSection(
-                title = stringResource(id = R.string.for_you_title),
-                booksUiState = newBooksUiState,
-                titlePadding = PaddingValues(horizontal = 32.dp),
-                listPadding = PaddingValues(horizontal = 32.dp),
-                onBook = onBook
-            )
+            booksSections.forEach {
+                BooksSection(
+                    title = it.title,
+                    books = it.books,
+                    titlePadding = PaddingValues(horizontal = 32.dp),
+                    listPadding = PaddingValues(horizontal = 32.dp),
+                    onBook = onBook
+                )
+            }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun BooksSection(
     modifier: Modifier = Modifier,
     title: String,
-    booksUiState: BooksUiState,
+    books: List<BookItemUiState>,
     titlePadding: PaddingValues = PaddingValues(0.dp),
     listPadding: PaddingValues = PaddingValues(0.dp),
     onBook: (String) -> Unit
 ) {
-    if(booksUiState is BooksUiState.Loading) {
-        CircularProgressIndicator()
-    } else if(booksUiState is BooksUiState.Success) {
-        Column(modifier = Modifier.then(modifier)) {
-            Text(
-                modifier = Modifier.padding(titlePadding),
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            LazyRow(
-                modifier = Modifier.padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = listPadding
+    Column(modifier = Modifier.then(modifier)) {
+        Text(
+            modifier = Modifier.padding(titlePadding),
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        LazyRow(
+            modifier = Modifier.padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = listPadding
+        ) {
+            items(
+                items = books,
+                key = { it.id }
             ) {
-                /*items(
-                    items = booksUiState.books,
-                    key = { it.id }
-                ) {
-                    BookItem(
-                        book = it,
-                        onBook = onBook
-                    )
-                }*/
+                BookItem(
+                    book = it,
+                    onBook = onBook
+                )
             }
         }
     }

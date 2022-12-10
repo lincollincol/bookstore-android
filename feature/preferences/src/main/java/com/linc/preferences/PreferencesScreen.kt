@@ -24,14 +24,14 @@ fun PreferencesRoute(
     viewModel: PreferencesViewModel = hiltViewModel(),
     navigateToSubjectsEditor: () -> Unit
 ) {
-    val preferencesUiState by viewModel.preferencesUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
             PreferenceNavigationState.SubjectsEditor -> navigateToSubjectsEditor()
         }
     }
     PreferencesScreen(
-        preferencesUiState = preferencesUiState,
+        subjects = uiState.subjects,
         onSubject = viewModel::selectSubject,
         onNew = viewModel::addNewSubject
     )
@@ -39,12 +39,12 @@ fun PreferencesRoute(
 
 @Composable
 internal fun PreferencesScreen(
-    preferencesUiState: PreferencesUiState,
+    subjects: List<SubjectItemUiState>,
     onSubject: (String) -> Unit,
     onNew: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        SubjectsComponent(preferencesUiState.subjects, onSubject, onNew)
+        SubjectsComponent(subjects, onSubject, onNew)
     }
 }
 

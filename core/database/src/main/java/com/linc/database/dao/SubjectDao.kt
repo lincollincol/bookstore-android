@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.linc.database.entity.subject.SubjectBookCrossRef
 import com.linc.database.entity.subject.SubjectEntity
 import com.linc.database.entity.subject.SubjectWithBooks
 import com.linc.database.entity.subject.UpdateSubjectPrimary
@@ -33,11 +34,21 @@ interface SubjectDao {
     @Query("SELECT * FROM SubjectEntity WHERE SubjectEntity.name = :name")
     suspend fun getSubjectBooks(name: String): List<SubjectWithBooks>
 
+    @Transaction
+    @Query("SELECT * FROM SubjectEntity WHERE SubjectEntity.name IN (:subjects)")
+    fun getSubjectBooksStream(subjects: List<String>): Flow<List<SubjectWithBooks>>
+
     @Query("SELECT COUNT(*) FROM SubjectEntity WHERE SubjectEntity.isPrimary = 1")
     suspend fun getPrimarySubjectsCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSubject(subject: SubjectEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSubjectBookCrossRef(crossRef: SubjectBookCrossRef)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSubjectBookCrossRefs(crossRefs: List<SubjectBookCrossRef>)
 
     @Update(entity = SubjectEntity::class)
     suspend fun updateSubjectPrimary(primaryUpdate: UpdateSubjectPrimary)

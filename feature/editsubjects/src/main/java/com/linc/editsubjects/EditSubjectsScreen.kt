@@ -32,8 +32,10 @@ fun EditSubjectsRoute(
     EditSubjectsScreen(
         primarySubjects = uiState.primarySubjects,
         availableSubjects = uiState.availableSubjects,
+        customSubjectName = uiState.customSubjectName,
         onPrimarySubjectClick = viewModel::selectPrimarySubject,
-        onAvailableSubjectClick = viewModel::selectAvailableSubject
+        onAvailableSubjectClick = viewModel::selectAvailableSubject,
+        onCustomSubjectValue = viewModel::updateCustomSubjectName
     )
 }
 
@@ -41,14 +43,16 @@ fun EditSubjectsRoute(
 fun EditSubjectsScreen(
     primarySubjects: List<SubjectItemUiState>,
     availableSubjects: List<SubjectItemUiState>,
+    customSubjectName: String,
     onPrimarySubjectClick: (String) -> Unit,
     onAvailableSubjectClick: (String) -> Unit,
+    onCustomSubjectValue: (String) -> Unit,
 ) {
     Column {
         BookstoreTextField(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            value = "",
-            onValueChange = {}
+            value = customSubjectName,
+            onValueChange = onCustomSubjectValue
         )
         SubjectsComponent(
             title = "Primary subjects",

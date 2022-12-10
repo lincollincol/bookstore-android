@@ -8,8 +8,11 @@ import com.linc.database.entity.subject.SubjectEntity
 import com.linc.database.entity.subject.UpdateSubjectPrimary
 import com.linc.model.Subject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -34,11 +37,13 @@ class SubjectsRepository @Inject constructor(
     fun getPrimarySubjectsStream(): Flow<List<Subject>> {
         return subjectDao.getPrimarySubjectsStream()
             .map { it.map(SubjectEntity::asExternalModel) }
+            .flowOn(dispatcher)
     }
 
     fun getNonPrimarySubjectsStream(): Flow<List<Subject>> {
         return subjectDao.getNonPrimarySubjectsStream()
             .map { it.map(SubjectEntity::asExternalModel) }
+            .flowOn(dispatcher)
     }
 
     suspend fun updateSubjectPrimary(

@@ -18,7 +18,7 @@ private const val BOOKSTORE_DATABASE = "bookstore_database.db"
 private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.db"
 
 @Database(
-    version = 1,
+    version = 2,
     exportSchema = false,
     entities = [
         BookEntity::class,
@@ -44,6 +44,7 @@ abstract class BookstoreDatabase : RoomDatabase() {
                 BOOKSTORE_DATABASE
             )
             .createFromAsset(INITIAL_ASSET_DATABASE)
+//            .fallbackToDestructiveMigration()
             .build()
     }
 }

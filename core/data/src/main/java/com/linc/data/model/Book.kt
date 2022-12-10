@@ -10,24 +10,20 @@ import com.linc.network.model.book.Saleability
 fun BookApiModel.asEntity() = BookEntity(
     bookId = id,
     title = volumeInfo.title,
-    description = volumeInfo.description,
-    imageUrl = volumeInfo.imageLinks.thumbnail,
+    description = volumeInfo.description.orEmpty(),
+    imageUrl = volumeInfo.imageLinks?.thumbnail.orEmpty(),
     authors = volumeInfo.authors ?: emptyList(),
-    categories = volumeInfo.categories
-        .map { it.split("/") }
-        .flatten()
-        .distinct()
-        .map { it.lowercase().trim() },
-    averageRating = volumeInfo.averageRating.toFloat(),
-    ratingsCount = volumeInfo.ratingsCount.toFloat(),
+    categories = volumeInfo.categories ?: emptyList(),
+    averageRating = volumeInfo.averageRating?.toFloat(),
+    ratingsCount = volumeInfo.ratingsCount?.toFloat(),
     pageCount = volumeInfo.pageCount,
-    publishedDate = volumeInfo.publishedDate,
+    publishedDate = volumeInfo.publishedDate.orEmpty(),
     language = volumeInfo.language,
-    publisher = volumeInfo.publisher,
+    publisher = volumeInfo.publisher.orEmpty(),
     availableForSale = saleInfo?.saleability == Saleability.FOR_SALE,
     price = saleInfo?.listPrice?.amountInMicros ?: 0.0,
     currency = saleInfo?.country.orEmpty(),
-    webResourceUrl = accessInfo.webReaderLink
+    webResourceUrl = accessInfo?.webReaderLink.orEmpty()
 )
 
 fun BookEntity.asExternalModel() = Book(
@@ -37,8 +33,8 @@ fun BookEntity.asExternalModel() = Book(
     imageUrl = imageUrl,
     authors = authors,
     categories = categories,
-    averageRating = averageRating,
-    ratingsCount = ratingsCount,
+    averageRating = averageRating ?: 0f,
+    ratingsCount = ratingsCount ?: 0f,
     pageCount = pageCount,
     publishedDate = publishedDate,
     language = language,

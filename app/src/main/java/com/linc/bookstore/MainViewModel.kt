@@ -19,7 +19,7 @@ class MainViewModel @Inject constructor(
     fun loadBooks() {
         viewModelScope.launch {
             try {
-                booksRepository.getBooks()
+//                booksRepository.getBooks()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
