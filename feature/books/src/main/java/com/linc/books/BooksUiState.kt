@@ -10,6 +10,7 @@ data class BooksUiState(
 ) : UiState
 
 data class BooksSectionItemUiState(
+    val subjectId: String,
     val title: String,
     val books: List<BookItemUiState>
 ) : UiState
@@ -24,6 +25,7 @@ data class BookItemUiState(
 ) : UiState
 
 fun SubjectBooks.toUiState() = BooksSectionItemUiState(
+    subjectId = subject.id,
     title = subject.name,
     books = books.map(Book::toUiState)
 )

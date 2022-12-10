@@ -15,6 +15,8 @@ import com.linc.editsubjects.navigation.editSubjectsScreen
 import com.linc.editsubjects.navigation.navigateToEditSubjects
 import com.linc.preferences.navigation.preferencesGraph
 import com.linc.preferences.navigation.preferencesScreen
+import com.linc.subjectbooks.navigation.navigateToSubjectBooks
+import com.linc.subjectbooks.navigation.subjectBooksScreen
 
 @Composable
 fun BookstoreNavHost(
@@ -29,8 +31,10 @@ fun BookstoreNavHost(
     ) {
         booksGraph(
             navigateToBookDetails = navController::navigateToBookDetails,
+            navigateToSubjectBook = navController::navigateToSubjectBooks,
             nestedGraphs = {
                 bookDetailsScreen(navigateBack = { navController.navigateUp() })
+                subjectBooksScreen()
             }
         )
         cartGraph()

@@ -34,19 +34,22 @@ import com.linc.navigation.observeNavigation
 @Composable
 internal fun BooksRoute(
     navigateToBookDetails: (String) -> Unit,
+    navigateToSubjectBooks: (String) -> Unit,
     viewModel: BooksViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
-            is BooksNavigationState.BookDetails -> navigateToBookDetails(it.id)
+            is BooksNavigationState.BookDetails -> navigateToBookDetails(it.bookId)
+            is BooksNavigationState.SubjectBooks -> navigateToSubjectBooks(it.subjectId)
         }
     }
     BooksScreen(
         searchQuery = uiState.searchQuery,
         booksSections = uiState.books,
-        viewModel::updateSearchQuery,
-        viewModel::selectBook
+        onSearchValueChange = viewModel::updateSearchQuery,
+        onBookClick = viewModel::selectBook,
+        onSeeAllClick = viewModel::selectSubject
     )
 }
 
@@ -55,7 +58,8 @@ internal fun BooksScreen(
     searchQuery: String,
     booksSections: List<BooksSectionItemUiState>,
     onSearchValueChange: (String) -> Unit,
-    onBook: (String) -> Unit
+    onBookClick: (String) -> Unit,
+    onSeeAllClick: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -83,45 +87,64 @@ internal fun BooksScreen(
             )
             booksSections.forEach {
                 BooksSection(
-                    title = it.title,
-                    books = it.books,
+                    sectionItemUiState = it,
                     titlePadding = PaddingValues(horizontal = 32.dp),
                     listPadding = PaddingValues(horizontal = 32.dp),
-                    onBook = onBook
+                    onBookClick = onBookClick,
+                    onSeeAllClick = onSeeAllClick
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BooksSection(
     modifier: Modifier = Modifier,
-    title: String,
-    books: List<BookItemUiState>,
+    sectionItemUiState: BooksSectionItemUiState,
     titlePadding: PaddingValues = PaddingValues(0.dp),
     listPadding: PaddingValues = PaddingValues(0.dp),
-    onBook: (String) -> Unit
+    onBookClick: (String) -> Unit,
+    onSeeAllClick: (String) -> Unit
 ) {
     Column(modifier = Modifier.then(modifier)) {
-        Text(
-            modifier = Modifier.padding(titlePadding),
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier.padding(titlePadding),
+                text = sectionItemUiState.title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Surface(
+                shape = MaterialTheme.shapes.large,
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
+                onClick = { onSeeAllClick(sectionItemUiState.subjectId) }
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                    text = "See all",
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
         LazyRow(
             modifier = Modifier.padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = listPadding
         ) {
             items(
-                items = books,
+                items = sectionItemUiState.books,
                 key = { it.id }
             ) {
                 BookItem(
                     book = it,
-                    onBook = onBook
+                    onBook = onBookClick
                 )
             }
         }

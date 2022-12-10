@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":feature:cart"))
     implementation(project(":feature:preferences"))
     implementation(project(":feature:editsubjects"))
+    implementation(project(":feature:subjectbooks"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

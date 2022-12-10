@@ -42,6 +42,7 @@ class BooksViewModel @Inject constructor(
         )
 
     init {
+        // TODO: reload after applying new subjects
         fetchBooks()
     }
 
@@ -55,9 +56,12 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-
     fun selectBook(bookId: String) {
         navigateTo(BooksNavigationState.BookDetails(bookId))
+    }
+
+    fun selectSubject(subjectId: String) {
+        navigateTo(BooksNavigationState.SubjectBooks(subjectId))
     }
 
     fun updateSearchQuery(query: String) {

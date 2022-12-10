@@ -29,7 +29,6 @@ fun NavGraphBuilder.bookDetailsScreen(
             navArgument(bookIdArg) { type = NavType.StringType }
         )
     ) {
-        NavBackStackEntry
         BookDetailsRoute(
             navigateBack = navigateBack
         )
