@@ -45,6 +45,25 @@ fun BookEntity.asExternalModel() = Book(
     webResourceUrl = webResourceUrl
 )
 
+fun BookApiModel.asExternalModel() = Book(
+    id = id,
+    title = volumeInfo.title,
+    description = volumeInfo.description.orEmpty(),
+    imageUrl = volumeInfo.imageLinks?.thumbnail.orEmpty(),
+    authors = volumeInfo.authors ?: emptyList(),
+    categories = volumeInfo.categories ?: emptyList(),
+    averageRating = volumeInfo.averageRating?.toFloat() ?: 0f,
+    ratingsCount = volumeInfo.ratingsCount?.toFloat() ?: 0f,
+    pageCount = volumeInfo.pageCount,
+    publishedDate = volumeInfo.publishedDate.orEmpty(),
+    language = volumeInfo.language,
+    publisher = volumeInfo.publisher.orEmpty(),
+    availableForSale = saleInfo?.saleability == Saleability.FOR_SALE,
+    price = saleInfo?.listPrice?.amountInMicros ?: 0.0,
+    currency = saleInfo?.country.orEmpty(),
+    webResourceUrl = accessInfo?.webReaderLink.orEmpty()
+)
+
 fun BookOrderEntity.asExternalModel() = BookOrder(
     id = orderId,
     book = book.asExternalModel()

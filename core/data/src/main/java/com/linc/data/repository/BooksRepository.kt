@@ -1,9 +1,15 @@
 package com.linc.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.linc.common.coroutines.AppDispatchers
 import com.linc.common.coroutines.Dispatcher
+import com.linc.data.di.BooksPagingSourceFactory
 import com.linc.data.model.asEntity
 import com.linc.data.model.asExternalModel
+import com.linc.data.paging.BooksPagingSource
 import com.linc.database.dao.BooksDao
 import com.linc.database.dao.SubjectDao
 import com.linc.database.entity.book.BookEntity
@@ -22,16 +28,30 @@ class BooksRepository @Inject constructor(
     private val booksDao: BooksDao,
     private val subjectDao: SubjectDao,
     private val booksApiService: BooksApiService,
+    private val booksPagingSourceFactory: BooksPagingSourceFactory,
     @Dispatcher(AppDispatchers.IO) private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun fetchBooks() = withContext(dispatcher) {
-        try {
-//            booksApiService.getBooks()
-//                .items
-//                .map(BookApiModel::asEntity)
-//                .also { booksDao.insertBooks(it) }
-        } catch (ignored: UnknownHostException) {}
+    companion object {
+        const val MAX_BOOKS_PER_PAGE = 10
+    }
+
+    fun getSubjectBooksStream(subjectId: String) = flow {
+        val subjectName = subjectDao.getSubject(subjectId)?.name.orEmpty()
+        Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false,
+                maxSize = 30,
+                prefetchDistance = 5,
+                initialLoadSize = 10
+            ),
+            pagingSourceFactory = { booksPagingSourceFactory.create(subjectName) }
+        )
+            .flow
+            .map { it.map(BookApiModel::asExternalModel) }
+            .flowOn(dispatcher)
+            .collect(this)
     }
 
     suspend fun fetchBooksBySubjects() : Unit = withContext(dispatcher) {
@@ -41,7 +61,7 @@ class BooksRepository @Inject constructor(
                     async {
                         booksApiService.getBooks(
                             query = subject.name,
-                            maxResults = 10
+                            maxResults = MAX_BOOKS_PER_PAGE
                         )
                             .items
                             .map(BookApiModel::asEntity)
@@ -78,7 +98,6 @@ class BooksRepository @Inject constructor(
             .map { it.map(BookEntity::asExternalModel) }
             .flowOn(dispatcher)
     }
-
 
     suspend fun getBook(id: String): Book? = withContext(dispatcher) {
         return@withContext booksDao.getBook(id)?.asExternalModel()

@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SubjectDao {
 
+    @Query("SELECT * FROM SubjectEntity WHERE SubjectEntity.subjectId = :id")
+    suspend fun getSubject(id: String): SubjectEntity?
+
     @Query("SELECT * FROM SubjectEntity")
     suspend fun getSubjects(): List<SubjectEntity>
 

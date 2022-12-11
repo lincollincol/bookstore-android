@@ -24,13 +24,13 @@ data class BookItemUiState(
     val title: String
 ) : UiState
 
-fun SubjectBooks.toUiState() = BooksSectionItemUiState(
+internal fun SubjectBooks.toUiState() = BooksSectionItemUiState(
     subjectId = subject.id,
     title = subject.name,
     books = books.map(Book::toUiState)
 )
 
-fun Book.toUiState() = BookItemUiState(
+internal fun Book.toUiState() = BookItemUiState(
     id = id,
     imageUrl = imageUrl,
     price = price,

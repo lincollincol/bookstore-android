@@ -16,5 +16,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.kotlin.coroutines)
+    implementation(libs.bundles.paging)
 
 }

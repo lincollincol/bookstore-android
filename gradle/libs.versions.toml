@@ -106,6 +106,10 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+# Paging
+paging-runtime = "androidx.paging:paging-runtime:3.1.1"
+paging-compose = "androidx.paging:paging-compose:1.0.0-alpha17"
+
 # Utils
 cloudy = "com.github.skydoves:cloudy:0.1.1"
 motion-compose-core = "io.github.fornewid:material-motion-compose-core:0.11.0-alpha"
@@ -120,5 +124,4 @@ kotlin-coroutines = ["kotlin-coroutines-core", "kotlin-coroutines-android"]
 retrofit = ["retrofit", "retrofit-gson", "retrofit-scalars"]
 okhttp = ["okhttp", "okhttp-logging-interceptor"]
 room = ["room-runtime", "room-ktx"]
-#compose-ui = ["compose-material", "compose-ui-tooling-preview", "compose-ui"]
-#compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
+paging = ["paging-runtime", "paging-compose"]

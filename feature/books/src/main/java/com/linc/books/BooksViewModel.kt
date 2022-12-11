@@ -20,8 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BooksViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
-    private val booksRepository: BooksRepository,
-    @Dispatcher(AppDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
+    private val booksRepository: BooksRepository
 ) : ViewModel(), UiStateHolder<BooksUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val searchUiState = MutableStateFlow("")
