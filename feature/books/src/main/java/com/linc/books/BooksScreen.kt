@@ -2,6 +2,8 @@ package com.linc.books
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -65,11 +67,6 @@ internal fun BooksScreen(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -95,6 +92,11 @@ internal fun BooksScreen(
                 )
             }
         }
+        LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -153,18 +155,49 @@ private fun BooksSection(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BookItem(
+private fun LazyItemScope.BookItem(
     modifier: Modifier = Modifier,
     book: BookItemUiState,
     onBook: (String) -> Unit
 ) {
     Surface(
         modifier = Modifier
+            .fillParentMaxWidth(0.4f)
             .then(modifier),
         onClick = { onBook(book.id) },
         shape = MaterialTheme.shapes.medium
     ) {
-        ConstraintLayout {
+        Column {
+            Box {
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .fillMaxWidth()
+                        // TODO: move to common consts: ASPECT_RATION_2_3
+                        .aspectRatio(2f / 3f)
+                        .background(Color.White),
+                    model = book.imageUrl,
+                    contentDescription = book.title,
+                    contentScale = ContentScale.Crop
+                )
+                Text(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(Color.White)
+                        .align(Alignment.TopEnd),
+                    text = "${book.averageRating}(${book.ratingsCount})"
+                )
+            }
+            Text(
+                text = book.title,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Text(
+                text = book.price.toString()
+            )
+        }
+        /*ConstraintLayout {
             val (image, title, rating, price) = createRefs()
             AsyncImage(
                 modifier = Modifier
@@ -182,10 +215,7 @@ private fun BookItem(
                     .background(Color.Green),
                 model = book.imageUrl,
                 contentDescription = book.title,
-                contentScale = ContentScale.Crop,
-                onError = {
-                    it.result.throwable.printStackTrace()
-                }
+                contentScale = ContentScale.Crop
             )
             Text(
                 modifier = Modifier
@@ -219,7 +249,7 @@ private fun BookItem(
                     },
                 text = book.price.toString()
             )
-        }
+        }*/
     }
 }
 

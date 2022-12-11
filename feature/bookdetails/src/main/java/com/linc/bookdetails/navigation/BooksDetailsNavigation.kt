@@ -17,7 +17,7 @@ fun NavController.navigateToBookDetails(
     bookId: String,
     navOptions: NavOptions? = null
 ) {
-    this.navigate("$bookDetailsRoute/$bookId", navOptions)
+    navigate("$bookDetailsRoute/$bookId", navOptions)
 }
 
 fun NavGraphBuilder.bookDetailsScreen(

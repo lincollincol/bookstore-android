@@ -39,13 +39,7 @@ class BooksRepository @Inject constructor(
     fun getSubjectBooksStream(subjectId: String) = flow {
         val subjectName = subjectDao.getSubject(subjectId)?.name.orEmpty()
         Pager(
-            config = PagingConfig(
-                pageSize = 10,
-                enablePlaceholders = false,
-                maxSize = 30,
-                prefetchDistance = 5,
-                initialLoadSize = 10
-            ),
+            config = PagingConfig(pageSize = MAX_BOOKS_PER_PAGE),
             pagingSourceFactory = { booksPagingSourceFactory.create(subjectName) }
         )
             .flow

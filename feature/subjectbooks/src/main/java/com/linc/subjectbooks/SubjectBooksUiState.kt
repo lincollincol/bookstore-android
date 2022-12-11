@@ -14,6 +14,7 @@ data class SubjectBooksUiState(
 data class BookItemUiState(
     val id: String,
     val imageUrl: String,
+    val authors: String,
     val price: Double,
     val averageRating: Float,
     val ratingsCount: Float,
@@ -26,5 +27,6 @@ fun Book.toUiState() = BookItemUiState(
     price = price,
     averageRating = averageRating,
     ratingsCount = ratingsCount,
-    title = title
+    title = title,
+    authors = authors.joinToString()
 )

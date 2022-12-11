@@ -24,6 +24,7 @@ fun BookstoreNavHost(
     navController: NavHostController,
     startDestination: String = booksRouteGraph
 ) {
+    println(navController.backQueue.joinToString { it.destination.route.orEmpty() })
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -33,8 +34,8 @@ fun BookstoreNavHost(
             navigateToBookDetails = navController::navigateToBookDetails,
             navigateToSubjectBook = navController::navigateToSubjectBooks,
             nestedGraphs = {
-                bookDetailsScreen(navigateBack = { navController.navigateUp() })
-                subjectBooksScreen()
+                subjectBooksScreen(navigateToBookDetails = { navController.navigateToBookDetails(it) })
+                bookDetailsScreen(navigateBack = { navController.popBackStack() })
             }
         )
         cartGraph()
