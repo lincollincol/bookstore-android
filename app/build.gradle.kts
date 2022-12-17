@@ -16,9 +16,21 @@ android {
             useSupportLibrary = true
         }
     }
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("keystore/bookstore.jks")
+            keyAlias = "bookstore"
+            keyPassword = "bookstore"
+            storePassword = "bookstore"
+        }
+    }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = true
+            applicationIdSuffix = ".prod"
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

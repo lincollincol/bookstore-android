@@ -1,5 +1,8 @@
 package com.linc.network.model.book
 
+import androidx.annotation.Keep
+
+//@Keep
 data class VolumeInfo(
     val authors: List<String>?,
     val averageRating: Double?,
@@ -14,5 +17,5 @@ data class VolumeInfo(
     val publishedDate: String?,
     val publisher: String?,
     val ratingsCount: Int?,
-    val title: String
+    val title: String?
 )

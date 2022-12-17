@@ -2,10 +2,7 @@ package com.linc.books
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,26 +60,38 @@ internal fun BooksScreen(
     onBookClick: (String) -> Unit,
     onSeeAllClick: (String) -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        Column(
+    ConstraintLayout {
+        val (searchField, list) = createRefs()
+        BookstoreTextField(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, top = 32.dp)
+                .constrainAs(searchField) {
+                    top.linkTo(parent.top)
+                    linkTo(start = parent.start, end = parent.end)
+                },
+            hint = stringResource(id = R.string.search_books_hint),
+            value = searchQuery,
+            onValueChange = onSearchValueChange,
+            trailingIcon = BookstoreIcons.Search.asIconWrapper()
+        )
+        LazyColumn(
+            modifier = Modifier
+                .constrainAs(list) {
+                    linkTo(
+                        top = searchField.bottom,
+                        bottom = parent.bottom,
+                        start = parent.start,
+                        end = parent.end
+                    )
+//                    width = Dimension.fillToConstraints
+                    height = Dimension.wrapContent
+                }
         ) {
-            BookstoreTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 32.dp, end = 32.dp, top = 32.dp),
-                hint = stringResource(id = R.string.search_books_hint),
-                value = searchQuery,
-                onValueChange = onSearchValueChange,
-                trailingIcon = BookstoreIcons.Search.asIconWrapper()
-            )
-            booksSections.forEach {
+            items(
+                items = booksSections,
+                key = { it.title }
+            ) {
                 BooksSection(
                     sectionItemUiState = it,
                     titlePadding = PaddingValues(horizontal = 32.dp),
@@ -92,11 +101,6 @@ internal fun BooksScreen(
                 )
             }
         }
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-        )
     }
 }
 
@@ -162,7 +166,7 @@ private fun LazyItemScope.BookItem(
 ) {
     Surface(
         modifier = Modifier
-            .fillParentMaxWidth(0.4f)
+            .fillParentMaxWidth(0.35f)
             .then(modifier),
         onClick = { onBook(book.id) },
         shape = MaterialTheme.shapes.medium
@@ -197,59 +201,6 @@ private fun LazyItemScope.BookItem(
                 text = book.price.toString()
             )
         }
-        /*ConstraintLayout {
-            val (image, title, rating, price) = createRefs()
-            AsyncImage(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .constrainAs(image) {
-                        top.linkTo(parent.top)
-                        linkTo(
-                            start = parent.start,
-                            end = parent.end
-                        )
-//                        width = Dimension.fillToConstraints
-                    }
-                    .width(128.dp)
-                    .aspectRatio(2f / 3f)
-                    .background(Color.Green),
-                model = book.imageUrl,
-                contentDescription = book.title,
-                contentScale = ContentScale.Crop
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(title) {
-                        top.linkTo(image.bottom)
-                        linkTo(
-                            start = parent.start,
-                            end = parent.end
-                        )
-                        width = Dimension.fillToConstraints
-                    },
-                text = book.title,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(rating) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                    }
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(Color.White),
-                text = "${book.averageRating}(${book.ratingsCount})"
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(price) {
-                        top.linkTo(title.bottom)
-                        start.linkTo(parent.start)
-                    },
-                text = book.price.toString()
-            )
-        }*/
     }
 }
 

@@ -5,11 +5,17 @@ import androidx.paging.PagingData
 import com.linc.common.coroutines.state.UiState
 import com.linc.common.coroutines.state.UiStateHolder
 import com.linc.model.Book
+import com.linc.model.Subject
 
 data class SubjectBooksUiState(
-    val books: PagingData<BookItemUiState> = PagingData.empty(),
-    val loading: Boolean = false
+    val title: String = "",
+    val firstBookState: FirstPagingBookUiState = FirstPagingBookUiState()
 ) : UiState
+
+data class FirstPagingBookUiState(
+    val index: Int = 0,
+    val offset: Int = 0
+)
 
 data class BookItemUiState(
     val id: String,

@@ -39,7 +39,8 @@ internal object RetrofitModule {
         HttpLoggingInterceptor().apply {
             level = when {
                 BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
-                else -> HttpLoggingInterceptor.Level.NONE
+                else -> HttpLoggingInterceptor.Level.BODY
+//                else -> HttpLoggingInterceptor.Level.NONE
             }
         }
 

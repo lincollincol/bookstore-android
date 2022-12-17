@@ -8,6 +8,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.linc.common.coroutines.state.UiStateHolder
 import com.linc.data.repository.BooksRepository
+import com.linc.data.repository.SubjectsRepository
 import com.linc.model.Book
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
@@ -21,8 +22,9 @@ import javax.inject.Inject
 class SubjectBooksViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     defaultRouteNavigator: DefaultRouteNavigator,
-    booksRepository: BooksRepository
-) : ViewModel(), RouteNavigator by defaultRouteNavigator {
+    booksRepository: BooksRepository,
+    subjectsRepository: SubjectsRepository
+) : ViewModel(), UiStateHolder<SubjectBooksUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val subjectBooksArgs = SubjectBooksArgs(savedStateHandle)
 
@@ -32,7 +34,26 @@ class SubjectBooksViewModel @Inject constructor(
         .map { it.map(Book::toUiState) }
         .cachedIn(viewModelScope)
 
+    private val firstBookUiState = MutableStateFlow(FirstPagingBookUiState())
+    override val uiState: StateFlow<SubjectBooksUiState> = combine(
+        firstBookUiState,
+        subjectsRepository.getSubjectStream(subjectBooksArgs.subjectId)
+    ) { firstBookState, subject ->
+        SubjectBooksUiState(title = subject.name, firstBookState = firstBookState)
+    }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            SubjectBooksUiState()
+        )
+
     fun selectBook(bookId: String) {
         navigateTo(SubjectBooksNavigationState.BookDetails(bookId))
     }
+
+    fun updateFirstBookPosition(index: Int, offset: Int) {
+        firstBookUiState.update { it.copy(index = index, offset = offset) }
+//        println("$index $offset")
+    }
+
 }

@@ -22,6 +22,10 @@ class SubjectsRepository @Inject constructor(
     @Dispatcher(AppDispatchers.IO) private val dispatcher: CoroutineDispatcher
 ) {
 
+    fun getSubjectStream(id: String): Flow<Subject> {
+        return subjectDao.getSubjectStream(id).map(SubjectEntity::asExternalModel)
+    }
+
     suspend fun getSubjects(): List<Subject> = withContext(dispatcher) {
         return@withContext subjectDao.getSubjects().map(SubjectEntity::asExternalModel)
     }

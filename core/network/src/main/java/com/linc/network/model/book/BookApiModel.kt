@@ -1,5 +1,8 @@
 package com.linc.network.model.book
 
+import androidx.annotation.Keep
+
+//@Keep
 data class BookApiModel(
     val accessInfo: AccessInfo?,
     val etag: String?,

@@ -72,13 +72,11 @@ class BooksRepository @Inject constructor(
         }
     }
 
-    fun getPrimarySubjectsBooksStream(): Flow<List<SubjectBooks>> {
-        return flow {
-            val subjects = subjectDao.getPrimarySubjects().map { it.name }
-            subjectDao.getSubjectBooksStream(subjects)
-                .map { it.map(SubjectWithBooks::asExternalModel) }
-                .collect(this)
-        }
+    fun getPrimarySubjectsBooksStream(): Flow<List<SubjectBooks>> = flow {
+        val subjects = subjectDao.getPrimarySubjects().map { it.name }
+        subjectDao.getSubjectBooksStream(subjects)
+            .map { it.map(SubjectWithBooks::asExternalModel) }
+            .collect(this)
     }
 
     fun getBooksStream(): Flow<List<Book>> {
