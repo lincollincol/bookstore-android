@@ -26,10 +26,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.flowlayout.FlowRow
-import com.linc.common.coroutines.extension.toAnnotatedString
 import com.linc.designsystem.component.RatingBar
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
+import com.linc.ui.extensions.toAnnotatedString
 import soup.compose.material.motion.MaterialMotion
 import soup.compose.material.motion.animation.*
 

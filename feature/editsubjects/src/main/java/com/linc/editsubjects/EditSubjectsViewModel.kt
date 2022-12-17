@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linc.common.coroutines.AppDispatchers
 import com.linc.common.coroutines.Dispatcher
-import com.linc.common.coroutines.state.UiState
-import com.linc.common.coroutines.state.UiStateHolder
+import com.linc.ui.state.UiState
+import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.SubjectsRepository
 import com.linc.model.Subject
 import com.linc.navigation.DefaultRouteNavigator
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class EditSubjectsViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     private val subjectsRepository: SubjectsRepository
-) : ViewModel(), UiStateHolder<EditSubjectUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), com.linc.ui.state.UiStateHolder<EditSubjectUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val customSubjectNameState = MutableStateFlow("")
 

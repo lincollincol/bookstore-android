@@ -2,7 +2,7 @@ package com.linc.preferences
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.linc.common.coroutines.state.UiStateHolder
+import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.SubjectsRepository
 import com.linc.model.Subject
 import com.linc.navigation.DefaultRouteNavigator
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class PreferencesViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     subjectsRepository: SubjectsRepository
-) : ViewModel(), UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), com.linc.ui.state.UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
 
     override val uiState: StateFlow<PreferencesUiState> = subjectsRepository.getPrimarySubjectsStream()
         .map { PreferencesUiState(it.map(Subject::toUiState)) }

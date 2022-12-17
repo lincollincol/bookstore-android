@@ -1,4 +1,4 @@
-package com.linc.common.coroutines.extension
+package com.linc.ui.extensions
 
 import android.graphics.Typeface
 import android.text.Spanned

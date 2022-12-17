@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.linc.common.coroutines.state.UiStateHolder
+import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.BooksRepository
 import com.linc.data.repository.SubjectsRepository
 import com.linc.model.Book
@@ -24,7 +24,7 @@ class SubjectBooksViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     booksRepository: BooksRepository,
     subjectsRepository: SubjectsRepository
-) : ViewModel(), UiStateHolder<SubjectBooksUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), com.linc.ui.state.UiStateHolder<SubjectBooksUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val subjectBooksArgs = SubjectBooksArgs(savedStateHandle)
 

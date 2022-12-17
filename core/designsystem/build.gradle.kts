@@ -5,9 +5,6 @@ plugins {
 
 android {
     namespace = "com.linc.designsystem"
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 }
 
 dependencies {

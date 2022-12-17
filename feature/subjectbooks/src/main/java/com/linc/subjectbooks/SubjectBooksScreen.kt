@@ -28,7 +28,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import androidx.paging.compose.itemsIndexed
 import coil.compose.AsyncImage
-import com.linc.common.coroutines.state.UiState
+import com.linc.ui.state.UiState
 import com.linc.designsystem.component.RatingBar
 import com.linc.designsystem.component.SimpleIcon
 import com.linc.designsystem.icon.BookstoreIcons
@@ -36,6 +36,7 @@ import com.linc.designsystem.icon.asIconWrapper
 import com.linc.model.SubjectBooks
 import com.linc.navigation.observeNavigation
 import com.linc.subjectbooks.navigation.SubjectBooksNavigationState
+import com.linc.ui.extensions.ASPECT_RATIO_3_4
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -90,8 +91,7 @@ fun SubjectBooksScreen(
                         AsyncImage(
                             modifier = Modifier
                                 .fillParentMaxWidth(0.4f)
-                                // TODO: move to common consts: ASPECT_RATION_2_3
-                                .aspectRatio(2f / 3f)
+                                .aspectRatio(ASPECT_RATIO_3_4)
                                 .clip(MaterialTheme.shapes.medium),
                             model = it.imageUrl,
                             contentDescription = it.title,

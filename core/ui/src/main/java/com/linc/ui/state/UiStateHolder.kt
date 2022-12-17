@@ -1,4 +1,4 @@
-package com.linc.common.coroutines.state
+package com.linc.ui.state
 
 import kotlinx.coroutines.flow.StateFlow
 

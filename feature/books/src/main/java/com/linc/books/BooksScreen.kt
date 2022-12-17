@@ -28,6 +28,7 @@ import com.linc.designsystem.icon.BookstoreIcons
 import com.linc.designsystem.icon.asIconWrapper
 import com.linc.designsystem.theme.BookstoreTheme
 import com.linc.navigation.observeNavigation
+import com.linc.ui.extensions.ASPECT_RATIO_3_4
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -65,7 +66,7 @@ internal fun BooksScreen(
         BookstoreTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp, top = 32.dp)
+                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
                 .constrainAs(searchField) {
                     top.linkTo(parent.top)
                     linkTo(start = parent.start, end = parent.end)
@@ -84,8 +85,7 @@ internal fun BooksScreen(
                         start = parent.start,
                         end = parent.end
                     )
-//                    width = Dimension.fillToConstraints
-                    height = Dimension.wrapContent
+                    height = Dimension.preferredWrapContent
                 }
         ) {
             items(
@@ -177,8 +177,7 @@ private fun LazyItemScope.BookItem(
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.medium)
                         .fillMaxWidth()
-                        // TODO: move to common consts: ASPECT_RATION_2_3
-                        .aspectRatio(2f / 3f)
+                        .aspectRatio(ASPECT_RATIO_3_4)
                         .background(Color.White),
                     model = book.imageUrl,
                     contentDescription = book.title,

@@ -1,19 +1,19 @@
 package com.linc.books
 
-import com.linc.common.coroutines.state.UiState
+import com.linc.ui.state.UiState
 import com.linc.model.Book
 import com.linc.model.SubjectBooks
 
 data class BooksUiState(
     val books: List<BooksSectionItemUiState> = emptyList(),
     val searchQuery: String = ""
-) : UiState
+) : com.linc.ui.state.UiState
 
 data class BooksSectionItemUiState(
     val subjectId: String,
     val title: String,
     val books: List<BookItemUiState>
-) : UiState
+) : com.linc.ui.state.UiState
 
 data class BookItemUiState(
     val id: String,
@@ -22,7 +22,7 @@ data class BookItemUiState(
     val averageRating: Float,
     val ratingsCount: Float,
     val title: String
-) : UiState
+) : com.linc.ui.state.UiState
 
 internal fun SubjectBooks.toUiState() = BooksSectionItemUiState(
     subjectId = subject.id,

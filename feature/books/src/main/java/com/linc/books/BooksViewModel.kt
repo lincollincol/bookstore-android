@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.linc.books.navigation.BooksNavigationState
 import com.linc.common.coroutines.AppDispatchers
 import com.linc.common.coroutines.Dispatcher
-import com.linc.common.coroutines.state.UiStateHolder
+import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.BooksRepository
 import com.linc.model.Book
 import com.linc.model.SubjectBooks
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class BooksViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     private val booksRepository: BooksRepository
-) : ViewModel(), UiStateHolder<BooksUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), com.linc.ui.state.UiStateHolder<BooksUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val searchUiState = MutableStateFlow("")
 
