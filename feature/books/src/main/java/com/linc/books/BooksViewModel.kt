@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.linc.books.navigation.BooksNavigationState
+import com.linc.common.coroutines.extensions.EMPTY
 import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.BooksRepository
 import com.linc.model.Book
@@ -69,6 +70,12 @@ class BooksViewModel @Inject constructor(
 
     fun selectSubject(subjectId: String) {
         navigateTo(BooksNavigationState.SubjectBooks(subjectId))
+    }
+
+    fun clearSearchQuery() {
+        if(rawUiState.isSearching) {
+            searchUiState.update { String.EMPTY }
+        }
     }
 
     fun updateSearchQuery(query: String) {

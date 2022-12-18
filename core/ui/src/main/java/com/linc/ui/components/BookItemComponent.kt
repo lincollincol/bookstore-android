@@ -33,7 +33,7 @@ fun LazyItemScope.DetailedBookItem(
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .fillParentMaxWidth(0.4f)
+                    .fillParentMaxWidth(0.3f)
                     .aspectRatio(ASPECT_RATIO_3_4)
                     .clip(MaterialTheme.shapes.medium),
                 model = item.imageUrl,

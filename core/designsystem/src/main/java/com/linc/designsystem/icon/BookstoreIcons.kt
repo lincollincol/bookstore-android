@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.linc.designsystem.R
 
@@ -22,6 +23,7 @@ object BookstoreIcons {
     val OutlinedBookmark = R.drawable.ic_outlined_bookmark
     val Check = Icons.Rounded.Check
     val Close = Icons.Rounded.Close
+    val Clear = Icons.Rounded.Clear
     val Person = Icons.Rounded.Person
     val Search = Icons.Rounded.Search
     val Settings = Icons.Rounded.Settings
@@ -37,3 +39,7 @@ sealed interface IconWrapper {
 fun ImageVector.asIconWrapper() = IconWrapper.Vector(this)
 
 fun Int.asIconWrapper() = IconWrapper.Drawable(this)
+
+fun IconWrapper?.buildComposable(
+    icon: @Composable (IconWrapper) -> Unit
+) : @Composable (() -> Unit)? = this?.let { { icon(it) } }

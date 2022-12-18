@@ -3,14 +3,18 @@ package com.linc.books
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,10 +38,11 @@ import com.linc.designsystem.icon.asIconWrapper
 import com.linc.designsystem.theme.BookstoreTheme
 import com.linc.navigation.observeNavigation
 import com.linc.ui.components.DetailedBookItem
+import com.linc.ui.components.SearchNotFound
 import com.linc.ui.extensions.ASPECT_RATIO_3_4
 import com.linc.ui.model.DetailedBookItemUiState
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun BooksRoute(
     navigateToBookDetails: (String) -> Unit,
@@ -46,12 +51,15 @@ internal fun BooksRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchBooks = viewModel.searchBooksUiState.collectAsLazyPagingItems()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     viewModel.observeNavigation {
         when(it) {
             is BooksNavigationState.BookDetails -> navigateToBookDetails(it.bookId)
             is BooksNavigationState.SubjectBooks -> navigateToSubjectBooks(it.subjectId)
         }
     }
+
     BooksScreen(
         searchQuery = uiState.searchQuery,
         isSearching = uiState.isSearching,
@@ -59,7 +67,9 @@ internal fun BooksRoute(
         searchBooks = searchBooks,
         onSearchValueChange = viewModel::updateSearchQuery,
         onBookClick = viewModel::selectBook,
-        onSeeAllClick = viewModel::selectSubject
+        onSeeAllClick = viewModel::selectSubject,
+        onSearchIconClick = viewModel::clearSearchQuery,
+        onKeyboardDoneClick = { keyboardController?.hide() }
     )
 }
 
@@ -71,8 +81,14 @@ internal fun BooksScreen(
     searchBooks: LazyPagingItems<DetailedBookItemUiState>,
     onSearchValueChange: (String) -> Unit,
     onBookClick: (String) -> Unit,
-    onSeeAllClick: (String) -> Unit
+    onSeeAllClick: (String) -> Unit,
+    onSearchIconClick: () -> Unit,
+    onKeyboardDoneClick: () -> Unit
 ) {
+    val searchFieldIcon = when {
+        isSearching -> BookstoreIcons.Clear
+        else -> BookstoreIcons.Search
+    }.asIconWrapper()
     ConstraintLayout {
         val (searchField, list) = createRefs()
         BookstoreTextField(
@@ -86,8 +102,11 @@ internal fun BooksScreen(
             hint = stringResource(id = R.string.search_books_hint),
             value = searchQuery,
             onValueChange = onSearchValueChange,
-            trailingIcon = BookstoreIcons.Search.asIconWrapper()
+            trailingIcon = searchFieldIcon,
+            onTrailingIconClick = onSearchIconClick,
+            onKeyboardDone = onKeyboardDoneClick
         )
+
         if(!isSearching) {
             SubjectBooks(
                 modifier = Modifier
@@ -130,21 +149,29 @@ private fun SearchResultBooks(
     searchBooks: LazyPagingItems<DetailedBookItemUiState>,
     onBookClick: (String) -> Unit
 ) {
-    val loadState = searchBooks.loadState
-
-    /*progressBar.isVisible = loadState.refresh is LoadState.Loading
-    retry.isVisible = loadState.refresh !is LoadState.Loading
-    errorMsg.isVisible = loadState.refresh is LoadState.Error*/
-    if(loadState.refresh is LoadState.Loading) {
-        CircularProgressIndicator(modifier)
-    } else {
-        LazyColumn(modifier = modifier) {
-            items(
-                items = searchBooks,
-                key = { it.id }
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .then(modifier),
+        contentAlignment = Alignment.Center
+    ) {
+        val loadState = searchBooks.loadState
+        if(loadState.refresh is LoadState.Loading) {
+            CircularProgressIndicator()
+        } else if(loadState.refresh is LoadState.Error || searchBooks.itemCount == 0) {
+            SearchNotFound(
+                message = stringResource(R.string.not_found)
+            )
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 32.dp)
             ) {
-                if(it == null) return@items
-                DetailedBookItem(item = it, onBookClick = onBookClick)
+                items(
+                    items = searchBooks,
+                    key = { it.id }
+                ) {
+                    if(it == null) return@items
+                    DetailedBookItem(item = it, onBookClick = onBookClick)
+                }
             }
         }
     }
@@ -157,7 +184,10 @@ private fun SubjectBooks(
     onBookClick: (String) -> Unit,
     onSeeAllClick: (String) -> Unit
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+            .then(modifier)
+    ) {
         items(
             items = booksSections,
             key = { it.title }
