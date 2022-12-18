@@ -18,7 +18,7 @@ import javax.inject.Inject
 class PreferencesViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     subjectsRepository: SubjectsRepository
-) : ViewModel(), com.linc.ui.state.UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
 
     override val uiState: StateFlow<PreferencesUiState> = subjectsRepository.getPrimarySubjectsStream()
         .map { PreferencesUiState(it.map(Subject::toUiState)) }

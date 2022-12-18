@@ -2,18 +2,19 @@ package com.linc.books
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.linc.books.navigation.BooksNavigationState
-import com.linc.common.coroutines.AppDispatchers
-import com.linc.common.coroutines.Dispatcher
 import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.BooksRepository
 import com.linc.model.Book
 import com.linc.model.SubjectBooks
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
+import com.linc.ui.model.DetailedBookItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,9 +23,15 @@ import javax.inject.Inject
 class BooksViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     private val booksRepository: BooksRepository
-) : ViewModel(), com.linc.ui.state.UiStateHolder<BooksUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), UiStateHolder<BooksUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val searchUiState = MutableStateFlow("")
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val searchBooksUiState: Flow<PagingData<DetailedBookItemUiState>> = searchUiState
+        .flatMapLatest { booksRepository.getPagedQueryBooksStream(it) }
+        .map { it.map(Book::toDetailedItemUiState) }
+        .cachedIn(viewModelScope)
 
     override val uiState: StateFlow<BooksUiState> = combine(
         booksRepository.getPrimarySubjectsBooksStream(),

@@ -17,10 +17,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import com.linc.books.navigation.BooksNavigationState
 import com.linc.designsystem.component.BookstoreTextField
@@ -28,7 +33,9 @@ import com.linc.designsystem.icon.BookstoreIcons
 import com.linc.designsystem.icon.asIconWrapper
 import com.linc.designsystem.theme.BookstoreTheme
 import com.linc.navigation.observeNavigation
+import com.linc.ui.components.DetailedBookItem
 import com.linc.ui.extensions.ASPECT_RATIO_3_4
+import com.linc.ui.model.DetailedBookItemUiState
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -38,6 +45,7 @@ internal fun BooksRoute(
     viewModel: BooksViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val searchBooks = viewModel.searchBooksUiState.collectAsLazyPagingItems()
     viewModel.observeNavigation {
         when(it) {
             is BooksNavigationState.BookDetails -> navigateToBookDetails(it.bookId)
@@ -46,7 +54,9 @@ internal fun BooksRoute(
     }
     BooksScreen(
         searchQuery = uiState.searchQuery,
+        isSearching = uiState.isSearching,
         booksSections = uiState.books,
+        searchBooks = searchBooks,
         onSearchValueChange = viewModel::updateSearchQuery,
         onBookClick = viewModel::selectBook,
         onSeeAllClick = viewModel::selectSubject
@@ -56,7 +66,9 @@ internal fun BooksRoute(
 @Composable
 internal fun BooksScreen(
     searchQuery: String,
+    isSearching: Boolean,
     booksSections: List<BooksSectionItemUiState>,
+    searchBooks: LazyPagingItems<DetailedBookItemUiState>,
     onSearchValueChange: (String) -> Unit,
     onBookClick: (String) -> Unit,
     onSeeAllClick: (String) -> Unit
@@ -76,30 +88,87 @@ internal fun BooksScreen(
             onValueChange = onSearchValueChange,
             trailingIcon = BookstoreIcons.Search.asIconWrapper()
         )
-        LazyColumn(
-            modifier = Modifier
-                .constrainAs(list) {
-                    linkTo(
-                        top = searchField.bottom,
-                        bottom = parent.bottom,
-                        start = parent.start,
-                        end = parent.end
-                    )
-                    height = Dimension.preferredWrapContent
-                }
-        ) {
+        if(!isSearching) {
+            SubjectBooks(
+                modifier = Modifier
+                    .constrainAs(list) {
+                        linkTo(
+                            top = searchField.bottom,
+                            bottom = parent.bottom,
+                            start = parent.start,
+                            end = parent.end
+                        )
+                        height = Dimension.preferredWrapContent
+                    },
+                booksSections = booksSections,
+                onBookClick = onBookClick,
+                onSeeAllClick = onSeeAllClick
+            )
+        } else {
+            SearchResultBooks(
+                modifier = Modifier
+                    .constrainAs(list) {
+                        linkTo(
+                            top = searchField.bottom,
+                            bottom = parent.bottom,
+                            start = parent.start,
+                            end = parent.end
+                        )
+                        height = Dimension.preferredWrapContent
+                    },
+                searchBooks = searchBooks,
+                onBookClick = onBookClick
+            )
+        }
+    }
+
+}
+
+@Composable
+private fun SearchResultBooks(
+    modifier: Modifier,
+    searchBooks: LazyPagingItems<DetailedBookItemUiState>,
+    onBookClick: (String) -> Unit
+) {
+    val loadState = searchBooks.loadState
+
+    /*progressBar.isVisible = loadState.refresh is LoadState.Loading
+    retry.isVisible = loadState.refresh !is LoadState.Loading
+    errorMsg.isVisible = loadState.refresh is LoadState.Error*/
+    if(loadState.refresh is LoadState.Loading) {
+        CircularProgressIndicator(modifier)
+    } else {
+        LazyColumn(modifier = modifier) {
             items(
-                items = booksSections,
-                key = { it.title }
+                items = searchBooks,
+                key = { it.id }
             ) {
-                BooksSection(
-                    sectionItemUiState = it,
-                    titlePadding = PaddingValues(horizontal = 32.dp),
-                    listPadding = PaddingValues(horizontal = 32.dp),
-                    onBookClick = onBookClick,
-                    onSeeAllClick = onSeeAllClick
-                )
+                if(it == null) return@items
+                DetailedBookItem(item = it, onBookClick = onBookClick)
             }
+        }
+    }
+}
+
+@Composable
+private fun SubjectBooks(
+    modifier: Modifier,
+    booksSections: List<BooksSectionItemUiState>,
+    onBookClick: (String) -> Unit,
+    onSeeAllClick: (String) -> Unit
+) {
+    LazyColumn(modifier = modifier) {
+        items(
+            items = booksSections,
+            key = { it.title }
+        ) {
+            BooksSection(
+                sectionItemUiState = it,
+                titlePadding = PaddingValues(horizontal = 32.dp),
+                listPadding = PaddingValues(horizontal = 32.dp),
+                onBookClick = onBookClick,
+                onSeeAllClick = onSeeAllClick
+            )
         }
     }
 }
@@ -127,15 +196,16 @@ private fun BooksSection(
                 fontWeight = FontWeight.Bold
             )
             Surface(
+                modifier = Modifier.padding(titlePadding),
                 shape = MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
                 onClick = { onSeeAllClick(sectionItemUiState.subjectId) }
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                    text = "See all",
+                    text = stringResource(R.string.see_all),
                     color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }

@@ -20,7 +20,7 @@ import javax.inject.Inject
 class EditSubjectsViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     private val subjectsRepository: SubjectsRepository
-) : ViewModel(), com.linc.ui.state.UiStateHolder<EditSubjectUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), UiStateHolder<EditSubjectUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val customSubjectNameState = MutableStateFlow("")
 

@@ -5,12 +5,12 @@ import com.linc.model.Subject
 
 data class PreferencesUiState(
     val subjects: List<SubjectItemUiState> = emptyList()
-) : com.linc.ui.state.UiState
+) : UiState
 
 data class SubjectItemUiState(
     val id: String,
     val name: String
-) : com.linc.ui.state.UiState
+) : UiState
 
 fun Subject.toUiState() = SubjectItemUiState(
     id = id,

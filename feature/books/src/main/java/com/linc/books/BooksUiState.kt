@@ -3,17 +3,18 @@ package com.linc.books
 import com.linc.ui.state.UiState
 import com.linc.model.Book
 import com.linc.model.SubjectBooks
+import com.linc.ui.model.DetailedBookItemUiState
 
 data class BooksUiState(
     val books: List<BooksSectionItemUiState> = emptyList(),
     val searchQuery: String = ""
-) : com.linc.ui.state.UiState
+) : UiState
 
 data class BooksSectionItemUiState(
     val subjectId: String,
     val title: String,
     val books: List<BookItemUiState>
-) : com.linc.ui.state.UiState
+) : UiState
 
 data class BookItemUiState(
     val id: String,
@@ -22,7 +23,7 @@ data class BookItemUiState(
     val averageRating: Float,
     val ratingsCount: Float,
     val title: String
-) : com.linc.ui.state.UiState
+) : UiState
 
 internal fun SubjectBooks.toUiState() = BooksSectionItemUiState(
     subjectId = subject.id,
@@ -38,3 +39,15 @@ internal fun Book.toUiState() = BookItemUiState(
     ratingsCount = ratingsCount,
     title = title
 )
+
+fun Book.toDetailedItemUiState() = DetailedBookItemUiState(
+    id = id,
+    imageUrl = imageUrl,
+    price = price,
+    averageRating = averageRating,
+    ratingsCount = ratingsCount,
+    title = title,
+    authors = authors.joinToString()
+)
+
+val BooksUiState.isSearching: Boolean get() = searchQuery.isNotEmpty()

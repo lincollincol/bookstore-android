@@ -14,6 +14,7 @@ import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import com.linc.subjectbooks.navigation.SubjectBooksArgs
 import com.linc.subjectbooks.navigation.SubjectBooksNavigationState
+import com.linc.ui.model.DetailedBookItemUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -24,11 +25,11 @@ class SubjectBooksViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
     booksRepository: BooksRepository,
     subjectsRepository: SubjectsRepository
-) : ViewModel(), com.linc.ui.state.UiStateHolder<SubjectBooksUiState>, RouteNavigator by defaultRouteNavigator {
+) : ViewModel(), UiStateHolder<SubjectBooksUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val subjectBooksArgs = SubjectBooksArgs(savedStateHandle)
 
-    val booksUiState: Flow<PagingData<BookItemUiState>> = booksRepository.getSubjectBooksStream(
+    val booksUiState: Flow<PagingData<DetailedBookItemUiState>> = booksRepository.getPagedSubjectBooksStream(
         subjectBooksArgs.subjectId
     )
         .map { it.map(Book::toUiState) }

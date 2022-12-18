@@ -6,28 +6,19 @@ import com.linc.ui.state.UiState
 import com.linc.ui.state.UiStateHolder
 import com.linc.model.Book
 import com.linc.model.Subject
+import com.linc.ui.model.DetailedBookItemUiState
 
 data class SubjectBooksUiState(
     val title: String = "",
     val firstBookState: FirstPagingBookUiState = FirstPagingBookUiState()
-) : com.linc.ui.state.UiState
+) : UiState
 
 data class FirstPagingBookUiState(
     val index: Int = 0,
     val offset: Int = 0
 )
 
-data class BookItemUiState(
-    val id: String,
-    val imageUrl: String,
-    val authors: String,
-    val price: Double,
-    val averageRating: Float,
-    val ratingsCount: Float,
-    val title: String
-) : com.linc.ui.state.UiState
-
-fun Book.toUiState() = BookItemUiState(
+fun Book.toUiState() = DetailedBookItemUiState(
     id = id,
     imageUrl = imageUrl,
     price = price,

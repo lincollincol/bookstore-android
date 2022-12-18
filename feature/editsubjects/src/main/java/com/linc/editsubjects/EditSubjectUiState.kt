@@ -9,13 +9,13 @@ data class EditSubjectUiState(
     val primarySubjects: List<SubjectItemUiState> = emptyList(),
     val availableSubjects: List<SubjectItemUiState> = emptyList(),
     val customSubjectName: String = ""
-) : com.linc.ui.state.UiState
+) : UiState
 
 data class SubjectItemUiState(
     val id: String,
     val name: String,
     val isPrimary: Boolean
-) : com.linc.ui.state.UiState
+) : UiState
 
 val EditSubjectUiState.isMaxPrimarySubjects: Boolean get() =
     primarySubjects.count() >= MAX_PRIMARY_SUBJECTS

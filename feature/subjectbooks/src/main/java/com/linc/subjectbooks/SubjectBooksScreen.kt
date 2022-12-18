@@ -36,7 +36,9 @@ import com.linc.designsystem.icon.asIconWrapper
 import com.linc.model.SubjectBooks
 import com.linc.navigation.observeNavigation
 import com.linc.subjectbooks.navigation.SubjectBooksNavigationState
+import com.linc.ui.components.DetailedBookItem
 import com.linc.ui.extensions.ASPECT_RATIO_3_4
+import com.linc.ui.model.DetailedBookItemUiState
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -63,7 +65,7 @@ fun SubjectBooksRoute(
 @Composable
 fun SubjectBooksScreen(
     title: String,
-    books: LazyPagingItems<BookItemUiState>,
+    books: LazyPagingItems<DetailedBookItemUiState>,
     onBookClick: (String) -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
@@ -71,7 +73,7 @@ fun SubjectBooksScreen(
             modifier = Modifier.shadow(4.dp).zIndex(2f),
             title = { Text(text = title) },
             navigationIcon = {
-                IconButton(onClick = { onBookClick("mNGNEAAAQBAJ") }) {
+                IconButton(onClick = {  }) {
                     SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
                 }
             }
@@ -81,32 +83,10 @@ fun SubjectBooksScreen(
                 if(it == null) {
                     return@items
                 }
-                Surface(
-                    onClick = { onBookClick(it.id) }
-                ) {
-                    Row(
-                        modifier = Modifier.padding(8.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillParentMaxWidth(0.4f)
-                                .aspectRatio(ASPECT_RATIO_3_4)
-                                .clip(MaterialTheme.shapes.medium),
-                            model = it.imageUrl,
-                            contentDescription = it.title,
-                            contentScale = ContentScale.Crop
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column(Modifier.fillMaxWidth()) {
-                            Text(text = it.title)
-                            Text(text = it.authors)
-                            // TODO: move to common consts: MAX_RATING
-                            RatingBar(maxRate = 5, rating = it.averageRating.toInt())
-                            Text(text = it.price.toString())
-                        }
-                    }
-                }
+                DetailedBookItem(
+                    item = it,
+                    onBookClick = onBookClick
+                )
             }
         }
     }

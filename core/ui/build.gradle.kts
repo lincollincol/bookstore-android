@@ -10,7 +10,13 @@ android {
 dependencies {
 
     implementation(project(":core:designsystem"))
-//    compileOnly(libs.androidx.compose.ui)
-//    compileOnly(libs.androidx.compose.ui.text)
+
+    api(libs.cloudy)
+    api(libs.motion.compose.core)
+    api(libs.motion.compose.navigation)
+    api(libs.coil)
+    api(libs.coil.compose)
+    api(libs.accompanist.flowlayout)
+    api(libs.androidx.constraintlayout.compose)
 
 }
