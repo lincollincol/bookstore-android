@@ -6,6 +6,8 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -15,7 +17,11 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.*
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +35,8 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.linc.designsystem.component.RatingBar
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
+import com.linc.ui.extensions.animateAlignmentAsState
+import com.linc.ui.extensions.heightInPx
 import com.linc.ui.extensions.toAnnotatedString
 import soup.compose.material.motion.MaterialMotion
 import soup.compose.material.motion.animation.*
@@ -88,17 +96,6 @@ internal fun BookDetailsScreen(
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
-@Composable
-fun animateAlignmentAsState(
-    targetAlignment: Alignment,
-): State<Alignment> {
-    val biased = targetAlignment as BiasAlignment
-    val horizontal by animateFloatAsState(biased.horizontalBias)
-    val vertical by animateFloatAsState(biased.verticalBias)
-    return derivedStateOf { BiasAlignment(horizontal, vertical) }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BookDetails(
@@ -107,8 +104,6 @@ internal fun BookDetails(
     onBack: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
-    var scrolledY by remember { mutableStateOf(0f) }
-    var previousOffset by remember { mutableStateOf(0) }
     val buttonAlignment by animateAlignmentAsState(
         targetAlignment = when {
             lazyListState.firstVisibleItemIndex > 0 -> Alignment.BottomCenter
@@ -127,87 +122,18 @@ internal fun BookDetails(
     val buttonBottomPadding by animateDpAsState(
         targetValue = if(lazyListState.firstVisibleItemIndex > 0) 16.dp else 0.dp
     )
-    println()
     Box {
         LazyColumn(
-            Modifier.fillMaxSize(),
-            lazyListState,
+            modifier = Modifier.fillMaxSize(),
+            state = lazyListState,
         ) {
             item {
-                Box(
-                    modifier = Modifier
-                        .graphicsLayer {
-                            scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
-                            translationY = scrolledY * 0.3f /*+ 50*/
-                            previousOffset = lazyListState.firstVisibleItemScrollOffset
-                        }
-                        .fillParentMaxHeight(0.5f)
-                        .fillMaxWidth()
-                ) {
-                    AsyncImage(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .scale(1.0f, 1.2f),
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(book.imageUrl)
-                            .crossfade(500)
-                            .build(),
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth
-                    )
-                }
+                BookImageDetails(
+                    imageUrl = book.imageUrl,
+                    lazyListState = lazyListState
+                )
             }
-            item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    shadowElevation = 4.dp
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 24.dp, end = 24.dp, top = 24.dp),
-                    ) {
-                        Text(
-                            text = book.title,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Text(
-                            text = book.authors.joinToString(),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Row {
-                            RatingBar(
-                                maxRate = 5,
-                                rating = book.averageRating.toInt()
-                            )
-                            Text(
-                                text = "(${book.ratingsCount})",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                        Text(
-                            text = "About the book",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = HtmlCompat.fromHtml(
-                                book.description,
-                                HtmlCompat.FROM_HTML_MODE_LEGACY
-                            ).toAnnotatedString(),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        FlowRow(modifier = Modifier.fillMaxWidth()) {
-                            book.categories.forEach {
-                                AssistChip(
-                                    onClick = { /*TODO*/ },
-                                    label = { Text(text = it) }
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.fillParentMaxSize(0.5f))
-                    }
-                }
-            }
+            item { BookTextDetails(book = book) }
         }
         Surface(
             modifier = Modifier
@@ -220,7 +146,7 @@ internal fun BookDetails(
             Text(
                 modifier = Modifier
                     .padding(vertical = 24.dp, horizontal = 64.dp),
-                text = "Buy now",
+                text = stringResource(R.string.buy_now),
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
@@ -228,7 +154,112 @@ internal fun BookDetails(
     }
 }
 
+@Composable
+fun LazyItemScope.BookImageDetails(
+    modifier: Modifier = Modifier,
+    imageUrl: String,
+    lazyListState: LazyListState
+) {
+    var scrolledY by remember { mutableStateOf(0f) }
+    var previousOffset by remember { mutableStateOf(0) }
+    Box(
+        modifier = Modifier
+            .graphicsLayer {
+                scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
+                translationY = scrolledY * 0.3f
+                previousOffset = lazyListState.firstVisibleItemScrollOffset
+            }
+            .fillParentMaxHeight(0.5f)
+            .fillMaxWidth()
+            .then(modifier)
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxSize()
+                .scale(1.0f, 1.2f),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(500)
+                .build(),
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth
+        )
+    }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BookTextDetails(
+    modifier: Modifier = Modifier,
+    book: BookUiState
+) {
+    var parentBottom by remember { mutableStateOf(0f) }
+    var componentBottom by remember { mutableStateOf(0f) }
+    val fillSpaceHeight = remember(componentBottom, parentBottom) {
+        parentBottom - componentBottom
+    }
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .onGloballyPositioned {
+                parentBottom = it.parentLayoutCoordinates?.boundsInRoot()?.bottom ?: 0f
+            }
+            .then(modifier),
+        shape = MaterialTheme.shapes.medium,
+        shadowElevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(start = 24.dp, end = 24.dp, top = 24.dp),
+        ) {
+            Text(
+                text = book.title,
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                text = book.authors.joinToString(),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Row {
+                RatingBar(
+                    maxRate = 5,
+                    rating = book.averageRating.toInt()
+                )
+                Text(
+                    text = "(${book.ratingsCount})",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Text(
+                text = stringResource(id = R.string.about_book),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = HtmlCompat.fromHtml(
+                    book.description,
+                    HtmlCompat.FROM_HTML_MODE_LEGACY
+                ).toAnnotatedString(),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned {
+                        componentBottom = it.boundsInParent().bottom
+                    }
+            ) {
+                book.categories.forEach {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(text = it) }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.heightInPx(fillSpaceHeight))
+        }
+    }
+
+}
 
 @Preview
 @Composable
