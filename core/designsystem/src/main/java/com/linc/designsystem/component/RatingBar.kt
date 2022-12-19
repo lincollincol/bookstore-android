@@ -12,11 +12,13 @@ import com.linc.designsystem.icon.BookstoreIcons
 import com.linc.designsystem.icon.asIconWrapper
 import com.linc.designsystem.theme.BookstoreTheme
 
+private const val DEFAULT_MAX_RATING = 5
+
 @Composable
 fun RatingBar(
     modifier: Modifier = Modifier,
-    maxRate: Int,
     rating: Int,
+    maxRate: Int = DEFAULT_MAX_RATING,
     selectedColor: Color = Color.Yellow,
     color: Color = Color.LightGray
 ) {

@@ -195,9 +195,13 @@ fun BookTextDetails(
 ) {
     var parentBottom by remember { mutableStateOf(0f) }
     var componentBottom by remember { mutableStateOf(0f) }
-    val fillSpaceHeight = remember(componentBottom, parentBottom) {
-        parentBottom - componentBottom
+    val fillSpaceHeight by remember(componentBottom, parentBottom) {
+        derivedStateOf {
+            (parentBottom - componentBottom).coerceAtLeast(parentBottom / 4f)
+        }
     }
+
+    println(fillSpaceHeight)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -221,10 +225,7 @@ fun BookTextDetails(
                 style = MaterialTheme.typography.bodyMedium
             )
             Row {
-                RatingBar(
-                    maxRate = 5,
-                    rating = book.averageRating.toInt()
-                )
+                RatingBar(rating = book.averageRating.toInt())
                 Text(
                     text = "(${book.ratingsCount})",
                     style = MaterialTheme.typography.bodyMedium
