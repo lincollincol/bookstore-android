@@ -9,11 +9,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.*
@@ -23,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
@@ -33,6 +38,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.flowlayout.FlowRow
 import com.linc.designsystem.component.RatingBar
+import com.linc.designsystem.component.SimpleIcon
+import com.linc.designsystem.icon.BookstoreIcons
+import com.linc.designsystem.icon.asIconWrapper
+import com.linc.designsystem.theme.BookstoreTheme
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
 import com.linc.ui.extensions.animateAlignmentAsState
@@ -62,6 +71,7 @@ fun BookDetailsRoute(
     )
 }
 
+/*
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun BookDetailsScreen(
@@ -96,7 +106,7 @@ internal fun BookDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun BookDetails(
     book: BookUiState,
@@ -104,14 +114,17 @@ internal fun BookDetails(
     onBack: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
+    val bookImageHidden by remember(lazyListState) {
+        derivedStateOf { lazyListState.firstVisibleItemIndex > 0 }
+    }
     val buttonAlignment by animateAlignmentAsState(
         targetAlignment = when {
-            lazyListState.firstVisibleItemIndex > 0 -> Alignment.BottomCenter
+            bookImageHidden -> Alignment.BottomCenter
             else -> Alignment.BottomEnd
         }
     )
     val buttonCornersRadius by animateDpAsState(
-        targetValue = if(lazyListState.firstVisibleItemIndex > 0) 16.dp else 0.dp
+        targetValue = if(bookImageHidden) 16.dp else 0.dp
     )
     val buttonShape = RoundedCornerShape(
         topStart = 16.dp,
@@ -120,7 +133,7 @@ internal fun BookDetails(
         bottomStart = buttonCornersRadius
     )
     val buttonBottomPadding by animateDpAsState(
-        targetValue = if(lazyListState.firstVisibleItemIndex > 0) 16.dp else 0.dp
+        targetValue = if(bookImageHidden) 16.dp else 0.dp
     )
     Box {
         LazyColumn(
@@ -135,11 +148,24 @@ internal fun BookDetails(
             }
             item { BookTextDetails(book = book) }
         }
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .size(42.dp)
+                .align(Alignment.TopStart),
+            containerColor = MaterialTheme.colorScheme.surface,
+            onClick = { */
+/*TODO*//*
+ },
+            shape = CircleShape
+        ) {
+            SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
+        }
         Surface(
             modifier = Modifier
                 .align(buttonAlignment)
                 .padding(bottom = buttonBottomPadding),
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.primary,
             onClick = { onCart(book.id) },
             shape = buttonShape
         ) {
@@ -200,8 +226,6 @@ fun BookTextDetails(
             (parentBottom - componentBottom).coerceAtLeast(parentBottom / 4f)
         }
     }
-
-    println(fillSpaceHeight)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -209,21 +233,37 @@ fun BookTextDetails(
                 parentBottom = it.parentLayoutCoordinates?.boundsInRoot()?.bottom ?: 0f
             }
             .then(modifier),
-        shape = MaterialTheme.shapes.medium,
-        shadowElevation = 4.dp
+        shadowElevation = 4.dp,
+        shape = MaterialTheme.shapes.medium
     ) {
         Column(
-            modifier = Modifier
-                .padding(start = 24.dp, end = 24.dp, top = 24.dp),
+            modifier = Modifier.padding(horizontal = 24.dp),
         ) {
-            Text(
-                text = book.title,
-                style = MaterialTheme.typography.titleLarge
-            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row {
+                FloatingActionButton(
+                    modifier = Modifier
+                        .size(42.dp),
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    onClick = { */
+/*TODO*//*
+ },
+                    shape = CircleShape
+                ) {
+                    SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
+                }
+                Text(
+                    modifier = Modifier,
+                    text = book.title,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = book.authors.joinToString(),
                 style = MaterialTheme.typography.bodyMedium
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Row {
                 RatingBar(rating = book.averageRating.toInt())
                 Text(
@@ -261,9 +301,4 @@ fun BookTextDetails(
     }
 
 }
-
-@Preview
-@Composable
-private fun BookDetailsScreenPreview() {
-
-}
+*/

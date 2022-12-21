@@ -111,6 +111,7 @@ paging-runtime = "androidx.paging:paging-runtime:3.1.1"
 paging-compose = "androidx.paging:paging-compose:1.0.0-alpha17"
 
 # Utils
+palette = "androidx.palette:palette:1.0.0"
 cloudy = "com.github.skydoves:cloudy:0.1.1"
 motion-compose-core = "io.github.fornewid:material-motion-compose-core:0.11.0-alpha"
 motion-compose-navigation = "io.github.fornewid:material-motion-compose-navigation:0.11.0-alpha"
