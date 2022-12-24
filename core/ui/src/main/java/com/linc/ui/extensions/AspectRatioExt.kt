@@ -1,4 +1,4 @@
-package com.linc.ui.extensions
+package com.linc.designsystem.extensions
 
 const val ASPECT_RATIO_1_1: Float = 2f / 3f
 

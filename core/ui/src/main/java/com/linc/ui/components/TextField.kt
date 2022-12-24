@@ -10,11 +10,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.linc.designsystem.icon.BookstoreIcons
-import com.linc.designsystem.icon.IconWrapper
-import com.linc.designsystem.icon.asIconWrapper
-import com.linc.designsystem.icon.buildComposable
-import com.linc.designsystem.theme.BookstoreTheme
+import com.linc.ui.icon.BookstoreIcons
+import com.linc.ui.icon.IconWrapper
+import com.linc.ui.icon.asIconWrapper
+import com.linc.ui.icon.buildComposable
+import com.linc.ui.theme.BookstoreTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.linc.designsystem.theme
+package com.linc.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

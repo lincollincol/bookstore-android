@@ -3,11 +3,9 @@ package com.linc.books
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -21,7 +19,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -33,13 +30,13 @@ import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import com.linc.books.navigation.BooksNavigationState
 import com.linc.designsystem.component.BookstoreTextField
-import com.linc.designsystem.icon.BookstoreIcons
-import com.linc.designsystem.icon.asIconWrapper
-import com.linc.designsystem.theme.BookstoreTheme
+import com.linc.ui.icon.BookstoreIcons
+import com.linc.ui.icon.asIconWrapper
+import com.linc.ui.theme.BookstoreTheme
 import com.linc.navigation.observeNavigation
 import com.linc.ui.components.DetailedBookItem
-import com.linc.ui.components.SearchNotFound
-import com.linc.ui.extensions.ASPECT_RATIO_3_4
+import com.linc.designsystem.component.SearchNotFound
+import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.ui.model.DetailedBookItemUiState
 
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class)

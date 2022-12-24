@@ -1,4 +1,4 @@
-package com.linc.ui.extensions
+package com.linc.designsystem.extensions
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb

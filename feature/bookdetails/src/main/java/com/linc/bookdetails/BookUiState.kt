@@ -1,33 +1,36 @@
 package com.linc.bookdetails
 
+import com.linc.common.coroutines.extensions.EMPTY
+import com.linc.common.coroutines.extensions.replaceLast
 import com.linc.model.Book
+import com.linc.ui.util.ResourceProvider
 
 data class BookUiState(
-    val id: String = "",
-    val title: String = "",
-    val description: String = "",
-    val imageUrl: String = "",
-    val authors: List<String> = emptyList(),
+    val id: String = String.EMPTY,
+    val title: String = String.EMPTY,
+    val description: String = String.EMPTY,
+    val imageUrl: String = String.EMPTY,
+    val authors: String = String.EMPTY,
     val categories: List<String> = emptyList(),
     val averageRating: Float = 0f,
     val ratingsCount: Float = 0f,
     val pageCount: Int = 0,
-    val publishedDate: String = "",
-    val language: String = "",
-    val publisher: String = "",
+    val publishedDate: String = String.EMPTY,
+    val language: String = String.EMPTY,
+    val publisher: String = String.EMPTY,
     val availableForSale: Boolean = false,
     val price: Double = 0.0,
-    val currency: String = "",
-    val webResourceUrl: String = "",
+    val currency: String = String.EMPTY,
+    val webResourceUrl: String = String.EMPTY,
     val isLoading: Boolean = false
 )
 
-fun Book.toUiState() = BookUiState(
+fun Book.toUiState(resourceProvider: ResourceProvider) = BookUiState(
     id = id,
     title = title,
     description = description,
     imageUrl = hiqImageUrl,
-    authors = authors,
+    authors = formatAuthors(resourceProvider, authors),
     categories = categories,
     averageRating = averageRating,
     ratingsCount = ratingsCount,
@@ -40,3 +43,14 @@ fun Book.toUiState() = BookUiState(
     currency = currency,
     webResourceUrl = webResourceUrl
 )
+
+private fun formatAuthors(
+    resourceProvider: ResourceProvider,
+    authors: List<String>
+): String {
+    if(authors.count() == 1) {
+        return authors.first()
+    }
+    return authors.joinToString()
+        .replaceLast(", ", resourceProvider.getString(com.linc.ui.R.string.and_spaced))
+}

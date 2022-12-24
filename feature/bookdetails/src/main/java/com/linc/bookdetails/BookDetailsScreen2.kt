@@ -1,52 +1,227 @@
 package com.linc.bookdetails
 
-import android.graphics.ColorSpace
-import android.graphics.RadialGradient
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.MutatePriority
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.*
+import androidx.compose.ui.zIndex
+import androidx.constraintlayout.compose.*
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.linc.designsystem.component.SimpleIcon
-import com.linc.designsystem.icon.BookstoreIcons
-import com.linc.designsystem.icon.asIconWrapper
-import com.linc.designsystem.theme.BookstoreTheme
-import com.linc.ui.extensions.ASPECT_RATIO_3_2
-import com.linc.ui.extensions.ASPECT_RATIO_4_5
-import com.linc.ui.extensions.getVibrantColor
+import com.linc.ui.icon.BookstoreIcons
+import com.linc.ui.icon.asIconWrapper
+import com.linc.designsystem.extensions.getVibrantColor
+import java.util.*
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun BookDetailsScreen(
+    modifier: Modifier = Modifier,
+    bookUiState: BookUiState,
+    onCartClick: (String) -> Unit,
+    onBackClick: () -> Unit,
+    onBookmarkClick: () -> Unit,
+    onShareClick: () -> Unit
+) {
+    var showMenu by remember {
+        mutableStateOf(false)
+    }
+    val scroll = TopAppBarDefaults.pinnedScrollBehavior()
+    val imageTopMargin = remember {
+        56.dp + 24.dp
+    }
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scroll.nestedScrollConnection)
+    ) {
+        val (toolbar, content, buyButton) = createRefs()
+        TopAppBar(
+            modifier = Modifier
+                .zIndex(1f)
+                .constrainAs(toolbar) {
+                    top.linkTo(parent.top)
+                    centerHorizontallyTo(parent)
+                },
+            title = {},
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
+                }
+            },
+            actions = {
+                IconButton(onClick = onBookmarkClick) {
+                    SimpleIcon(icon = BookstoreIcons.OutlinedBookmark.asIconWrapper())
+                }
+                IconButton(onClick = { showMenu = true }) {
+                    SimpleIcon(icon = BookstoreIcons.MoreVertical.asIconWrapper())
+                }
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }) {
+                    DropdownMenuItem(
+                        leadingIcon = { SimpleIcon(icon = BookstoreIcons.Share.asIconWrapper()) },
+                        text = { Text(text = stringResource(id = R.string.share)) },
+                        onClick = onShareClick
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
+            scrollBehavior = scroll
+        )
+        Column(
+            modifier = Modifier
+                .constrainAs(content) {
+                    top.linkTo(toolbar.top)
+                    bottom.linkTo(parent.bottom)
+                    centerHorizontallyTo(parent)
+                    height = Dimension.fillToConstraints
+                }
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            BookImage(
+                modifier = Modifier.padding(top = imageTopMargin),
+                imageUrl = bookUiState.imageUrl,
+            )
+            BookContent(
+                modifier = Modifier.padding(
+                    top = 24.dp,
+                    bottom = 56.dp,
+                    start = 24.dp,
+                    end = 24.dp
+                ),
+                book = bookUiState
+            )
+        }
+        ElevatedButton(
+            modifier = Modifier
+                .padding(8.dp)
+                .constrainAs(buyButton) {
+                    bottom.linkTo(parent.bottom)
+                    centerHorizontallyTo(parent)
+                    width = Dimension.fillToConstraints
+                },
+            onClick = { onCartClick(bookUiState.id) },
+            elevation = ButtonDefaults.elevatedButtonElevation(
+                defaultElevation = 4.dp
+            )
+        ) {
+            Text(text = stringResource(id = R.string.add_to_cart_with_price, "12.8$"))
+        }
+    }
+}
+
+@Composable
+fun BookContent(
+    modifier: Modifier = Modifier,
+    book: BookUiState
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier)
+    ) {
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            text = book.title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            modifier = Modifier.padding(top = 8.dp),
+            text = book.authors,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            text = book.description,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Justify
+        )
+    }
+}
+@Composable
+private fun BookImage(
+    modifier: Modifier = Modifier,
+    imageUrl: String
+) {
+    val inf = rememberInfiniteTransition()
+    val shadow by inf.animateValue(
+        initialValue = 32.dp,
+        targetValue = 64.dp,
+        typeConverter = Dp.VectorConverter,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    val elevation by inf.animateValue(
+        initialValue = 16.dp,
+        targetValue = 32.dp,
+        typeConverter = Dp.VectorConverter,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    var vibrant by remember { mutableStateOf(Color.Transparent) }
+    Surface(
+        modifier = Modifier
+//            .fillMaxSize(0.8f)
+//            .aspectRatio(ASPECT_RATIO_4_5)
+            .shadow(
+                elevation = shadow,
+                spotColor = vibrant,
+                clip = false,
+                shape = CircleShape
+            )
+            .then(modifier),
+        shape = MaterialTheme.shapes.medium,
+        shadowElevation = 4.dp
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxSize(0.8f),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .allowHardware(false)
+                .build(),
+            contentDescription = null,
+            onSuccess = {
+                Palette.Builder(it.result.drawable.toBitmap()).generate { palette ->
+                    vibrant = palette.getVibrantColor()
+                }
+            },
+            contentScale = ContentScale.FillWidth
+        )
+    }
+
+}
+
+/*
+
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun BookDetailsScreen(
@@ -98,71 +273,4 @@ internal fun BookDetailsScreen(
         }
     }
 }
-
-@Composable
-fun BookContent(
-    modifier: Modifier = Modifier,
-    book: BookUiState
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(modifier)
-    ) {
-//        Text(
-//            text = book.title,
-//            style = MaterialTheme.typography.titleLarge
-//        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = book.authors.joinToString(),
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = book.description,
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-}
-@Composable
-private fun BookImage(
-    modifier: Modifier = Modifier,
-    imageUrl: String
-) {
-    var vibrant by remember { mutableStateOf(Color.Transparent) }
-    AsyncImage(
-        modifier = Modifier
-            .fillMaxSize(0.8f)
-            .aspectRatio(ASPECT_RATIO_4_5)
-            .shadow(
-                elevation = 32.dp,
-                spotColor = vibrant,
-                clip = false,
-                shape = CircleShape
-            )
-            .then(modifier),
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl)
-            .allowHardware(false)
-            .build(),
-        contentDescription = null,
-        onSuccess = {
-            Palette.Builder(it.result.drawable.toBitmap()).generate { palette ->
-                vibrant = palette.getVibrantColor()
-            }
-        }
-    )
-}
-
-@Preview
-@Composable
-private fun ScreenPreview() {
-    BookstoreTheme {
-        BookDetailsScreen(
-            bookUiState = BookUiState(),
-            onCart = {},
-            onBack = {}
-        )
-    }
-}
+ */

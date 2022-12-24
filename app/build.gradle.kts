@@ -46,7 +46,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:data"))
     implementation(project(":core:model"))
-    implementation(project(":core:designsystem"))
+    implementation(project(":core:ui"))
 
     implementation(project(":feature:books"))
     implementation(project(":feature:bookdetails"))

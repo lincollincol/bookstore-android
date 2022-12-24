@@ -1,4 +1,4 @@
-package com.linc.ui.extensions
+package com.linc.designsystem.extensions
 
 import android.graphics.Typeface
 import android.text.Spanned

@@ -1,4 +1,4 @@
-package com.linc.ui.extensions
+package com.linc.designsystem.extensions
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState

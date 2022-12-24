@@ -2,7 +2,6 @@ package com.linc.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -15,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.linc.designsystem.component.RatingBar
-import com.linc.ui.extensions.ASPECT_RATIO_3_4
+import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.ui.model.DetailedBookItemUiState
 
 @OptIn(ExperimentalMaterial3Api::class)

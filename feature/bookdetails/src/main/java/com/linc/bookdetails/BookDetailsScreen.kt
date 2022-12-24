@@ -1,53 +1,18 @@
 package com.linc.bookdetails
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.*
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.google.accompanist.flowlayout.FlowRow
-import com.linc.designsystem.component.RatingBar
-import com.linc.designsystem.component.SimpleIcon
-import com.linc.designsystem.icon.BookstoreIcons
-import com.linc.designsystem.icon.asIconWrapper
-import com.linc.designsystem.theme.BookstoreTheme
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
-import com.linc.ui.extensions.animateAlignmentAsState
-import com.linc.ui.extensions.heightInPx
-import com.linc.ui.extensions.toAnnotatedString
-import soup.compose.material.motion.MaterialMotion
 import soup.compose.material.motion.animation.*
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -66,8 +31,10 @@ fun BookDetailsRoute(
     BookDetailsScreen(
         modifier = modifier,
         bookUiState = bookUiState,
-        onBack = viewModel::navigateBack,
-        onCart = viewModel::addToCart
+        onBackClick = viewModel::navigateBack,
+        onCartClick = viewModel::addToCart,
+        onBookmarkClick = {},
+        onShareClick = {}
     )
 }
 

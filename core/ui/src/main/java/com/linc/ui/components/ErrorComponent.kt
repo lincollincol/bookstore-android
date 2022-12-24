@@ -1,4 +1,4 @@
-package com.linc.ui.components
+package com.linc.designsystem.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
@@ -8,8 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.linc.designsystem.component.SimpleIcon
-import com.linc.designsystem.icon.BookstoreIcons
-import com.linc.designsystem.icon.asIconWrapper
+import com.linc.ui.icon.BookstoreIcons
+import com.linc.ui.icon.asIconWrapper
 
 @Composable
 fun SearchNotFound(

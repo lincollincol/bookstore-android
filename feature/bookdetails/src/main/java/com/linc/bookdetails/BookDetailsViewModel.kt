@@ -14,6 +14,7 @@ import com.linc.model.Book
 import com.linc.model.mockBooks
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
+import com.linc.ui.util.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class BookDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     defaultRouteNavigator: DefaultRouteNavigator,
+    private val resourceProvider: ResourceProvider,
     private val booksRepository: BooksRepository,
     private val ordersRepository: OrdersRepository,
 ) : ViewModel(), RouteNavigator by defaultRouteNavigator {
@@ -43,7 +45,7 @@ class BookDetailsViewModel @Inject constructor(
                 val book = booksRepository.getBook(bookDetailsArgs.bookId)
                     ?: return@launch
 //                val book = mockBooks.first()
-                _bookUiState.update { book.toUiState() }
+                _bookUiState.update { book.toUiState(resourceProvider) }
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {

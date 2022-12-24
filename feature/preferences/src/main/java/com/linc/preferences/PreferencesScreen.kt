@@ -13,8 +13,8 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.flowlayout.FlowRow
 import com.linc.designsystem.component.SimpleIcon
-import com.linc.designsystem.icon.BookstoreIcons
-import com.linc.designsystem.icon.asIconWrapper
+import com.linc.ui.icon.BookstoreIcons
+import com.linc.ui.icon.asIconWrapper
 import com.linc.navigation.observeNavigation
 import com.linc.preferences.navigation.PreferenceNavigationState
 

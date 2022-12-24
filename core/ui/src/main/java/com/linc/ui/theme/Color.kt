@@ -1,4 +1,4 @@
-package com.linc.designsystem.theme
+package com.linc.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

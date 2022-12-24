@@ -1,17 +1,14 @@
-package com.linc.designsystem.icon
+package com.linc.ui.icon
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.BookOnline
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.linc.designsystem.R
+import com.linc.ui.R
 
 object BookstoreIcons {
     val Add = Icons.Rounded.Add
@@ -19,6 +16,7 @@ object BookstoreIcons {
     val StarOutlined = Icons.Outlined.StarOutline
     val ArrowBack = Icons.Rounded.ArrowBack
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
+    val MoreVertical = Icons.Default.MoreVert
     val ArrowDropUp = Icons.Rounded.ArrowDropUp
     val OutlinedBookmark = R.drawable.ic_outlined_bookmark
     val Check = Icons.Rounded.Check
@@ -26,6 +24,7 @@ object BookstoreIcons {
     val Clear = Icons.Rounded.Clear
     val Person = Icons.Rounded.Person
     val Search = Icons.Rounded.Search
+    val Share = Icons.Rounded.Share
     val Settings = Icons.Rounded.Settings
     val SearchBooks = R.drawable.ic_search_books
     val Cart = Icons.Default.ShoppingCart
