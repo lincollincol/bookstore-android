@@ -1,30 +1,55 @@
 package com.linc.bookdetails
 
-import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.*
+import androidx.compose.ui.zIndex
+import androidx.constraintlayout.compose.*
+import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.palette.graphics.Palette
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.linc.bookdetails.navigation.BookDetailsNavigationState
+import com.linc.designsystem.component.SimpleIcon
+import com.linc.ui.icon.BookstoreIcons
+import com.linc.ui.icon.asIconWrapper
+import com.linc.designsystem.extensions.getVibrantColor
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
-import soup.compose.material.motion.animation.*
+import java.util.*
+
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun BookDetailsRoute(
     modifier: Modifier = Modifier,
     viewModel: BookDetailsViewModel = hiltViewModel(),
-    navigateBack: () -> Unit
+    navigateToCart: () -> Unit,
+    navigateBack: () -> Unit,
 ) {
-    val bookUiState: BookUiState by viewModel.bookUiState.collectAsStateWithLifecycle()
+    val bookUiState: BookUiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
+            BookDetailsNavigationState.Cart -> navigateToCart()
             NavigationState.Back -> navigateBack()
         }
     }
@@ -33,148 +58,167 @@ fun BookDetailsRoute(
         bookUiState = bookUiState,
         onBackClick = viewModel::navigateBack,
         onCartClick = viewModel::addToCart,
-        onBookmarkClick = {},
+        onBookmarkClick = viewModel::bookmarkBook,
         onShareClick = {}
     )
 }
 
-/*
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BookDetailsScreen(
     modifier: Modifier = Modifier,
     bookUiState: BookUiState,
-    onCart: (String) -> Unit,
-    onBack: () -> Unit
+    onCartClick: () -> Unit,
+    onBackClick: () -> Unit,
+    onBookmarkClick: () -> Unit,
+    onShareClick: () -> Unit
 ) {
-    MaterialMotion(
-        targetState = bookUiState,
-        transitionSpec = {
-            slideInVertically(tween(500)) { it } with slideOutVertically { it }
-        }
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(modifier),
-            contentAlignment = Alignment.Center
-        ) {
-            AnimatedVisibility(bookUiState.isLoading) {
-                CircularProgressIndicator()
-            }
-            AnimatedVisibility(!bookUiState.isLoading) {
-                BookDetails(
-                    book = bookUiState,
-                    onBack = onBack,
-                    onCart = onCart
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Composable
-internal fun BookDetails(
-    book: BookUiState,
-    onCart: (String) -> Unit,
-    onBack: () -> Unit
-) {
-    val lazyListState = rememberLazyListState()
-    val bookImageHidden by remember(lazyListState) {
-        derivedStateOf { lazyListState.firstVisibleItemIndex > 0 }
-    }
-    val buttonAlignment by animateAlignmentAsState(
-        targetAlignment = when {
-            bookImageHidden -> Alignment.BottomCenter
-            else -> Alignment.BottomEnd
-        }
-    )
-    val buttonCornersRadius by animateDpAsState(
-        targetValue = if(bookImageHidden) 16.dp else 0.dp
-    )
-    val buttonShape = RoundedCornerShape(
-        topStart = 16.dp,
-        topEnd = buttonCornersRadius,
-        bottomEnd = buttonCornersRadius,
-        bottomStart = buttonCornersRadius
-    )
-    val buttonBottomPadding by animateDpAsState(
-        targetValue = if(bookImageHidden) 16.dp else 0.dp
-    )
-    Box {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = lazyListState,
-        ) {
-            item {
-                BookImageDetails(
-                    imageUrl = book.imageUrl,
-                    lazyListState = lazyListState
-                )
-            }
-            item { BookTextDetails(book = book) }
-        }
-        FloatingActionButton(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .size(42.dp)
-                .align(Alignment.TopStart),
-            containerColor = MaterialTheme.colorScheme.surface,
-            onClick = { */
-/*TODO*//*
- },
-            shape = CircleShape
-        ) {
-            SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
-        }
-        Surface(
-            modifier = Modifier
-                .align(buttonAlignment)
-                .padding(bottom = buttonBottomPadding),
-            color = MaterialTheme.colorScheme.primary,
-            onClick = { onCart(book.id) },
-            shape = buttonShape
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 24.dp, horizontal = 64.dp),
-                text = stringResource(R.string.buy_now),
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-fun LazyItemScope.BookImageDetails(
-    modifier: Modifier = Modifier,
-    imageUrl: String,
-    lazyListState: LazyListState
-) {
-    var scrolledY by remember { mutableStateOf(0f) }
-    var previousOffset by remember { mutableStateOf(0) }
-    Box(
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    ConstraintLayout(
         modifier = Modifier
-            .graphicsLayer {
-                scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
-                translationY = scrolledY * 0.3f
-                previousOffset = lazyListState.firstVisibleItemScrollOffset
-            }
-            .fillParentMaxHeight(0.5f)
-            .fillMaxWidth()
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .then(modifier)
+    ) {
+        val (toolbar, content, buyButton) = createRefs()
+        BookDetailsAppBar(
+            modifier = Modifier.constrainAs(toolbar) {
+                top.linkTo(parent.top)
+                centerHorizontallyTo(parent)
+            },
+            scrollBehavior = scrollBehavior,
+            onBackClick = onBackClick,
+            onBookmarkClick = onBookmarkClick,
+            onShareClick = onShareClick
+        )
+        BookContent(
+            modifier = Modifier.constrainAs(content) {
+                top.linkTo(toolbar.top)
+                bottom.linkTo(parent.bottom)
+                centerHorizontallyTo(parent)
+                height = Dimension.fillToConstraints
+            },
+            book = bookUiState
+        )
+        AddToCartButton(
+            modifier = Modifier.constrainAs(buyButton) {
+                bottom.linkTo(parent.bottom)
+                centerHorizontallyTo(parent)
+                width = Dimension.fillToConstraints
+            },
+            isOrdered = bookUiState.isOrdered,
+            price = bookUiState.price.toString(),
+            currency = "usd",
+            onAddToCartClick = onCartClick
+        )
+    }
+}
+
+@Composable
+private fun BookContent(
+    modifier: Modifier = Modifier,
+    book: BookUiState
+) {
+    val imageTopMargin = remember {
+        56.dp + 24.dp
+    }
+    val bottomPadding = remember {
+        ButtonDefaults.MinHeight + 36.dp
+    }
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .then(modifier),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        BookImage(
+            modifier = Modifier.padding(top = imageTopMargin),
+            imageUrl = book.imageUrl,
+        )
+        BookDescription(
+            modifier = Modifier.padding(
+                top = 24.dp,
+                bottom = bottomPadding,
+                start = 24.dp,
+                end = 24.dp
+            ),
+            book = book
+        )
+    }
+}
+
+@Composable
+fun BookDescription(
+    modifier: Modifier = Modifier,
+    book: BookUiState
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier)
+    ) {
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            text = book.title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            modifier = Modifier.padding(top = 8.dp),
+            text = book.authors,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            text = book.description,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Justify
+        )
+    }
+}
+
+@Composable
+private fun BookImage(
+    modifier: Modifier = Modifier,
+    imageUrl: String
+) {
+    val inf = rememberInfiniteTransition()
+    val shadow by inf.animateValue(
+        initialValue = 32.dp,
+        targetValue = 64.dp,
+        typeConverter = Dp.VectorConverter,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    var vibrant by remember { mutableStateOf(Color.Transparent) }
+    Surface(
+        modifier = Modifier
+            .shadow(
+                elevation = shadow,
+                spotColor = vibrant,
+                clip = false,
+                shape = CircleShape
+            )
+            .then(modifier),
+        shape = MaterialTheme.shapes.medium,
+        shadowElevation = 4.dp
     ) {
         AsyncImage(
             modifier = Modifier
-                .fillMaxSize()
-                .scale(1.0f, 1.2f),
+                .fillMaxSize(0.8f),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl)
-                .crossfade(500)
+                .allowHardware(false)
                 .build(),
             contentDescription = null,
+            onSuccess = {
+                Palette.Builder(it.result.drawable.toBitmap()).generate { palette ->
+                    vibrant = palette.getVibrantColor()
+                }
+            },
             contentScale = ContentScale.FillWidth
         )
     }
@@ -182,90 +226,74 @@ fun LazyItemScope.BookImageDetails(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookTextDetails(
+private fun BookDetailsAppBar(
     modifier: Modifier = Modifier,
-    book: BookUiState
+    scrollBehavior: TopAppBarScrollBehavior,
+    onBackClick: () -> Unit,
+    onBookmarkClick: () -> Unit,
+    onShareClick: () -> Unit
 ) {
-    var parentBottom by remember { mutableStateOf(0f) }
-    var componentBottom by remember { mutableStateOf(0f) }
-    val fillSpaceHeight by remember(componentBottom, parentBottom) {
-        derivedStateOf {
-            (parentBottom - componentBottom).coerceAtLeast(parentBottom / 4f)
-        }
+    var showMenu by remember {
+        mutableStateOf(false)
     }
-    Surface(
+    TopAppBar(
         modifier = Modifier
-            .fillMaxWidth()
-            .onGloballyPositioned {
-                parentBottom = it.parentLayoutCoordinates?.boundsInRoot()?.bottom ?: 0f
-            }
+            .zIndex(1f)
             .then(modifier),
-        shadowElevation = 4.dp,
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 24.dp),
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Row {
-                FloatingActionButton(
-                    modifier = Modifier
-                        .size(42.dp),
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    onClick = { */
-/*TODO*//*
- },
-                    shape = CircleShape
-                ) {
-                    SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
-                }
-                Text(
-                    modifier = Modifier,
-                    text = book.title,
-                    style = MaterialTheme.typography.titleLarge
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
+            }
+        },
+        actions = {
+            IconButton(onClick = onBookmarkClick) {
+                SimpleIcon(icon = BookstoreIcons.OutlinedBookmark.asIconWrapper())
+            }
+            IconButton(onClick = { showMenu = true }) {
+                SimpleIcon(icon = BookstoreIcons.MoreVertical.asIconWrapper())
+            }
+            DropdownMenu(
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false }) {
+                DropdownMenuItem(
+                    leadingIcon = { SimpleIcon(icon = BookstoreIcons.Share.asIconWrapper()) },
+                    text = { Text(text = stringResource(id = R.string.share)) },
+                    onClick = onShareClick
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = book.authors.joinToString(),
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row {
-                RatingBar(rating = book.averageRating.toInt())
-                Text(
-                    text = "(${book.ratingsCount})",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Text(
-                text = stringResource(id = R.string.about_book),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = HtmlCompat.fromHtml(
-                    book.description,
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-                ).toAnnotatedString(),
-                style = MaterialTheme.typography.bodyMedium
-            )
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned {
-                        componentBottom = it.boundsInParent().bottom
-                    }
-            ) {
-                book.categories.forEach {
-                    AssistChip(
-                        onClick = {},
-                        label = { Text(text = it) }
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.heightInPx(fillSpaceHeight))
+        },
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = Color.Transparent,
+            scrolledContainerColor = MaterialTheme.colorScheme.surface
+        ),
+        scrollBehavior = scrollBehavior
+    )
+}
+
+@Composable
+private fun AddToCartButton(
+    modifier: Modifier = Modifier,
+    price: String,
+    currency: String,
+    isOrdered: Boolean,
+    onAddToCartClick: () -> Unit 
+) {
+    val cartButtonText = remember(isOrdered) {
+        when {
+            isOrdered -> R.string.go_to_cart
+            else -> R.string.add_to_cart_with_price
         }
     }
-
+    ElevatedButton(
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .then(modifier),
+        onClick = onAddToCartClick,
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 4.dp
+        )
+    ) {
+        Text(text = stringResource(id = cartButtonText, "12.8$"))
+    }
 }
-*/

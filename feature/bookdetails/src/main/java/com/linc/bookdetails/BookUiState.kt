@@ -3,6 +3,8 @@ package com.linc.bookdetails
 import com.linc.common.coroutines.extensions.EMPTY
 import com.linc.common.coroutines.extensions.replaceLast
 import com.linc.model.Book
+import com.linc.model.BookOrder
+import com.linc.ui.state.UiState
 import com.linc.ui.util.ResourceProvider
 
 data class BookUiState(
@@ -22,10 +24,14 @@ data class BookUiState(
     val price: Double = 0.0,
     val currency: String = String.EMPTY,
     val webResourceUrl: String = String.EMPTY,
-    val isLoading: Boolean = false
-)
+    val isLoading: Boolean = false,
+    val isOrdered: Boolean = false
+) : UiState
 
-fun Book.toUiState(resourceProvider: ResourceProvider) = BookUiState(
+fun Book.toUiState(
+    resourceProvider: ResourceProvider,
+    isOrdered: Boolean
+) = BookUiState(
     id = id,
     title = title,
     description = description,
@@ -41,7 +47,8 @@ fun Book.toUiState(resourceProvider: ResourceProvider) = BookUiState(
     availableForSale = availableForSale,
     price = price,
     currency = currency,
-    webResourceUrl = webResourceUrl
+    webResourceUrl = webResourceUrl,
+    isOrdered = isOrdered
 )
 
 private fun formatAuthors(

@@ -11,6 +11,8 @@ import com.linc.books.navigation.booksGraph
 import com.linc.books.navigation.booksRouteGraph
 import com.linc.books.navigation.navigateToBooks
 import com.linc.cart.navigation.cartGraph
+import com.linc.cart.navigation.cartScreen
+import com.linc.cart.navigation.navigateToCart
 import com.linc.editsubjects.navigation.editSubjectsScreen
 import com.linc.editsubjects.navigation.navigateToEditSubjects
 import com.linc.preferences.navigation.preferencesGraph
@@ -34,8 +36,11 @@ fun BookstoreNavHost(
             navigateToBookDetails = navController::navigateToBookDetails,
             navigateToSubjectBook = navController::navigateToSubjectBooks,
             nestedGraphs = {
-                subjectBooksScreen(navigateToBookDetails = { navController.navigateToBookDetails(it) })
-                bookDetailsScreen(navigateBack = { navController.popBackStack() })
+                subjectBooksScreen(navigateToBookDetails = navController::navigateToBookDetails)
+                bookDetailsScreen(
+                    navigateToCart = navController::navigateToCart,
+                    navigateBack = navController::popBackStack
+                )
             }
         )
         cartGraph()

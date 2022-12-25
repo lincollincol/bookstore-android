@@ -10,22 +10,22 @@ import com.linc.ui.icon.asIconWrapper
 import com.linc.preferences.navigation.preferencesRoute
 
 enum class MenuDestinations(
-    val icon: com.linc.ui.icon.IconWrapper,
+    val icon: IconWrapper,
     val iconTextId: Int,
     val route: String
 ) {
     BOOKS(
-        icon = com.linc.ui.icon.BookstoreIcons.SearchBooks.asIconWrapper(),
+        icon = BookstoreIcons.SearchBooks.asIconWrapper(),
         iconTextId = com.linc.books.R.string.books,
         route = booksRoute
     ),
     CART(
-        icon = com.linc.ui.icon.BookstoreIcons.Cart.asIconWrapper(),
+        icon = BookstoreIcons.Cart.asIconWrapper(),
         iconTextId = com.linc.cart.R.string.cart,
         route = cartRoute
     ),
     PREFERENCES(
-        icon = com.linc.ui.icon.BookstoreIcons.StarOutlined.asIconWrapper(),
+        icon = BookstoreIcons.StarOutlined.asIconWrapper(),
         iconTextId = com.linc.preferences.R.string.preferences,
         route = preferencesRoute
     );

@@ -1,9 +1,8 @@
 package com.linc.database.di
 
 import android.content.Context
-import androidx.room.RoomDatabase
 import com.linc.database.BookstoreDatabase
-import com.linc.database.dao.BookOrdersDao
+import com.linc.database.dao.OrdersDao
 import com.linc.database.dao.BooksDao
 import com.linc.database.dao.SubjectDao
 import dagger.Module
@@ -27,7 +26,7 @@ object DatabaseModule {
     @Provides
     fun provideBookOrdersDao(
         database: BookstoreDatabase
-    ): BookOrdersDao = database.bookOrdersDao
+    ): OrdersDao = database.ordersDao
 
     @Singleton
     @Provides

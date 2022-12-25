@@ -13,6 +13,9 @@ interface BooksDao {
     @Query("SELECT * FROM BookEntity WHERE BookEntity.bookId = :id")
     suspend fun getBook(id: String): BookEntity?
 
+    @Query("SELECT * FROM BookEntity WHERE BookEntity.bookId = :id")
+    fun getBookStream(id: String): Flow<BookEntity>
+
     @Query("SELECT * FROM BookEntity")
     suspend fun getBooks(): List<BookEntity>
 

@@ -1,7 +1,7 @@
 package com.linc.data.model
 
+import com.linc.database.entity.book.BookAndOrder
 import com.linc.database.entity.book.BookEntity
-import com.linc.database.entity.book.BookOrderEntity
 import com.linc.model.Book
 import com.linc.model.BookOrder
 import com.linc.network.model.book.BookApiModel
@@ -64,7 +64,11 @@ fun BookApiModel.asExternalModel() = Book(
     webResourceUrl = accessInfo?.webReaderLink.orEmpty()
 )
 
-fun BookOrderEntity.asExternalModel() = BookOrder(
-    id = orderId,
-    book = book.asExternalModel()
-)
+fun BookAndOrder.asExternalModel(): BookOrder? {
+    val order = order ?: return null
+    return BookOrder(
+        id = order.orderId,
+        bookId = book.bookId,
+        count = order.count
+    )
+}

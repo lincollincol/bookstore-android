@@ -6,11 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.linc.database.converters.StringListConverter
-import com.linc.database.dao.BookOrdersDao
+import com.linc.database.dao.BookmarksDao
+import com.linc.database.dao.OrdersDao
 import com.linc.database.dao.BooksDao
 import com.linc.database.dao.SubjectDao
 import com.linc.database.entity.book.BookEntity
-import com.linc.database.entity.book.BookOrderEntity
+import com.linc.database.entity.bookmark.BookmarkEntity
+import com.linc.database.entity.order.OrderEntity
 import com.linc.database.entity.subject.SubjectBookCrossRef
 import com.linc.database.entity.subject.SubjectEntity
 
@@ -18,22 +20,24 @@ private const val BOOKSTORE_DATABASE = "bookstore_database.db"
 private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.db"
 
 @Database(
-    version = 2,
+    version = 1,
     exportSchema = false,
     entities = [
         BookEntity::class,
-        BookOrderEntity::class,
         SubjectEntity::class,
-        SubjectBookCrossRef::class
+        SubjectBookCrossRef::class,
+        OrderEntity::class,
+        BookmarkEntity::class,
     ]
 )
 @TypeConverters(
     StringListConverter::class
 )
 abstract class BookstoreDatabase : RoomDatabase() {
-    abstract val bookOrdersDao: BookOrdersDao
+    abstract val ordersDao: OrdersDao
     abstract val booksDao: BooksDao
     abstract val subjectDao: SubjectDao
+    abstract val bookmarksDao: BookmarksDao
 
     companion object {
         @JvmStatic
@@ -44,7 +48,6 @@ abstract class BookstoreDatabase : RoomDatabase() {
                 BOOKSTORE_DATABASE
             )
             .createFromAsset(INITIAL_ASSET_DATABASE)
-//            .fallbackToDestructiveMigration()
             .build()
     }
 }

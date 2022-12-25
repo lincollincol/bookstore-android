@@ -43,7 +43,7 @@ fun BookstoreApp() {
         bottomBar = {
             AnimatedVisibility(
                 visible = MenuDestinations.isTopLevelDestination(backStackEntry?.destination?.route),
-//                visible = true,
+
                 enter = slideInVertically(animationSpec = tween(200)) { it },
                 exit = slideOutVertically(animationSpec = tween(100)) { it }
             ) {

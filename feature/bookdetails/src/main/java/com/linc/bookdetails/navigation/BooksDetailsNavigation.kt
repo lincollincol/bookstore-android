@@ -4,9 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.linc.bookdetails.BookDetailsRoute
+import com.linc.navigation.NavigationState
 
 const val bookDetailsRoute: String = "book_details_route"
 internal const val bookIdArg: String = "book_id_arg"
+
+sealed interface BookDetailsNavigationState : NavigationState {
+    object Cart : BookDetailsNavigationState
+}
 
 internal class BookDetailsArgs(val bookId: String) {
     constructor(savedStateHandle: SavedStateHandle)
@@ -21,6 +26,7 @@ fun NavController.navigateToBookDetails(
 }
 
 fun NavGraphBuilder.bookDetailsScreen(
+    navigateToCart: () -> Unit,
     navigateBack: () -> Unit
 ) {
     composable(
@@ -30,6 +36,7 @@ fun NavGraphBuilder.bookDetailsScreen(
         )
     ) {
         BookDetailsRoute(
+            navigateToCart = navigateToCart,
             navigateBack = navigateBack
         )
     }
