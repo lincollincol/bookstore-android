@@ -1,10 +1,8 @@
 package com.linc.data.model
 
 import com.linc.common.coroutines.extensions.EMPTY
-import com.linc.database.entity.book.BookAndOrder
 import com.linc.database.entity.book.BookEntity
 import com.linc.model.Book
-import com.linc.model.BookOrder
 import com.linc.network.model.book.BookApiModel
 import com.linc.network.model.book.Saleability
 

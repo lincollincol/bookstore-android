@@ -3,7 +3,6 @@ package com.linc.bookdetails
 import com.linc.common.coroutines.extensions.EMPTY
 import com.linc.common.coroutines.extensions.replaceLast
 import com.linc.model.Book
-import com.linc.model.BookOrder
 import com.linc.ui.state.UiState
 import com.linc.ui.util.ResourceProvider
 

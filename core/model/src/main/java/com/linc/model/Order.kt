@@ -1,7 +1,7 @@
 package com.linc.model
 
-data class BookOrder(
+data class Order(
     val id: String,
-    val bookId: String,
+    val targetId: String,
     val count: Int,
 )

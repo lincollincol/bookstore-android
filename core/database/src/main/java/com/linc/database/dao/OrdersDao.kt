@@ -17,8 +17,12 @@ interface OrdersDao {
     suspend fun getBookOrders(): List<BookAndOrder>
 
     @Transaction
+    @Query("SELECT * FROM OrderEntity WHERE OrderEntity.targetId = :targetId")
+    fun getOrderByTarget(targetId: String): Flow<OrderEntity?>
+
+    @Transaction
     @Query("SELECT * FROM BookEntity WHERE BookEntity.bookId = :id")
-    fun getBookOrderStream(id: String): Flow<BookAndOrder>
+    fun getBookOrder(id: String): Flow<BookAndOrder>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: OrderEntity)

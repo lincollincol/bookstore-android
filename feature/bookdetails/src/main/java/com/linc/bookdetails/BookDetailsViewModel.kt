@@ -1,9 +1,5 @@
 package com.linc.bookdetails
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,15 +8,11 @@ import com.linc.bookdetails.navigation.BookDetailsNavigationState
 import com.linc.data.repository.BookmarksRepository
 import com.linc.data.repository.BooksRepository
 import com.linc.data.repository.OrdersRepository
-import com.linc.model.Book
-import com.linc.model.mockBooks
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import com.linc.ui.state.UiStateHolder
 import com.linc.ui.util.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,15 +31,14 @@ class BookDetailsViewModel @Inject constructor(
         private const val MIN_ORDER_COUNT: Int = 1
     }
 
-    private val bookDetailsArgs: BookDetailsArgs = BookDetailsArgs(savedStateHandle)
-
+    private val bookDetailsArgs = BookDetailsArgs(savedStateHandle)
 
     private val orderCountState = MutableStateFlow(MIN_ORDER_COUNT)
 
     override val uiState: StateFlow<BookUiState> = combine(
         booksRepository.getBookStream(bookDetailsArgs.bookId),
         ordersRepository.getBookOrderStream(bookDetailsArgs.bookId),
-        bookmarksRepository.getBookmarkedBookStream(bookDetailsArgs.bookId),
+        bookmarksRepository.getBookBookmarkStream(bookDetailsArgs.bookId),
         orderCountState
     ) { book, order, bookmark, orderCount ->
         book.toUiState(

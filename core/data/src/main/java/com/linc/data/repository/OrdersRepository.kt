@@ -7,9 +7,8 @@ import com.linc.database.dao.OrdersDao
 import com.linc.database.dao.BooksDao
 import com.linc.database.entity.book.BookAndOrder
 import com.linc.database.entity.order.OrderEntity
-import com.linc.model.BookOrder
+import com.linc.model.Order
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -21,9 +20,9 @@ class OrdersRepository @Inject constructor(
     @Dispatcher(AppDispatchers.IO) private val dispatcher: CoroutineDispatcher
 ) {
 
-    fun getBookOrderStream(bookId: String): Flow<BookOrder?> =
-        ordersDao.getBookOrderStream(bookId)
-            .map(BookAndOrder::asExternalModel)
+    fun getBookOrderStream(bookId: String): Flow<Order?> =
+        ordersDao.getOrderByTarget(bookId)
+            .map { it?.asExternalModel() }
             .flowOn(dispatcher)
 
     suspend fun orderBook(
