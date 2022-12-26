@@ -78,10 +78,14 @@ class BooksRepository @Inject constructor(
         }
     }
 
-    suspend fun fetchBook(id: String) = withContext(dispatcher) {
+    suspend fun fetchBook(id: String): Unit = withContext(dispatcher) {
         booksDao.getBook(id) ?: booksApiService.getBook(id)
             ?.asEntity()
             ?.also { booksDao.insertBook(it) }
+    }
+
+    suspend fun fff() = withContext(dispatcher) {
+
     }
 
     fun getPrimarySubjectsBooksStream(): Flow<List<SubjectBooks>> = flow {
@@ -103,12 +107,8 @@ class BooksRepository @Inject constructor(
             .flowOn(dispatcher)
     }
 
-    fun getBookStream(id: String): Flow<Book> = flow {
-        fetchBook(id)
-        booksDao.getBookStream(id)
-            .map(BookEntity::asExternalModel)
-            .flowOn(dispatcher)
-            .collect(this)
-    }
+    fun getBookStream(id: String): Flow<Book> = booksDao.getBookStream(id)
+        .map(BookEntity::asExternalModel)
+        .flowOn(dispatcher)
 
 }

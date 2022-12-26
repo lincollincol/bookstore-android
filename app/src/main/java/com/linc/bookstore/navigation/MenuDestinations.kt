@@ -31,9 +31,9 @@ enum class MenuDestinations(
     );
     companion object {
         @JvmStatic
+        fun routes(): Array<String> = values().map(MenuDestinations::route).toTypedArray()
+        @JvmStatic
         fun fromRoute(route: String?): MenuDestinations? =
             route?.let { values().find { dest -> dest.route.equals(it, true) } }
-        @JvmStatic
-        fun isTopLevelDestination(route: String?): Boolean = fromRoute(route) != null
     }
 }

@@ -10,7 +10,6 @@ android {
 
 dependencies {
 
-//    implementation(project(":core:designsystem"))
     implementation(libs.androidx.core.ktx)
 
     api(libs.androidx.compose.foundation)

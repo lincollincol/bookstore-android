@@ -9,6 +9,7 @@ import com.linc.database.entity.book.BookAndOrder
 import com.linc.database.entity.order.OrderEntity
 import com.linc.model.BookOrder
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -20,16 +21,10 @@ class OrdersRepository @Inject constructor(
     @Dispatcher(AppDispatchers.IO) private val dispatcher: CoroutineDispatcher
 ) {
 
-    fun getBookOrderStream(bookId: String): Flow<BookOrder?> {
-        return ordersDao.getBookOrderStream(bookId)
-//            .map { it?.asExternalModel() }
+    fun getBookOrderStream(bookId: String): Flow<BookOrder?> =
+        ordersDao.getBookOrderStream(bookId)
             .map(BookAndOrder::asExternalModel)
             .flowOn(dispatcher)
-    }
-
-//    suspend fun getOrders(): List<BookOrder> {
-//        return ordersDao.getBookOrders().map(BookAndOrder::asExternalModel)
-//    }
 
     suspend fun orderBook(bookId: String) = withContext(dispatcher) {
         ordersDao.insertOrder(

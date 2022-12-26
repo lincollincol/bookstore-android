@@ -66,6 +66,7 @@ fun BookApiModel.asExternalModel() = Book(
 
 fun BookAndOrder.asExternalModel(): BookOrder? {
     val order = order ?: return null
+    val book = book ?: return null
     return BookOrder(
         id = order.orderId,
         bookId = book.bookId,

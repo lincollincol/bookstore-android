@@ -2,9 +2,12 @@ package com.linc.bookstore.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.linc.bookdetails.navigation.bookDetailsScreen
 import com.linc.bookdetails.navigation.navigateToBookDetails
 import com.linc.books.navigation.booksGraph
@@ -38,7 +41,19 @@ fun BookstoreNavHost(
             nestedGraphs = {
                 subjectBooksScreen(navigateToBookDetails = navController::navigateToBookDetails)
                 bookDetailsScreen(
-                    navigateToCart = navController::navigateToCart,
+                    navigateToCart = {
+                        /*navController.popBackStack(
+                            route = navController.graph.findStartDestination().route.orEmpty(),
+                            inclusive = false
+                        )*/
+                        navController.navigateToCart(
+                            navOptions {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                            }
+                        )
+                    },
                     navigateBack = navController::popBackStack
                 )
             }

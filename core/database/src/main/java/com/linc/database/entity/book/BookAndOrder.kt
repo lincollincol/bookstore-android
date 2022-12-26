@@ -5,7 +5,7 @@ import com.linc.database.entity.order.OrderEntity
 
 data class BookAndOrder(
     @Embedded
-    val book: BookEntity,
+    val book: BookEntity?,
     @Relation(
         parentColumn = "bookId",
         entityColumn = "targetId"

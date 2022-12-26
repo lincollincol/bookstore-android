@@ -10,4 +10,5 @@ android {
 
 dependencies {
     compileOnly(libs.androidx.lifecycle.runtime.compose)
+    compileOnly(libs.androidx.navigation.compose)
 }

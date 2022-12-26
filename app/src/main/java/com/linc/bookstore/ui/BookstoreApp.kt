@@ -28,6 +28,8 @@ import com.linc.bookstore.navigation.BookstoreNavHost
 import com.linc.bookstore.navigation.MenuDestinations
 import com.linc.cart.navigation.navigateToCart
 import com.linc.designsystem.component.SimpleIcon
+import com.linc.navigation.currentRouteEquals
+import com.linc.navigation.currentRouteIsOneOf
 import com.linc.preferences.navigation.navigateToPreferences
 import soup.compose.material.motion.MaterialFadeThrough
 
@@ -37,12 +39,12 @@ fun BookstoreApp() {
     val navController = rememberNavController()
     val menuDestinations: List<MenuDestinations> = MenuDestinations.values().asList()
     val backStackEntry by navController.currentBackStackEntryAsState()
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             AnimatedVisibility(
-                visible = MenuDestinations.isTopLevelDestination(backStackEntry?.destination?.route),
+//                visible = MenuDestinations.isTopLevelDestination(backStackEntry?.destination?.route),
+                visible = backStackEntry.currentRouteIsOneOf(*MenuDestinations.routes()),
 
                 enter = slideInVertically(animationSpec = tween(200)) { it },
                 exit = slideOutVertically(animationSpec = tween(100)) { it }

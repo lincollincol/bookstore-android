@@ -18,6 +18,7 @@ import com.linc.navigation.RouteNavigator
 import com.linc.ui.state.UiStateHolder
 import com.linc.ui.util.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ class BookDetailsViewModel @Inject constructor(
             isOrdered = order != null
         )
     }
+        .onStart { booksRepository.fetchBook(bookDetailsArgs.bookId) }
         .catch {
             it.printStackTrace()
         }
