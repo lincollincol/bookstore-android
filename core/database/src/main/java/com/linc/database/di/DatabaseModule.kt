@@ -2,6 +2,7 @@ package com.linc.database.di
 
 import android.content.Context
 import com.linc.database.BookstoreDatabase
+import com.linc.database.dao.BookmarksDao
 import com.linc.database.dao.OrdersDao
 import com.linc.database.dao.BooksDao
 import com.linc.database.dao.SubjectDao
@@ -39,5 +40,11 @@ object DatabaseModule {
     fun provideSubjectDao(
         database: BookstoreDatabase
     ): SubjectDao = database.subjectDao
+
+    @Singleton
+    @Provides
+    fun provideBookmarksDao(
+        database: BookstoreDatabase
+    ): BookmarksDao = database.bookmarksDao
 
 }

@@ -24,13 +24,15 @@ data class BookUiState(
     val price: Double = 0.0,
     val currency: String = String.EMPTY,
     val webResourceUrl: String = String.EMPTY,
+    val isOrdered: Boolean = false,
+    val isBookmarked: Boolean = false,
     val isLoading: Boolean = false,
-    val isOrdered: Boolean = false
 ) : UiState
 
 fun Book.toUiState(
     resourceProvider: ResourceProvider,
-    isOrdered: Boolean
+    isOrdered: Boolean,
+    isBookmarked: Boolean
 ) = BookUiState(
     id = id,
     title = title,
@@ -48,7 +50,8 @@ fun Book.toUiState(
     price = price,
     currency = currency,
     webResourceUrl = webResourceUrl,
-    isOrdered = isOrdered
+    isOrdered = isOrdered,
+    isBookmarked = isBookmarked
 )
 
 private fun formatAuthors(

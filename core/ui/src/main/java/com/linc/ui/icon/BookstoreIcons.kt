@@ -19,6 +19,8 @@ object BookstoreIcons {
     val MoreVertical = Icons.Default.MoreVert
     val ArrowDropUp = Icons.Rounded.ArrowDropUp
     val OutlinedBookmark = R.drawable.ic_outlined_bookmark
+    val BookmarkAdd = Icons.Default.BookmarkAdd
+    val BookmarkAdded = Icons.Default.BookmarkAdded
     val Check = Icons.Rounded.Check
     val Close = Icons.Rounded.Close
     val Clear = Icons.Rounded.Clear

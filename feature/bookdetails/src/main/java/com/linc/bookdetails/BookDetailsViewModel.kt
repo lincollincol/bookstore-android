@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linc.bookdetails.navigation.BookDetailsArgs
 import com.linc.bookdetails.navigation.BookDetailsNavigationState
+import com.linc.data.repository.BookmarksRepository
 import com.linc.data.repository.BooksRepository
 import com.linc.data.repository.OrdersRepository
 import com.linc.model.Book
@@ -31,6 +32,7 @@ class BookDetailsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val booksRepository: BooksRepository,
     private val ordersRepository: OrdersRepository,
+    private val bookmarksRepository: BookmarksRepository,
 ) : ViewModel(), UiStateHolder<BookUiState>, RouteNavigator by defaultRouteNavigator {
 
     private val bookDetailsArgs: BookDetailsArgs = BookDetailsArgs(savedStateHandle)
@@ -38,10 +40,12 @@ class BookDetailsViewModel @Inject constructor(
     override val uiState: StateFlow<BookUiState> = combine(
         booksRepository.getBookStream(bookDetailsArgs.bookId),
         ordersRepository.getBookOrderStream(bookDetailsArgs.bookId),
-    ) { book, order ->
+        bookmarksRepository.getBookmarkedBookStream(bookDetailsArgs.bookId)
+    ) { book, order, bookmark ->
         book.toUiState(
             resourceProvider = resourceProvider,
-            isOrdered = order != null
+            isOrdered = order != null,
+            isBookmarked = bookmark != null
         )
     }
         .onStart { booksRepository.fetchBook(bookDetailsArgs.bookId) }
@@ -71,7 +75,11 @@ class BookDetailsViewModel @Inject constructor(
     fun bookmarkBook() {
         viewModelScope.launch {
             try {
-                ordersRepository.orderBook(rawUiState.id)
+                when {
+                    rawUiState.isBookmarked -> bookmarksRepository.deleteBookBookmark(rawUiState.id)
+                    else -> bookmarksRepository.bookmarkBook(rawUiState.id)
+                }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }

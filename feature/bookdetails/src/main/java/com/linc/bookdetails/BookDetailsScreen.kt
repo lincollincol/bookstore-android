@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
@@ -87,6 +88,7 @@ internal fun BookDetailsScreen(
                 centerHorizontallyTo(parent)
             },
             scrollBehavior = scrollBehavior,
+            isBookmarked = bookUiState.isBookmarked,
             onBackClick = onBackClick,
             onBookmarkClick = onBookmarkClick,
             onShareClick = onShareClick
@@ -229,12 +231,16 @@ private fun BookImage(
 private fun BookDetailsAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
+    isBookmarked: Boolean,
     onBackClick: () -> Unit,
     onBookmarkClick: () -> Unit,
     onShareClick: () -> Unit
 ) {
     var showMenu by remember {
         mutableStateOf(false)
+    }
+    val bookmarkIcon = remember(isBookmarked) {
+        if(isBookmarked) BookstoreIcons.BookmarkAdded else BookstoreIcons.BookmarkAdd
     }
     TopAppBar(
         modifier = Modifier
@@ -248,7 +254,7 @@ private fun BookDetailsAppBar(
         },
         actions = {
             IconButton(onClick = onBookmarkClick) {
-                SimpleIcon(icon = BookstoreIcons.OutlinedBookmark.asIconWrapper())
+                SimpleIcon(icon = bookmarkIcon.asIconWrapper())
             }
             IconButton(onClick = { showMenu = true }) {
                 SimpleIcon(icon = BookstoreIcons.MoreVertical.asIconWrapper())
