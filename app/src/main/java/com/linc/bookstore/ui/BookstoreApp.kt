@@ -1,8 +1,5 @@
 package com.linc.bookstore.ui
 
-import android.view.Menu
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -11,12 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,11 +20,9 @@ import com.linc.books.navigation.navigateToBooks
 import com.linc.bookstore.navigation.BookstoreNavHost
 import com.linc.bookstore.navigation.MenuDestinations
 import com.linc.cart.navigation.navigateToCart
-import com.linc.designsystem.component.SimpleIcon
-import com.linc.navigation.currentRouteEquals
+import com.linc.ui.components.SimpleIcon
 import com.linc.navigation.currentRouteIsOneOf
 import com.linc.preferences.navigation.navigateToPreferences
-import soup.compose.material.motion.MaterialFadeThrough
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable

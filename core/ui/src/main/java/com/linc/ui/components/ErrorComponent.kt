@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.linc.designsystem.component.SimpleIcon
+import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.icon.asIconWrapper
 

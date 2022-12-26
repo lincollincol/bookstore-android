@@ -10,9 +10,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.linc.ui.icon.BookstoreIcons
+import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.IconWrapper
-import com.linc.ui.icon.asIconWrapper
 import com.linc.ui.icon.buildComposable
 import com.linc.ui.theme.BookstoreTheme
 

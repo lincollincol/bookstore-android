@@ -1,18 +1,24 @@
 package com.linc.bookdetails
 
+import android.widget.Space
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
@@ -30,12 +36,15 @@ import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.linc.bookdetails.navigation.BookDetailsNavigationState
-import com.linc.designsystem.component.SimpleIcon
+import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.icon.asIconWrapper
 import com.linc.designsystem.extensions.getVibrantColor
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
+import com.linc.ui.icon.IconWrapper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -48,6 +57,8 @@ fun BookDetailsRoute(
     navigateBack: () -> Unit,
 ) {
     val bookUiState: BookUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+
     viewModel.observeNavigation {
         when(it) {
             BookDetailsNavigationState.Cart -> navigateToCart()
@@ -56,63 +67,210 @@ fun BookDetailsRoute(
     }
     BookDetailsScreen(
         modifier = modifier,
+        coroutineScope = coroutineScope,
         bookUiState = bookUiState,
         onBackClick = viewModel::navigateBack,
-        onCartClick = viewModel::addToCart,
+        onAddToCartClick = viewModel::addToCart,
+        onOrderPayClick = {},
         onBookmarkClick = viewModel::bookmarkBook,
-        onShareClick = {}
+        onShareClick = {},
+        onIncCountClick = viewModel::increaseOrderCount,
+        onDecCountClick = viewModel::decreaseOrderCount
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 internal fun BookDetailsScreen(
     modifier: Modifier = Modifier,
+    coroutineScope: CoroutineScope,
     bookUiState: BookUiState,
-    onCartClick: () -> Unit,
+    onAddToCartClick: () -> Unit,
+    onOrderPayClick: () -> Unit,
     onBackClick: () -> Unit,
     onBookmarkClick: () -> Unit,
-    onShareClick: () -> Unit
+    onShareClick: () -> Unit,
+    onIncCountClick: () -> Unit,
+    onDecCountClick: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    ConstraintLayout(
+    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    BackHandler {
+        if(bottomSheetState.isVisible) {
+            coroutineScope.launch {
+                bottomSheetState.hide()
+            }
+            return@BackHandler
+        }
+        onBackClick()
+    }
+    ModalBottomSheetLayout(
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .then(modifier)
+            .then(modifier),
+        sheetShape = MaterialTheme.shapes.large,
+        sheetElevation = 8.dp,
+        sheetContent = {
+            OrderBuilderBottomSheet(
+                formattedPrice = bookUiState.formattedPrice,
+                formattedTotalPrice = bookUiState.formattedTotalPrice,
+                count = bookUiState.orderCount,
+                onIncCountClick = onIncCountClick,
+                onDecCountClick = onDecCountClick,
+                onAddToCartClick = {
+                    onAddToCartClick()
+                    coroutineScope.launch { bottomSheetState.hide() }
+                },
+                onCancelClick = {
+                    coroutineScope.launch { bottomSheetState.hide() }
+                }
+            )
+        },
+        sheetState = bottomSheetState
     ) {
-        val (toolbar, content, buyButton) = createRefs()
-        BookDetailsAppBar(
-            modifier = Modifier.constrainAs(toolbar) {
-                top.linkTo(parent.top)
-                centerHorizontallyTo(parent)
-            },
-            scrollBehavior = scrollBehavior,
-            isBookmarked = bookUiState.isBookmarked,
-            onBackClick = onBackClick,
-            onBookmarkClick = onBookmarkClick,
-            onShareClick = onShareClick
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) {
+            val (toolbar, content, buyButton) = createRefs()
+            BookDetailsAppBar(
+                modifier = Modifier.constrainAs(toolbar) {
+                    top.linkTo(parent.top)
+                    centerHorizontallyTo(parent)
+                },
+                scrollBehavior = scrollBehavior,
+                isSoldOut = !bookUiState.availableForSale,
+                isBookmarked = bookUiState.isBookmarked,
+                onBackClick = onBackClick,
+                onBookmarkClick = onBookmarkClick,
+                onShareClick = onShareClick
+            )
+            BookContent(
+                modifier = Modifier.constrainAs(content) {
+                    top.linkTo(toolbar.top)
+                    bottom.linkTo(parent.bottom)
+                    centerHorizontallyTo(parent)
+                    height = Dimension.fillToConstraints
+                },
+                book = bookUiState
+            )
+            if(bookUiState.availableForSale) {
+                AddToCartButton(
+                    modifier = Modifier.constrainAs(buyButton) {
+                        bottom.linkTo(parent.bottom)
+                        centerHorizontallyTo(parent)
+                        width = Dimension.fillToConstraints
+                    },
+                    isOrdered = bookUiState.isOrdered,
+                    onAddToCartClick = {
+                        coroutineScope.launch {
+                            bottomSheetState.show()
+                        }
+                    },
+                    onOrderPayClick = onOrderPayClick
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun OrderBuilderBottomSheet(
+    modifier: Modifier = Modifier,
+    formattedPrice: String,
+    formattedTotalPrice: String,
+    count: Int,
+    onIncCountClick: () -> Unit,
+    onDecCountClick: () -> Unit,
+    onAddToCartClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    Column(modifier = Modifier
+        .padding(horizontal = 24.dp)
+        .then(modifier)
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(vertical = 16.dp),
+            text = "Complete order",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold
         )
-        BookContent(
-            modifier = Modifier.constrainAs(content) {
-                top.linkTo(toolbar.top)
-                bottom.linkTo(parent.bottom)
-                centerHorizontallyTo(parent)
-                height = Dimension.fillToConstraints
-            },
-            book = bookUiState
-        )
-        AddToCartButton(
-            modifier = Modifier.constrainAs(buyButton) {
-                bottom.linkTo(parent.bottom)
-                centerHorizontallyTo(parent)
-                width = Dimension.fillToConstraints
-            },
-            isOrdered = bookUiState.isOrdered,
-            price = bookUiState.price.toString(),
-            currency = "usd",
-            onAddToCartClick = onCartClick
-        )
+        Row(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "Book price:")
+            Text(text = formattedPrice)
+        }
+        Row(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Quantity:")
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircleButton(
+                    icon = BookstoreIcons.Remove.asIconWrapper(),
+                    onClick = onDecCountClick
+                )
+                Text(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    text = count.toString()
+                )
+                CircleButton(
+                    icon = BookstoreIcons.Add.asIconWrapper(),
+                    onClick = onIncCountClick
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider()
+        Row(
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Total price:",
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = formattedTotalPrice,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+        Divider()
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            OutlinedButton(
+                modifier = Modifier.padding(horizontal = 4.dp),
+                onClick = onCancelClick
+            ) {
+                Text(text = stringResource(id = com.linc.ui.R.string.cancel))
+            }
+            ElevatedButton(
+                onClick = onAddToCartClick
+            ) {
+                Text(text = stringResource(id = com.linc.ui.R.string.add_to_cart))
+            }
+        }
     }
 }
 
@@ -231,6 +389,7 @@ private fun BookImage(
 private fun BookDetailsAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
+    isSoldOut: Boolean,
     isBookmarked: Boolean,
     onBackClick: () -> Unit,
     onBookmarkClick: () -> Unit,
@@ -253,6 +412,9 @@ private fun BookDetailsAppBar(
             }
         },
         actions = {
+            if(isSoldOut) {
+                SimpleIcon(icon = BookstoreIcons.SoldOut.asIconWrapper())
+            }
             IconButton(onClick = onBookmarkClick) {
                 SimpleIcon(icon = bookmarkIcon.asIconWrapper())
             }
@@ -277,29 +439,52 @@ private fun BookDetailsAppBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CircleButton(
+    modifier: Modifier = Modifier,
+    icon: IconWrapper,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = modifier.size(24.dp),
+        color = MaterialTheme.colorScheme.surface,
+        shape = CircleShape,
+        shadowElevation = 2.dp,
+        onClick = onClick
+    ) {
+        SimpleIcon(
+            modifier = Modifier
+                .size(24.dp)
+                .padding(4.dp),
+            icon = icon
+        )
+    }
+}
+
 @Composable
 private fun AddToCartButton(
     modifier: Modifier = Modifier,
-    price: String,
-    currency: String,
     isOrdered: Boolean,
-    onAddToCartClick: () -> Unit 
+    onAddToCartClick: () -> Unit,
+    onOrderPayClick: () -> Unit,
 ) {
+    // TODO: show price when ordered
     val cartButtonText = remember(isOrdered) {
         when {
-            isOrdered -> R.string.go_to_cart
-            else -> R.string.add_to_cart_with_price
+            isOrdered -> R.string.pay_for_order
+            else -> com.linc.ui.R.string.make_order
         }
     }
     ElevatedButton(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .then(modifier),
-        onClick = onAddToCartClick,
+        onClick = if(isOrdered) onOrderPayClick else onAddToCartClick,
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 4.dp
         )
     ) {
-        Text(text = stringResource(id = cartButtonText, "12.8$"))
+        Text(text = stringResource(id = cartButtonText))
     }
 }

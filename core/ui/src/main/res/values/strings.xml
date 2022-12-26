@@ -2,4 +2,7 @@
 <resources>
     <string name="and">and</string>
     <string name="and_spaced">" and "</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="make_order">Make order</string>
 </resources>

@@ -1,13 +1,11 @@
 package com.linc.designsystem.component
 
-import android.widget.RatingBar
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.icon.asIconWrapper
 import com.linc.ui.theme.BookstoreTheme

@@ -35,15 +35,24 @@ class BookDetailsViewModel @Inject constructor(
     private val bookmarksRepository: BookmarksRepository,
 ) : ViewModel(), UiStateHolder<BookUiState>, RouteNavigator by defaultRouteNavigator {
 
+    companion object {
+        private const val MIN_ORDER_COUNT: Int = 1
+    }
+
     private val bookDetailsArgs: BookDetailsArgs = BookDetailsArgs(savedStateHandle)
+
+
+    private val orderCountState = MutableStateFlow(MIN_ORDER_COUNT)
 
     override val uiState: StateFlow<BookUiState> = combine(
         booksRepository.getBookStream(bookDetailsArgs.bookId),
         ordersRepository.getBookOrderStream(bookDetailsArgs.bookId),
-        bookmarksRepository.getBookmarkedBookStream(bookDetailsArgs.bookId)
-    ) { book, order, bookmark ->
+        bookmarksRepository.getBookmarkedBookStream(bookDetailsArgs.bookId),
+        orderCountState
+    ) { book, order, bookmark, orderCount ->
         book.toUiState(
             resourceProvider = resourceProvider,
+            orderCount = orderCount,
             isOrdered = order != null,
             isBookmarked = bookmark != null
         )
@@ -65,7 +74,7 @@ class BookDetailsViewModel @Inject constructor(
                     navigateTo(BookDetailsNavigationState.Cart)
                     return@launch
                 }
-                ordersRepository.orderBook(rawUiState.id)
+                ordersRepository.orderBook(rawUiState.id, orderCountState.value)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -85,4 +94,8 @@ class BookDetailsViewModel @Inject constructor(
             }
         }
     }
+
+    fun increaseOrderCount() = orderCountState.update { it + 1 }
+
+    fun decreaseOrderCount() = orderCountState.update { (it - 1).coerceAtLeast(MIN_ORDER_COUNT) }
 }

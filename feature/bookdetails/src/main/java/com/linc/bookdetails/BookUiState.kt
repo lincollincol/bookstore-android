@@ -7,6 +7,7 @@ import com.linc.model.BookOrder
 import com.linc.ui.state.UiState
 import com.linc.ui.util.ResourceProvider
 
+
 data class BookUiState(
     val id: String = String.EMPTY,
     val title: String = String.EMPTY,
@@ -24,13 +25,19 @@ data class BookUiState(
     val price: Double = 0.0,
     val currency: String = String.EMPTY,
     val webResourceUrl: String = String.EMPTY,
+    val orderCount: Int = 0,
     val isOrdered: Boolean = false,
     val isBookmarked: Boolean = false,
     val isLoading: Boolean = false,
 ) : UiState
 
+val BookUiState.totalPrice: Double get() = price * orderCount
+val BookUiState.formattedPrice: String get() = formatPrice(price, currency)
+val BookUiState.formattedTotalPrice: String get() = formatPrice(totalPrice, currency)
+
 fun Book.toUiState(
     resourceProvider: ResourceProvider,
+    orderCount: Int,
     isOrdered: Boolean,
     isBookmarked: Boolean
 ) = BookUiState(
@@ -50,6 +57,7 @@ fun Book.toUiState(
     price = price,
     currency = currency,
     webResourceUrl = webResourceUrl,
+    orderCount = orderCount,
     isOrdered = isOrdered,
     isBookmarked = isBookmarked
 )
@@ -64,3 +72,6 @@ private fun formatAuthors(
     return authors.joinToString()
         .replaceLast(", ", resourceProvider.getString(com.linc.ui.R.string.and_spaced))
 }
+
+
+private fun formatPrice(price: Double, currency: String): String = "$price $currency"

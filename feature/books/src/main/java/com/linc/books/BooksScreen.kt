@@ -37,6 +37,7 @@ import com.linc.navigation.observeNavigation
 import com.linc.ui.components.DetailedBookItem
 import com.linc.designsystem.component.SearchNotFound
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
+import com.linc.ui.components.SimpleIcon
 import com.linc.ui.model.DetailedBookItemUiState
 
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class)
@@ -147,7 +148,8 @@ private fun SearchResultBooks(
     onBookClick: (String) -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .then(modifier),
         contentAlignment = Alignment.Center
     ) {
@@ -182,7 +184,8 @@ private fun SubjectBooks(
     onSeeAllClick: (String) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .then(modifier)
     ) {
         items(
@@ -293,9 +296,11 @@ private fun LazyItemScope.BookItem(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
-            Text(
-                text = book.price.toString()
-            )
+            if(book.availableForSale) {
+                Text(text = book.price.toString())
+            } else {
+                SimpleIcon(icon = BookstoreIcons.SoldOut.asIconWrapper())
+            }
         }
     }
 }

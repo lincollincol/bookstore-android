@@ -20,6 +20,7 @@ data class BookItemUiState(
     val id: String,
     val imageUrl: String,
     val price: Double,
+    val availableForSale: Boolean,
     val averageRating: Float,
     val ratingsCount: Float,
     val title: String
@@ -35,6 +36,7 @@ internal fun Book.toUiState() = BookItemUiState(
     id = id,
     imageUrl = imageUrl,
     price = price,
+    availableForSale = availableForSale,
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     title = title

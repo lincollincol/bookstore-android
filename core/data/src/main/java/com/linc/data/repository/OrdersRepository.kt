@@ -26,12 +26,15 @@ class OrdersRepository @Inject constructor(
             .map(BookAndOrder::asExternalModel)
             .flowOn(dispatcher)
 
-    suspend fun orderBook(bookId: String) = withContext(dispatcher) {
+    suspend fun orderBook(
+        bookId: String,
+        count: Int
+    ) = withContext(dispatcher) {
         ordersDao.insertOrder(
             OrderEntity(
                 UUID.randomUUID().toString(),
                 bookId,
-                1
+                count
             )
         )
     }

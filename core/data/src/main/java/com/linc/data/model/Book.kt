@@ -1,5 +1,6 @@
 package com.linc.data.model
 
+import com.linc.common.coroutines.extensions.EMPTY
 import com.linc.database.entity.book.BookAndOrder
 import com.linc.database.entity.book.BookEntity
 import com.linc.model.Book
@@ -7,22 +8,28 @@ import com.linc.model.BookOrder
 import com.linc.network.model.book.BookApiModel
 import com.linc.network.model.book.Saleability
 
+private val BookApiModel.salePrice: Double get() =
+    saleInfo?.let { it?.listPrice?.amount ?: it?.retailPrice?.amount } ?: 0.0
+
+private val BookApiModel.salePriceCurrency: String get() =
+    saleInfo?.let { it?.listPrice?.currencyCode ?: it?.retailPrice?.currencyCode } ?: String.EMPTY
+
 fun BookApiModel.asEntity() = BookEntity(
     bookId = id,
     title = volumeInfo.title.orEmpty(),
-    description = volumeInfo?.description.orEmpty(),
-    imageUrl = volumeInfo?.imageLinks?.thumbnail.orEmpty(),
-    authors = volumeInfo?.authors ?: emptyList(),
-    categories = volumeInfo?.categories ?: emptyList(),
-    averageRating = volumeInfo?.averageRating?.toFloat(),
-    ratingsCount = volumeInfo?.ratingsCount?.toFloat(),
-    pageCount = volumeInfo?.pageCount ?: 0,
-    publishedDate = volumeInfo?.publishedDate.orEmpty(),
-    language = volumeInfo?.language.orEmpty(),
-    publisher = volumeInfo?.publisher.orEmpty(),
+    description = volumeInfo.description.orEmpty(),
+    imageUrl = volumeInfo.imageLinks?.thumbnail.orEmpty(),
+    authors = volumeInfo.authors ?: emptyList(),
+    categories = volumeInfo.categories ?: emptyList(),
+    averageRating = volumeInfo.averageRating?.toFloat(),
+    ratingsCount = volumeInfo.ratingsCount?.toFloat(),
+    pageCount = volumeInfo.pageCount,
+    publishedDate = volumeInfo.publishedDate.orEmpty(),
+    language = volumeInfo.language,
+    publisher = volumeInfo.publisher.orEmpty(),
     availableForSale = saleInfo?.saleability == Saleability.FOR_SALE,
-    price = saleInfo?.listPrice?.amountInMicros ?: 0.0,
-    currency = saleInfo?.country.orEmpty(),
+    price = salePrice,
+    currency = salePriceCurrency,
     webResourceUrl = accessInfo?.webReaderLink.orEmpty()
 )
 
@@ -47,29 +54,19 @@ fun BookEntity.asExternalModel() = Book(
 
 fun BookApiModel.asExternalModel() = Book(
     id = id,
-    title = volumeInfo?.title.orEmpty(),
-    description = volumeInfo?.description.orEmpty(),
-    imageUrl = volumeInfo?.imageLinks?.thumbnail.orEmpty(),
-    authors = volumeInfo?.authors ?: emptyList(),
-    categories = volumeInfo?.categories ?: emptyList(),
-    averageRating = volumeInfo?.averageRating?.toFloat() ?: 0f,
-    ratingsCount = volumeInfo?.ratingsCount?.toFloat() ?: 0f,
-    pageCount = volumeInfo?.pageCount ?: 0,
-    publishedDate = volumeInfo?.publishedDate.orEmpty(),
-    language = volumeInfo?.language.orEmpty(),
-    publisher = volumeInfo?.publisher.orEmpty(),
+    title = volumeInfo.title.orEmpty(),
+    description = volumeInfo.description.orEmpty(),
+    imageUrl = volumeInfo.imageLinks?.thumbnail.orEmpty(),
+    authors = volumeInfo.authors ?: emptyList(),
+    categories = volumeInfo.categories ?: emptyList(),
+    averageRating = volumeInfo.averageRating?.toFloat() ?: 0f,
+    ratingsCount = volumeInfo.ratingsCount?.toFloat() ?: 0f,
+    pageCount = volumeInfo.pageCount,
+    publishedDate = volumeInfo.publishedDate.orEmpty(),
+    language = volumeInfo.language,
+    publisher = volumeInfo.publisher.orEmpty(),
     availableForSale = saleInfo?.saleability == Saleability.FOR_SALE,
-    price = saleInfo?.listPrice?.amountInMicros ?: 0.0,
-    currency = saleInfo?.country.orEmpty(),
+    price = salePrice,
+    currency = salePriceCurrency,
     webResourceUrl = accessInfo?.webReaderLink.orEmpty()
 )
-
-fun BookAndOrder.asExternalModel(): BookOrder? {
-    val order = order ?: return null
-    val book = book ?: return null
-    return BookOrder(
-        id = order.orderId,
-        bookId = book.bookId,
-        count = order.count
-    )
-}

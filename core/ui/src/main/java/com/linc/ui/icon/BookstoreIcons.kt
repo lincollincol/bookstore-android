@@ -12,6 +12,7 @@ import com.linc.ui.R
 
 object BookstoreIcons {
     val Add = Icons.Rounded.Add
+    val Remove = Icons.Rounded.Remove
     val Star = Icons.Default.Star
     val StarOutlined = Icons.Outlined.StarOutline
     val ArrowBack = Icons.Rounded.ArrowBack
@@ -25,6 +26,7 @@ object BookstoreIcons {
     val Close = Icons.Rounded.Close
     val Clear = Icons.Rounded.Clear
     val Person = Icons.Rounded.Person
+    val SoldOut = R.drawable.ic_sold_out
     val Search = Icons.Rounded.Search
     val Share = Icons.Rounded.Share
     val Settings = Icons.Rounded.Settings
