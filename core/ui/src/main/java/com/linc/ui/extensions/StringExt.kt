@@ -1,4 +1,4 @@
-package com.linc.designsystem.extensions
+package com.linc.ui.extensions
 
 import android.graphics.Typeface
 import android.text.Spanned
@@ -12,6 +12,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+
+const val PRICE_WITH_CURRENCY_FORMAT: String = "%.2f %s"
 
 fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
     val spanned = this@toAnnotatedString

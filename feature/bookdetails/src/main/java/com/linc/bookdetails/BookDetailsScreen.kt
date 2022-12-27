@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.*
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.text.HtmlCompat
+import androidx.core.text.parseAsHtml
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +44,7 @@ import com.linc.ui.icon.asIconWrapper
 import com.linc.designsystem.extensions.getVibrantColor
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
+import com.linc.ui.extensions.toAnnotatedString
 import com.linc.ui.icon.IconWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -331,7 +334,7 @@ fun BookDescription(
         )
         Text(
             modifier = Modifier.padding(top = 16.dp),
-            text = book.description,
+            text = book.description.parseAsHtml().toAnnotatedString(),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Justify
         )

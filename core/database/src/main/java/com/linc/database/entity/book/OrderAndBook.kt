@@ -3,12 +3,12 @@ package com.linc.database.entity.book
 import androidx.room.*
 import com.linc.database.entity.order.OrderEntity
 
-data class BookAndOrder(
+data class OrderAndBook(
     @Embedded
-    val book: BookEntity?,
+    val order: OrderEntity,
     @Relation(
-        parentColumn = "bookId",
-        entityColumn = "targetId"
+        parentColumn = "targetId",
+        entityColumn = "bookId"
     )
-    val order: OrderEntity?
+    val book: BookEntity,
 )

@@ -1,15 +1,19 @@
 package com.linc.books
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -83,28 +87,19 @@ internal fun BooksScreen(
     onSearchIconClick: () -> Unit,
     onKeyboardDoneClick: () -> Unit
 ) {
+    val booksListState = rememberLazyListState()
+    val showToolbarElevation by remember {
+        derivedStateOf { booksListState.firstVisibleItemScrollOffset > 0 }
+    }
+    val toolbarElevation by animateDpAsState(
+        targetValue = if(showToolbarElevation) 4.dp else 0.dp
+    )
     val searchFieldIcon = when {
         isSearching -> BookstoreIcons.Clear
         else -> BookstoreIcons.Search
     }.asIconWrapper()
     ConstraintLayout {
         val (searchField, list) = createRefs()
-        BookstoreTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
-                .constrainAs(searchField) {
-                    top.linkTo(parent.top)
-                    linkTo(start = parent.start, end = parent.end)
-                },
-            hint = stringResource(id = R.string.search_books_hint),
-            value = searchQuery,
-            onValueChange = onSearchValueChange,
-            trailingIcon = searchFieldIcon,
-            onTrailingIconClick = onSearchIconClick,
-            onKeyboardDone = onKeyboardDoneClick
-        )
-
         if(!isSearching) {
             SubjectBooks(
                 modifier = Modifier
@@ -117,6 +112,7 @@ internal fun BooksScreen(
                         )
                         height = Dimension.preferredWrapContent
                     },
+                listState = booksListState,
                 booksSections = booksSections,
                 onBookClick = onBookClick,
                 onSeeAllClick = onSeeAllClick
@@ -133,10 +129,28 @@ internal fun BooksScreen(
                         )
                         height = Dimension.preferredWrapContent
                     },
+                listState = booksListState,
                 searchBooks = searchBooks,
                 onBookClick = onBookClick
             )
         }
+        BookstoreTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(toolbarElevation)
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
+                .constrainAs(searchField) {
+                    top.linkTo(parent.top)
+                    linkTo(start = parent.start, end = parent.end)
+                },
+            hint = stringResource(id = R.string.search_books_hint),
+            value = searchQuery,
+            onValueChange = onSearchValueChange,
+            trailingIcon = searchFieldIcon,
+            onTrailingIconClick = onSearchIconClick,
+            onKeyboardDone = onKeyboardDoneClick
+        )
     }
 
 }
@@ -144,6 +158,7 @@ internal fun BooksScreen(
 @Composable
 private fun SearchResultBooks(
     modifier: Modifier,
+    listState: LazyListState,
     searchBooks: LazyPagingItems<DetailedBookItemUiState>,
     onBookClick: (String) -> Unit
 ) {
@@ -162,7 +177,8 @@ private fun SearchResultBooks(
             )
         } else {
             LazyColumn(
-                contentPadding = PaddingValues(horizontal = 32.dp)
+                contentPadding = PaddingValues(horizontal = 32.dp),
+                state = listState
             ) {
                 items(
                     items = searchBooks,
@@ -179,6 +195,7 @@ private fun SearchResultBooks(
 @Composable
 private fun SubjectBooks(
     modifier: Modifier,
+    listState: LazyListState,
     booksSections: List<BooksSectionItemUiState>,
     onBookClick: (String) -> Unit,
     onSeeAllClick: (String) -> Unit
@@ -186,7 +203,8 @@ private fun SubjectBooks(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .then(modifier)
+            .then(modifier),
+        state = listState
     ) {
         items(
             items = booksSections,
@@ -301,19 +319,6 @@ private fun LazyItemScope.BookItem(
             } else {
                 SimpleIcon(icon = BookstoreIcons.SoldOut.asIconWrapper())
             }
-        }
-    }
-}
-
-
-@Preview
-@Composable
-private fun BooksScreenPreview() {
-    BookstoreTheme {
-        Column {
-//            BooksScreen({})
-//            BooksSection(title = "New books", books = mockBooks, onBookClick = {})
-//            BookItem(book = mockBooks.first())
         }
     }
 }

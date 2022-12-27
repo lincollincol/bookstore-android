@@ -3,6 +3,7 @@ package com.linc.bookdetails
 import com.linc.common.coroutines.extensions.EMPTY
 import com.linc.common.coroutines.extensions.replaceLast
 import com.linc.model.Book
+import com.linc.ui.extensions.PRICE_WITH_CURRENCY_FORMAT
 import com.linc.ui.state.UiState
 import com.linc.ui.util.ResourceProvider
 
@@ -31,8 +32,12 @@ data class BookUiState(
 ) : UiState
 
 val BookUiState.totalPrice: Double get() = price * orderCount
-val BookUiState.formattedPrice: String get() = formatPrice(price, currency)
-val BookUiState.formattedTotalPrice: String get() = formatPrice(totalPrice, currency)
+
+val BookUiState.formattedPrice: String get() =
+    String.format(PRICE_WITH_CURRENCY_FORMAT, price, currency)
+
+val BookUiState.formattedTotalPrice: String get() =
+    String.format(PRICE_WITH_CURRENCY_FORMAT, totalPrice, currency)
 
 fun Book.toUiState(
     resourceProvider: ResourceProvider,
@@ -71,6 +76,3 @@ private fun formatAuthors(
     return authors.joinToString()
         .replaceLast(", ", resourceProvider.getString(com.linc.ui.R.string.and_spaced))
 }
-
-
-private fun formatPrice(price: Double, currency: String): String = "$price $currency"
