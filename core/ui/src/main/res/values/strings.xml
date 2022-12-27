@@ -3,9 +3,10 @@
     <string name="and">and</string>
     <string name="and_spaced">" and "</string>
     <string name="cancel">Cancel</string>
+    <string name="pay">Pay</string>
     <string name="add_to_cart">Add to cart</string>
     <string name="make_order">Make order</string>
     <string name="pay_with_price">"Pay %s"</string>
     <string name="orders_with_count">"Orders (%d)"</string>
-    <string name="complete_purchase">"Complete purchase"</string>
+    <string name="purchase_all_orders">"Purchase all"</string>
 </resources>

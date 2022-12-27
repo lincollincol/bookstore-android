@@ -11,7 +11,8 @@ data class CartUiState(
 ) : UiState
 
 data class OrderItemUiState(
-    val id: String,
+    val bookId: String,
+    val orderId: String,
     val bookTitle: String,
     val bookImageUrl: String,
     val count: Int,
@@ -20,9 +21,6 @@ data class OrderItemUiState(
 ) : UiState
 
 val OrderItemUiState.totalPrice: Double get() = price * count
-
-val OrderItemUiState.formattedPrice: String get() =
-    String.format(PRICE_WITH_CURRENCY_FORMAT, price, currency)
 
 val OrderItemUiState.formattedTotalPrice: String get() =
     String.format(PRICE_WITH_CURRENCY_FORMAT, totalPrice, currency)
@@ -38,7 +36,8 @@ val CartUiState.formattedTotalPrice: String get() =
     String.format(PRICE_WITH_CURRENCY_FORMAT, totalPrice, ordersCurrency)
 
 fun BookOrder.toUiState() = OrderItemUiState(
-    id = order.id,
+    orderId = order.id,
+    bookId = book.id,
     count = order.count,
     bookTitle = book.title,
     bookImageUrl = book.hiqImageUrl,

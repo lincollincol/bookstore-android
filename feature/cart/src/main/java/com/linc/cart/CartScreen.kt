@@ -13,9 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -23,20 +25,32 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.linc.cart.navigation.CartNavigationState
 import com.linc.designsystem.component.RatingBar
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
+import com.linc.navigation.observeNavigation
 import com.linc.ui.R
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun CartRoute(
-    viewModel: CartViewModel = hiltViewModel()
+    viewModel: CartViewModel = hiltViewModel(),
+    navigateToBookDetails: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.observeNavigation {
+        when(it) {
+            is CartNavigationState.BookDetails -> navigateToBookDetails(it.bookId)
+        }
+    }
     CartScreen(
         orders = uiState.orders,
         ordersCount = uiState.ordersCount,
-        formattedTotalPrice = uiState.formattedTotalPrice
+        formattedTotalPrice = uiState.formattedTotalPrice,
+        onPurchaseAllClick = viewModel::purchaseAllOrders,
+        onOrderClick = viewModel::selectOrder,
+        onCancelOrderClick = viewModel::cancelOrder,
+        onPayOrderClick = viewModel::purchaseOrder
     )
 }
 
@@ -47,6 +61,10 @@ private fun CartScreen(
     orders: List<OrderItemUiState>,
     ordersCount: Int,
     formattedTotalPrice: String,
+    onOrderClick: (String) -> Unit,
+    onPurchaseAllClick: () -> Unit,
+    onCancelOrderClick: (String) -> Unit,
+    onPayOrderClick: (String) -> Unit,
 ) {
     val ordersListState = rememberLazyListState()
     val showToolbarElevation by remember {
@@ -72,7 +90,10 @@ private fun CartScreen(
                     height = Dimension.fillToConstraints
                 },
             orders = orders,
-            listState = ordersListState
+            listState = ordersListState,
+            onOrderClick = onOrderClick,
+            onCancelOrderClick = onCancelOrderClick,
+            onPayOrderClick = onPayOrderClick
         )
         Text(
             modifier = Modifier
@@ -95,7 +116,7 @@ private fun CartScreen(
                     centerHorizontallyTo(parent)
                 },
             formattedTotalPrice = formattedTotalPrice,
-            onPayClick = {}
+            onPurchaseAllClick = onPurchaseAllClick
         )
     }
 }
@@ -104,7 +125,7 @@ private fun CartScreen(
 private fun CompletePurchaseBar(
     modifier: Modifier = Modifier,
     formattedTotalPrice: String,
-    onPayClick: () -> Unit
+    onPurchaseAllClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -116,21 +137,21 @@ private fun CompletePurchaseBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = stringResource(id = R.string.complete_purchase))
-        TextButton(
-            onClick = onPayClick
-        ) {
+        Text(text = stringResource(id = R.string.purchase_all_orders))
+        TextButton(onClick = onPurchaseAllClick) {
             Text(text = stringResource(id = R.string.pay_with_price, formattedTotalPrice))
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OrdersList(
     modifier: Modifier = Modifier,
-    orders: List<OrderItemUiState>,
     listState: LazyListState,
+    orders: List<OrderItemUiState>,
+    onOrderClick: (String) -> Unit,
+    onCancelOrderClick: (String) -> Unit,
+    onPayOrderClick: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -141,11 +162,13 @@ private fun OrdersList(
     ) {
         items(
             items = orders,
-            key = { it.id }
+            key = { it.orderId }
         ) {
             OrderItem(
                 item = it,
-                onClick = {}
+                onClick = onOrderClick,
+                onCancelClick = onCancelOrderClick,
+                onPayClick = onPayOrderClick
             )
         }
     }
@@ -156,14 +179,18 @@ private fun OrdersList(
 fun LazyItemScope.OrderItem(
     modifier: Modifier = Modifier,
     item: OrderItemUiState,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    onCancelClick: (String) -> Unit,
+    onPayClick: (String) -> Unit,
 ) {
     Surface(
         modifier = Modifier.then(modifier),
-        onClick = { onClick(item.id) }
+        onClick = { onClick(item.orderId) }
     ) {
         Row(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .padding(8.dp),
             verticalAlignment = Alignment.Top
         ) {
             AsyncImage(
@@ -176,11 +203,52 @@ fun LazyItemScope.OrderItem(
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Column(Modifier.fillMaxWidth()) {
-                Text(text = item.bookTitle)
-                Text(text = item.formattedPrice)
-                Text(text = item.count.toString())
-                Text(text = item.formattedTotalPrice)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = item.bookTitle,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "${item.formattedTotalPrice} (x${item.count})",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    OutlinedButton(
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = 24.dp)
+                            .padding(horizontal = 4.dp),
+                        contentPadding = PaddingValues(),
+                        onClick = { onCancelClick(item.orderId) }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.cancel),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    ElevatedButton(
+                        modifier = Modifier.defaultMinSize(minHeight = 24.dp),
+                        contentPadding = PaddingValues(),
+                        onClick = { onPayClick(item.orderId) }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.pay),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+
             }
         }
     }

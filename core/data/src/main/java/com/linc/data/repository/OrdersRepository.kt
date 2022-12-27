@@ -45,4 +45,8 @@ class OrdersRepository @Inject constructor(
         )
     }
 
+    suspend fun deleteOrder(orderId: String, ) = withContext(dispatcher) {
+        ordersDao.deleteOrder(orderId)
+    }
+
 }

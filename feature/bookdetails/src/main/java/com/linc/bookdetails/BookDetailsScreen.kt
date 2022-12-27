@@ -49,6 +49,7 @@ import com.linc.ui.icon.IconWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.sign
 
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -98,11 +99,18 @@ internal fun BookDetailsScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    var toolbarHeight by remember {
+        mutableStateOf(0)
+    }
+    val showToolbarElevation by remember(scrollBehavior.state.contentOffset) {
+        derivedStateOf { scrollBehavior.state.contentOffset < -toolbarHeight }
+    }
+    val toolbarElevation by animateDpAsState(
+        targetValue = if(showToolbarElevation) 4.dp else 0.dp
+    )
     BackHandler {
         if(bottomSheetState.isVisible) {
-            coroutineScope.launch {
-                bottomSheetState.hide()
-            }
+            coroutineScope.launch { bottomSheetState.hide() }
             return@BackHandler
         }
         onBackClick()
@@ -138,10 +146,15 @@ internal fun BookDetailsScreen(
         ) {
             val (toolbar, content, buyButton) = createRefs()
             BookDetailsAppBar(
-                modifier = Modifier.constrainAs(toolbar) {
-                    top.linkTo(parent.top)
-                    centerHorizontallyTo(parent)
-                },
+                modifier = Modifier
+                    .constrainAs(toolbar) {
+                        top.linkTo(parent.top)
+                        centerHorizontallyTo(parent)
+                    }
+                    .onGloballyPositioned {
+                        toolbarHeight = it.size.height
+                    }
+                    .shadow(toolbarElevation),
                 scrollBehavior = scrollBehavior,
                 isSoldOut = !bookUiState.availableForSale,
                 isBookmarked = bookUiState.isBookmarked,

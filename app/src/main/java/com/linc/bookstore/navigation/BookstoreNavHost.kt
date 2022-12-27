@@ -42,10 +42,6 @@ fun BookstoreNavHost(
                 subjectBooksScreen(navigateToBookDetails = navController::navigateToBookDetails)
                 bookDetailsScreen(
                     navigateToCart = {
-                        /*navController.popBackStack(
-                            route = navController.graph.findStartDestination().route.orEmpty(),
-                            inclusive = false
-                        )*/
                         navController.navigateToCart(
                             navOptions {
                                 popUpTo(navController.graph.findStartDestination().id) {
@@ -58,7 +54,9 @@ fun BookstoreNavHost(
                 )
             }
         )
-        cartGraph()
+        cartGraph(
+            navigateToBookDetails = navController::navigateToBookDetails
+        )
         preferencesGraph(
             navigateToSubjectsEditor = navController::navigateToEditSubjects,
             nestedGraphs = {

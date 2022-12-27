@@ -23,4 +23,7 @@ interface OrdersDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrder(order: OrderEntity)
 
+    @Query("DELETE FROM OrderEntity WHERE OrderEntity.orderId = :orderId")
+    suspend fun deleteOrder(orderId: String)
+
 }

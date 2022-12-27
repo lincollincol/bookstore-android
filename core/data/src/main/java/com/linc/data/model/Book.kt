@@ -7,10 +7,10 @@ import com.linc.network.model.book.BookApiModel
 import com.linc.network.model.book.Saleability
 
 private val BookApiModel.salePrice: Double get() =
-    saleInfo?.let { it?.listPrice?.amount ?: it?.retailPrice?.amount } ?: 0.0
+    saleInfo?.let { it.listPrice?.amount ?: it.retailPrice?.amount } ?: 0.0
 
 private val BookApiModel.salePriceCurrency: String get() =
-    saleInfo?.let { it?.listPrice?.currencyCode ?: it?.retailPrice?.currencyCode } ?: String.EMPTY
+    saleInfo?.let { it.listPrice?.currencyCode ?: it.retailPrice?.currencyCode } ?: String.EMPTY
 
 fun BookApiModel.asEntity() = BookEntity(
     bookId = id,
