@@ -39,7 +39,10 @@ fun BookstoreNavHost(
             navigateToBookDetails = navController::navigateToBookDetails,
             navigateToSubjectBook = navController::navigateToSubjectBooks,
             nestedGraphs = {
-                subjectBooksScreen(navigateToBookDetails = navController::navigateToBookDetails)
+                subjectBooksScreen(
+                    navigateToBookDetails = navController::navigateToBookDetails,
+                    navigateBack = navController::popBackStack
+                )
                 bookDetailsScreen(
                     navigateToCart = {
                         navController.navigateToCart(

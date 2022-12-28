@@ -41,14 +41,20 @@ class BookDetailsViewModel @Inject constructor(
         bookmarksRepository.getBookBookmarkStream(bookDetailsArgs.bookId),
         orderCountState
     ) { book, order, bookmark, orderCount ->
-        book.toUiState(
+        book?.toUiState(
             resourceProvider = resourceProvider,
             orderCount = orderCount,
             isOrdered = order != null,
-            isBookmarked = bookmark != null
-        )
+            isBookmarked = bookmark != null,
+            isLoading = false
+        ) ?: BookUiState(isBookExist = false, isLoading = false)
     }
-        .onStart { booksRepository.fetchBook(bookDetailsArgs.bookId) }
+        .onStart {
+            try {
+
+                booksRepository.fetchBook(bookDetailsArgs.bookId)
+            } catch (e: Exception) {}
+        }
         .catch {
             it.printStackTrace()
         }

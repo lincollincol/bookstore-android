@@ -6,6 +6,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.*
 
+const val DEEPLINK_URI = "app://bookstore"
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable

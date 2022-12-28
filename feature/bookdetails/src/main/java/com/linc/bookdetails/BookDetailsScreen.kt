@@ -1,10 +1,7 @@
 package com.linc.bookdetails
 
-import android.widget.Space
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -29,7 +26,6 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.*
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.text.HtmlCompat
 import androidx.core.text.parseAsHtml
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -38,6 +34,7 @@ import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.linc.bookdetails.navigation.BookDetailsNavigationState
+import com.linc.ui.components.NothingFound
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.icon.asIconWrapper
@@ -49,7 +46,6 @@ import com.linc.ui.icon.IconWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.math.sign
 
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -124,7 +120,7 @@ internal fun BookDetailsScreen(
         sheetContent = {
             OrderBuilderBottomSheet(
                 formattedPrice = bookUiState.formattedPrice,
-                formattedTotalPrice = bookUiState.formattedTotalPrice,
+                formattedTotalPrice = bookUiState.formattedTotalOrderPrice,
                 count = bookUiState.orderCount,
                 onIncCountClick = onIncCountClick,
                 onDecCountClick = onDecCountClick,
@@ -156,6 +152,7 @@ internal fun BookDetailsScreen(
                     }
                     .shadow(toolbarElevation),
                 scrollBehavior = scrollBehavior,
+                isBookExist = bookUiState.isBookExist,
                 isSoldOut = !bookUiState.availableForSale,
                 isBookmarked = bookUiState.isBookmarked,
                 onBackClick = onBackClick,
@@ -171,13 +168,14 @@ internal fun BookDetailsScreen(
                 },
                 book = bookUiState
             )
-            if(bookUiState.availableForSale) {
+            if(bookUiState.canOrderBook) {
                 AddToCartButton(
                     modifier = Modifier.constrainAs(buyButton) {
                         bottom.linkTo(parent.bottom)
                         centerHorizontallyTo(parent)
                         width = Dimension.fillToConstraints
                     },
+                    formattedPrice = bookUiState.formattedPrice,
                     isOrdered = bookUiState.isOrdered,
                     onAddToCartClick = {
                         coroutineScope.launch {
@@ -301,25 +299,41 @@ private fun BookContent(
     val bottomPadding = remember {
         ButtonDefaults.MinHeight + 36.dp
     }
-    Column(
+    Box(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
             .then(modifier),
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
-        BookImage(
-            modifier = Modifier.padding(top = imageTopMargin),
-            imageUrl = book.imageUrl,
-        )
-        BookDescription(
-            modifier = Modifier.padding(
-                top = 24.dp,
-                bottom = bottomPadding,
-                start = 24.dp,
-                end = 24.dp
-            ),
-            book = book
-        )
+        if(book.isLoading) {
+            CircularProgressIndicator()
+        } else if(!book.isBookExist) {
+            NothingFound(
+                icon = BookstoreIcons.BookNotFound.asIconWrapper(),
+                message = "Book not found"
+            )
+        } else {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .then(modifier),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                BookImage(
+                    modifier = Modifier.padding(top = imageTopMargin),
+                    imageUrl = book.imageUrl,
+                )
+                BookDescription(
+                    modifier = Modifier.padding(
+                        top = 24.dp,
+                        bottom = bottomPadding,
+                        start = 24.dp,
+                        end = 24.dp
+                    ),
+                    book = book
+                )
+            }
+        }
     }
 }
 
@@ -405,6 +419,7 @@ private fun BookImage(
 private fun BookDetailsAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior,
+    isBookExist: Boolean,
     isSoldOut: Boolean,
     isBookmarked: Boolean,
     onBackClick: () -> Unit,
@@ -431,11 +446,13 @@ private fun BookDetailsAppBar(
             if(isSoldOut) {
                 SimpleIcon(icon = BookstoreIcons.SoldOut.asIconWrapper())
             }
-            IconButton(onClick = onBookmarkClick) {
-                SimpleIcon(icon = bookmarkIcon.asIconWrapper())
-            }
-            IconButton(onClick = { showMenu = true }) {
-                SimpleIcon(icon = BookstoreIcons.MoreVertical.asIconWrapper())
+            if(isBookExist) {
+                IconButton(onClick = onBookmarkClick) {
+                    SimpleIcon(icon = bookmarkIcon.asIconWrapper())
+                }
+                IconButton(onClick = { showMenu = true }) {
+                    SimpleIcon(icon = BookstoreIcons.MoreVertical.asIconWrapper())
+                }
             }
             DropdownMenu(
                 expanded = showMenu,
@@ -482,6 +499,7 @@ private fun CircleButton(
 private fun AddToCartButton(
     modifier: Modifier = Modifier,
     isOrdered: Boolean,
+    formattedPrice: String,
     onAddToCartClick: () -> Unit,
     onOrderPayClick: () -> Unit,
 ) {
@@ -489,7 +507,7 @@ private fun AddToCartButton(
     val cartButtonText = remember(isOrdered) {
         when {
             isOrdered -> R.string.pay_for_order
-            else -> com.linc.ui.R.string.make_order
+            else -> com.linc.ui.R.string.buy_with_price
         }
     }
     ElevatedButton(
@@ -501,6 +519,6 @@ private fun AddToCartButton(
             defaultElevation = 4.dp
         )
     ) {
-        Text(text = stringResource(id = cartButtonText))
+        Text(text = stringResource(id = cartButtonText, formattedPrice))
     }
 }

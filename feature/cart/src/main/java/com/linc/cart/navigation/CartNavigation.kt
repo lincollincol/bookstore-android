@@ -3,6 +3,7 @@ package com.linc.cart.navigation
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.linc.cart.CartRoute
+import com.linc.navigation.DEEPLINK_URI
 import com.linc.navigation.NavigationState
 
 const val cartRouteGraph: String = "cart_route_graph"
@@ -21,7 +22,11 @@ fun NavController.navigateToCart(
 fun NavGraphBuilder.cartScreen(
     navigateToBookDetails: (String) -> Unit
 ) {
-    composable(cartRoute) {
+
+    composable(
+        route = cartRoute,
+        deepLinks = listOf(navDeepLink { uriPattern = "$DEEPLINK_URI/cart" })
+    ) {
         CartRoute(
             navigateToBookDetails = navigateToBookDetails
         )

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.linc.bookdetails.BookDetailsRoute
+import com.linc.navigation.DEEPLINK_URI
 import com.linc.navigation.NavigationState
 
 const val bookDetailsRoute: String = "book_details_route"
@@ -33,7 +34,8 @@ fun NavGraphBuilder.bookDetailsScreen(
         route = "$bookDetailsRoute/{$bookIdArg}",
         arguments = listOf(
             navArgument(bookIdArg) { type = NavType.StringType }
-        )
+        ),
+        deepLinks = listOf(navDeepLink { uriPattern = "$DEEPLINK_URI/books/{${bookIdArg}}" })
     ) {
         BookDetailsRoute(
             navigateToCart = navigateToCart,

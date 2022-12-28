@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -36,10 +35,9 @@ import com.linc.books.navigation.BooksNavigationState
 import com.linc.designsystem.component.BookstoreTextField
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.icon.asIconWrapper
-import com.linc.ui.theme.BookstoreTheme
 import com.linc.navigation.observeNavigation
 import com.linc.ui.components.DetailedBookItem
-import com.linc.designsystem.component.SearchNotFound
+import com.linc.ui.components.NothingFound
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.model.DetailedBookItemUiState
@@ -172,7 +170,8 @@ private fun SearchResultBooks(
         if(loadState.refresh is LoadState.Loading) {
             CircularProgressIndicator()
         } else if(loadState.refresh is LoadState.Error || searchBooks.itemCount == 0) {
-            SearchNotFound(
+            NothingFound(
+                icon = BookstoreIcons.Search.asIconWrapper(),
                 message = stringResource(R.string.not_found)
             )
         } else {

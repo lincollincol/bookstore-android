@@ -21,7 +21,7 @@ data class BookUiState(
     val publishedDate: String = String.EMPTY,
     val language: String = String.EMPTY,
     val publisher: String = String.EMPTY,
-    val availableForSale: Boolean = false,
+    val availableForSale: Boolean = true,
     val price: Double = 0.0,
     val currency: String = String.EMPTY,
     val webResourceUrl: String = String.EMPTY,
@@ -29,21 +29,25 @@ data class BookUiState(
     val isOrdered: Boolean = false,
     val isBookmarked: Boolean = false,
     val isLoading: Boolean = false,
+    val isBookExist: Boolean = true,
 ) : UiState
 
-val BookUiState.totalPrice: Double get() = price * orderCount
+val BookUiState.totalOrderPrice: Double get() = price * orderCount
+
+val BookUiState.canOrderBook: Boolean get() = availableForSale && isBookExist
 
 val BookUiState.formattedPrice: String get() =
     String.format(PRICE_WITH_CURRENCY_FORMAT, price, currency)
 
-val BookUiState.formattedTotalPrice: String get() =
-    String.format(PRICE_WITH_CURRENCY_FORMAT, totalPrice, currency)
+val BookUiState.formattedTotalOrderPrice: String get() =
+    String.format(PRICE_WITH_CURRENCY_FORMAT, totalOrderPrice, currency)
 
 fun Book.toUiState(
     resourceProvider: ResourceProvider,
     orderCount: Int,
     isOrdered: Boolean,
-    isBookmarked: Boolean
+    isBookmarked: Boolean,
+    isLoading: Boolean,
 ) = BookUiState(
     id = id,
     title = title,
@@ -63,7 +67,8 @@ fun Book.toUiState(
     webResourceUrl = webResourceUrl,
     orderCount = orderCount,
     isOrdered = isOrdered,
-    isBookmarked = isBookmarked
+    isBookmarked = isBookmarked,
+    isLoading = isLoading
 )
 
 private fun formatAuthors(

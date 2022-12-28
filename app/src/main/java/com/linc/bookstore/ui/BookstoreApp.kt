@@ -1,5 +1,6 @@
 package com.linc.bookstore.ui
 
+import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -8,11 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -34,9 +38,7 @@ fun BookstoreApp() {
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             AnimatedVisibility(
-//                visible = MenuDestinations.isTopLevelDestination(backStackEntry?.destination?.route),
                 visible = backStackEntry.currentRouteIsOneOf(*MenuDestinations.routes()),
-
                 enter = slideInVertically(animationSpec = tween(200)) { it },
                 exit = slideOutVertically(animationSpec = tween(100)) { it }
             ) {

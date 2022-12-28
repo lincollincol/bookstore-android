@@ -1,11 +1,9 @@
 package com.linc.books.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
+import androidx.navigation.*
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.linc.books.BooksRoute
+import com.linc.navigation.DEEPLINK_URI
 import com.linc.navigation.NavigationState
 
 const val booksRouteGraph = "books_route_graph"
@@ -24,7 +22,10 @@ fun NavGraphBuilder.booksScreen(
     navigateToBookDetails: (String) -> Unit,
     navigateToSubjectBook: (String) -> Unit,
 ) {
-    composable(route = booksRoute) {
+    composable(
+        route = booksRoute,
+        deepLinks = listOf(navDeepLink { uriPattern = "$DEEPLINK_URI/books" })
+    ) {
         BooksRoute(navigateToBookDetails, navigateToSubjectBook)
     }
 }

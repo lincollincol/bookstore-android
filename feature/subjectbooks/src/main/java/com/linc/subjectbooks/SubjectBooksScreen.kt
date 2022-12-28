@@ -14,6 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.linc.navigation.NavigationState
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.icon.asIconWrapper
@@ -26,7 +27,8 @@ import com.linc.ui.model.DetailedBookItemUiState
 @Composable
 fun SubjectBooksRoute(
     viewModel: SubjectBooksViewModel = hiltViewModel(),
-    navigateToBookDetails: (String) -> Unit
+    navigateToBookDetails: (String) -> Unit,
+    navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val books = viewModel.booksUiState.collectAsLazyPagingItems()
@@ -34,12 +36,14 @@ fun SubjectBooksRoute(
     viewModel.observeNavigation {
         when(it) {
             is SubjectBooksNavigationState.BookDetails -> navigateToBookDetails(it.bookId)
+            is NavigationState.Back -> navigateBack()
         }
     }
     SubjectBooksScreen(
         title = uiState.title,
         books = books,
-        onBookClick = viewModel::selectBook
+        onBookClick = viewModel::selectBook,
+        onBackClick = viewModel::navigateBack
     )
 }
 
@@ -49,13 +53,14 @@ fun SubjectBooksScreen(
     title: String,
     books: LazyPagingItems<DetailedBookItemUiState>,
     onBookClick: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
     Column(Modifier.fillMaxSize()) {
         CenterAlignedTopAppBar(
             modifier = Modifier.shadow(4.dp).zIndex(2f),
             title = { Text(text = title) },
             navigationIcon = {
-                IconButton(onClick = {  }) {
+                IconButton(onClick = onBackClick) {
                     SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
                 }
             }

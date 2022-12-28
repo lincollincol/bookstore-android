@@ -43,16 +43,12 @@ class BooksViewModel @Inject constructor(
             searchQuery = searchQuery
         )
     }
+        .onStart { fetchBooks() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = BooksUiState()
         )
-
-    init {
-        // TODO: reload after applying new subjects
-        fetchBooks()
-    }
 
     private fun fetchBooks() {
         viewModelScope.launch {

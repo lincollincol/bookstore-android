@@ -107,8 +107,8 @@ class BooksRepository @Inject constructor(
             .flowOn(dispatcher)
     }
 
-    fun getBookStream(id: String): Flow<Book> = booksDao.getBookStream(id)
-        .map(BookEntity::asExternalModel)
+    fun getBookStream(id: String): Flow<Book?> = booksDao.getBookStream(id)
+        .map { it?.asExternalModel() }
         .flowOn(dispatcher)
 
 }

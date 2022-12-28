@@ -28,7 +28,8 @@ fun NavController.navigateToSubjectBooks(
 }
 
 fun NavGraphBuilder.subjectBooksScreen(
-    navigateToBookDetails: (String) -> Unit
+    navigateToBookDetails: (String) -> Unit,
+    navigateBack: () -> Unit
 ) {
     composable(
         "$subjectBooksRoute/{$subjectIdArg}",
@@ -36,6 +37,9 @@ fun NavGraphBuilder.subjectBooksScreen(
             navArgument(subjectIdArg) { type = NavType.StringType }
         )
     ) {
-        SubjectBooksRoute(navigateToBookDetails = navigateToBookDetails)
+        SubjectBooksRoute(
+            navigateToBookDetails = navigateToBookDetails,
+            navigateBack = navigateBack
+        )
     }
 }
