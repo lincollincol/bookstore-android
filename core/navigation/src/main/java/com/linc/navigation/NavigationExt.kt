@@ -1,7 +1,9 @@
 package com.linc.navigation
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.*
@@ -15,6 +17,8 @@ fun RouteNavigator.observeNavigation(onStateChange: (NavigationState) -> Unit) {
     onStateChange(navState)
     onNavigated(navState)
 }
+
+fun NavHostController.navigate(intent: Intent) = context.startActivity(intent)
 
 fun NavBackStackEntry?.currentRouteEquals(route: String?): Boolean =
     route?.let { this?.destination?.route?.startsWith(it, ignoreCase = true) } ?: false

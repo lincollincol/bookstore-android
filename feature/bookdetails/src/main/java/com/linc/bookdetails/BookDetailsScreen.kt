@@ -1,6 +1,8 @@
 package com.linc.bookdetails
 
+import android.content.Intent
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.*
@@ -54,6 +57,7 @@ fun BookDetailsRoute(
     modifier: Modifier = Modifier,
     viewModel: BookDetailsViewModel = hiltViewModel(),
     navigateToCart: () -> Unit,
+    navigateToChooser: (Intent) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val bookUiState: BookUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,8 +65,9 @@ fun BookDetailsRoute(
 
     viewModel.observeNavigation {
         when(it) {
-            BookDetailsNavigationState.Cart -> navigateToCart()
-            NavigationState.Back -> navigateBack()
+            is BookDetailsNavigationState.Cart -> navigateToCart()
+            is BookDetailsNavigationState.Chooser -> navigateToChooser(it.intent)
+            is NavigationState.Back -> navigateBack()
         }
     }
     BookDetailsScreen(
@@ -73,7 +78,7 @@ fun BookDetailsRoute(
         onAddToCartClick = viewModel::addToCart,
         onOrderPayClick = {},
         onBookmarkClick = viewModel::bookmarkBook,
-        onShareClick = {},
+        onShareClick = viewModel::shareBook,
         onIncCountClick = viewModel::increaseOrderCount,
         onDecCountClick = viewModel::decreaseOrderCount
     )
@@ -189,7 +194,6 @@ internal fun BookDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun OrderBuilderBottomSheet(
     modifier: Modifier = Modifier,
@@ -208,7 +212,7 @@ fun OrderBuilderBottomSheet(
         Text(
             modifier = Modifier
                 .padding(vertical = 16.dp),
-            text = "Complete order",
+            text = stringResource(id = com.linc.ui.R.string.create_order),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold
         )
@@ -218,7 +222,7 @@ fun OrderBuilderBottomSheet(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Book price:")
+            Text(text = stringResource(id = com.linc.ui.R.string.book_price_label))
             Text(text = formattedPrice)
         }
         Row(
@@ -228,7 +232,7 @@ fun OrderBuilderBottomSheet(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Quantity:")
+            Text(text = stringResource(id = com.linc.ui.R.string.quantity_label))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -256,7 +260,7 @@ fun OrderBuilderBottomSheet(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Total price:",
+                text = stringResource(id = com.linc.ui.R.string.total_price_label),
                 fontWeight = FontWeight.SemiBold
             )
             Text(
@@ -398,6 +402,7 @@ private fun BookImage(
     ) {
         AsyncImage(
             modifier = Modifier
+                .animateContentSize()
                 .fillMaxSize(0.8f),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl)
@@ -503,7 +508,6 @@ private fun AddToCartButton(
     onAddToCartClick: () -> Unit,
     onOrderPayClick: () -> Unit,
 ) {
-    // TODO: show price when ordered
     val cartButtonText = remember(isOrdered) {
         when {
             isOrdered -> R.string.pay_for_order

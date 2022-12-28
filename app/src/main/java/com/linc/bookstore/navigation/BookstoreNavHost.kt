@@ -1,9 +1,11 @@
 package com.linc.bookstore.navigation
 
+import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,6 +20,7 @@ import com.linc.cart.navigation.cartScreen
 import com.linc.cart.navigation.navigateToCart
 import com.linc.editsubjects.navigation.editSubjectsScreen
 import com.linc.editsubjects.navigation.navigateToEditSubjects
+import com.linc.navigation.navigate
 import com.linc.preferences.navigation.preferencesGraph
 import com.linc.preferences.navigation.preferencesScreen
 import com.linc.subjectbooks.navigation.navigateToSubjectBooks
@@ -52,6 +55,9 @@ fun BookstoreNavHost(
                                 }
                             }
                         )
+                    },
+                    navigateToChooser = {
+                        navController.navigate(intent = Intent.createChooser(it, null))
                     },
                     navigateBack = navController::popBackStack
                 )

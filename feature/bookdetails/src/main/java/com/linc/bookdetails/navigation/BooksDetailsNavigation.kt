@@ -1,5 +1,6 @@
 package com.linc.bookdetails.navigation
 
+import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.*
 import androidx.navigation.compose.composable
@@ -12,6 +13,7 @@ internal const val bookIdArg: String = "book_id_arg"
 
 sealed interface BookDetailsNavigationState : NavigationState {
     object Cart : BookDetailsNavigationState
+    data class Chooser(val intent: Intent) : BookDetailsNavigationState
 }
 
 internal class BookDetailsArgs(val bookId: String) {
@@ -28,6 +30,7 @@ fun NavController.navigateToBookDetails(
 
 fun NavGraphBuilder.bookDetailsScreen(
     navigateToCart: () -> Unit,
+    navigateToChooser: (Intent) -> Unit,
     navigateBack: () -> Unit
 ) {
     composable(
@@ -39,6 +42,7 @@ fun NavGraphBuilder.bookDetailsScreen(
     ) {
         BookDetailsRoute(
             navigateToCart = navigateToCart,
+            navigateToChooser = navigateToChooser,
             navigateBack = navigateBack
         )
     }

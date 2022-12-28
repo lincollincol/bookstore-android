@@ -1,10 +1,16 @@
 package com.linc.bookdetails
 
+import android.content.ClipData
+import android.content.ContentResolver.MimeTypeInfo
+import android.content.Intent
+import android.net.Uri
+import androidx.core.os.bundleOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linc.bookdetails.navigation.BookDetailsArgs
 import com.linc.bookdetails.navigation.BookDetailsNavigationState
+import com.linc.common.coroutines.extensions.TEXT_PLAIN_TYPE
 import com.linc.data.repository.BookmarksRepository
 import com.linc.data.repository.BooksRepository
 import com.linc.data.repository.OrdersRepository
@@ -85,11 +91,25 @@ class BookDetailsViewModel @Inject constructor(
                     rawUiState.isBookmarked -> bookmarksRepository.deleteBookBookmark(rawUiState.id)
                     else -> bookmarksRepository.bookmarkBook(rawUiState.id)
                 }
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun shareBook() {
+        val content = String.format(
+            "%s\n\n%s/books/%s",
+            rawUiState.title,
+            BuildConfig.BASE_BACKEND_URL,
+            rawUiState.id
+        )
+        val intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            type = TEXT_PLAIN_TYPE
+            putExtra(Intent.EXTRA_TEXT, content)
+        }
+        navigateTo(BookDetailsNavigationState.Chooser(intent))
     }
 
     fun increaseOrderCount() = orderCountState.update { it + 1 }
