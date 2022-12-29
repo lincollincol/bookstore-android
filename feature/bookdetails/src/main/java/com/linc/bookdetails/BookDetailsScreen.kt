@@ -2,8 +2,12 @@ package com.linc.bookdetails
 
 import android.content.Intent
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +20,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
@@ -35,6 +40,9 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.linc.bookdetails.navigation.BookDetailsNavigationState
 import com.linc.ui.components.NothingFound
@@ -377,46 +385,68 @@ private fun BookImage(
     modifier: Modifier = Modifier,
     imageUrl: String
 ) {
-    val inf = rememberInfiniteTransition()
-    val shadow by inf.animateValue(
-        initialValue = 32.dp,
-        targetValue = 64.dp,
+    val infinity = rememberInfiniteTransition()
+    val imageModel = ImageRequest.Builder(LocalContext.current)
+        .data(imageUrl)
+        .crossfade(true)
+        .allowHardware(false)
+        .size(coil.size.Size.ORIGINAL)
+        .build()
+    var shadowAmbientColor by remember { mutableStateOf(Color.Transparent) }
+    val animatedShadowAmbientColor by animateColorAsState(targetValue = shadowAmbientColor)
+    var minShadowAmbientElevation by remember { mutableStateOf(0.dp) }
+    var maxShadowAmbientElevation by remember { mutableStateOf(0.dp) }
+    var bookElevation by remember { mutableStateOf(0.dp) }
+    val animateBookElevation by animateDpAsState(targetValue = bookElevation)
+    val painter = rememberAsyncImagePainter(
+        model = imageModel,
+        onSuccess = {
+            minShadowAmbientElevation = 32.dp
+            maxShadowAmbientElevation = 64.dp
+            bookElevation = 6.dp
+            Palette.Builder(it.result.drawable.toBitmap()).generate { palette ->
+                shadowAmbientColor = palette.getVibrantColor()
+            }
+        }
+    )
+    val ambientShadowElevation by infinity.animateValue(
+        initialValue = minShadowAmbientElevation,
+        targetValue = maxShadowAmbientElevation,
         typeConverter = Dp.VectorConverter,
         animationSpec = infiniteRepeatable(
             animation = tween(2000),
             repeatMode = RepeatMode.Reverse
         )
     )
-    var vibrant by remember { mutableStateOf(Color.Transparent) }
-    Surface(
+    Box(
         modifier = Modifier
             .shadow(
-                elevation = shadow,
-                spotColor = vibrant,
+                elevation = ambientShadowElevation,
+                spotColor = animatedShadowAmbientColor,
                 clip = false,
                 shape = CircleShape
             )
             .then(modifier),
-        shape = MaterialTheme.shapes.medium,
-        shadowElevation = 4.dp
+        contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .animateContentSize()
-                .fillMaxSize(0.8f),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .allowHardware(false)
-                .build(),
-            contentDescription = null,
-            onSuccess = {
-                Palette.Builder(it.result.drawable.toBitmap()).generate { palette ->
-                    vibrant = palette.getVibrantColor()
-                }
-            },
-            contentScale = ContentScale.FillWidth
-        )
+        AnimatedVisibility(painter.state is AsyncImagePainter.State.Loading) {
+            CircularProgressIndicator()
+        }
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            shadowElevation = animateBookElevation
+        ) {
+            Image(
+                modifier = Modifier
+                    .animateContentSize(tween(500))
+                    .fillMaxSize(0.8f),
+                painter = painter,
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth
+            )
+        }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
