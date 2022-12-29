@@ -13,6 +13,7 @@ const val preferencesRoute: String = "preferences_route"
 
 sealed interface PreferenceNavigationState : NavigationState {
     object SubjectsEditor : PreferenceNavigationState
+    object Bookmarks : PreferenceNavigationState
 }
 
 fun NavController.navigateToPreferences(navOptions: NavOptions? = null) {
@@ -20,16 +21,19 @@ fun NavController.navigateToPreferences(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.preferencesScreen(
+    navigateToBookmarks: () -> Unit,
     navigateToSubjectsEditor: () -> Unit
 ) {
     composable(preferencesRoute) {
         PreferencesRoute(
+            navigateToBookmarks = navigateToBookmarks,
             navigateToSubjectsEditor = navigateToSubjectsEditor
         )
     }
 }
 
 fun NavGraphBuilder.preferencesGraph(
+    navigateToBookmarks: () -> Unit,
     navigateToSubjectsEditor: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit
 ) {
@@ -37,7 +41,10 @@ fun NavGraphBuilder.preferencesGraph(
         route = preferencesRouteGraph,
         startDestination = preferencesRoute
     ) {
-        preferencesScreen(navigateToSubjectsEditor)
+        preferencesScreen(
+            navigateToBookmarks = navigateToBookmarks,
+            navigateToSubjectsEditor = navigateToSubjectsEditor
+        )
         nestedGraphs()
     }
 }

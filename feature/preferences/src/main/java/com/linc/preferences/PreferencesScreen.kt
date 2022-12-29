@@ -1,12 +1,20 @@
 package com.linc.preferences
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,40 +24,60 @@ import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.icon.asIconWrapper
 import com.linc.navigation.observeNavigation
 import com.linc.preferences.navigation.PreferenceNavigationState
+import com.linc.ui.icon.IconWrapper
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun PreferencesRoute(
     viewModel: PreferencesViewModel = hiltViewModel(),
-    navigateToSubjectsEditor: () -> Unit
+    navigateToBookmarks: () -> Unit,
+    navigateToSubjectsEditor: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
             PreferenceNavigationState.SubjectsEditor -> navigateToSubjectsEditor()
+            PreferenceNavigationState.Bookmarks -> navigateToBookmarks()
         }
     }
     PreferencesScreen(
-        subjects = uiState.subjects,
-        onSubject = viewModel::selectSubject,
-        onNew = viewModel::addNewSubject
+        options = uiState.options,
+        onOptionClick = viewModel::selectOption
     )
 }
 
 @Composable
 internal fun PreferencesScreen(
-    subjects: List<SubjectItemUiState>,
-    onSubject: (String) -> Unit,
-    onNew: () -> Unit
+    options: List<OptionItemUiState>,
+    onOptionClick: (OptionItemUiState) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        SubjectsComponent(subjects, onSubject, onNew)
+//        SubjectsGroup(subjects, onSubject, onNew)
+        Text(
+            modifier = Modifier.padding(32.dp),
+            text = "Preferences",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        LazyColumn {
+            items(
+                items = options,
+                key = { it.name }
+            ) {
+                SettingsOption(
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    icon = it.icon,
+                    text = stringResource(id = it.title),
+                    onClick = { onOptionClick(it) }
+                )
+            }
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubjectsComponent(
+private fun SubjectsGroup(
     subjects: List<SubjectItemUiState>,
     onSubject: (String) -> Unit,
     onNew: () -> Unit
@@ -73,5 +101,37 @@ fun SubjectsComponent(
                 label = { Text("new") }
             )
         }
+    }
+}
+
+@Composable
+fun SettingsOption(
+    modifier: Modifier = Modifier,
+    icon: IconWrapper,
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)
+            .then(modifier),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SimpleIcon(icon = icon)
+            Text(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                text = text,
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+        SimpleIcon(icon = BookstoreIcons.ArrowForwardIos.asIconWrapper())
     }
 }

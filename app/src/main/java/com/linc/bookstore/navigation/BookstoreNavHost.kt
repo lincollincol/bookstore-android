@@ -12,6 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.linc.bookdetails.navigation.bookDetailsScreen
 import com.linc.bookdetails.navigation.navigateToBookDetails
+import com.linc.bookmarks.navigation.bookmarksScreen
+import com.linc.bookmarks.navigation.navigateToBookmarks
 import com.linc.books.navigation.booksGraph
 import com.linc.books.navigation.booksRouteGraph
 import com.linc.books.navigation.navigateToBooks
@@ -67,9 +69,14 @@ fun BookstoreNavHost(
             navigateToBookDetails = navController::navigateToBookDetails
         )
         preferencesGraph(
+            navigateToBookmarks = navController::navigateToBookmarks,
             navigateToSubjectsEditor = navController::navigateToEditSubjects,
             nestedGraphs = {
                 editSubjectsScreen()
+                bookmarksScreen(
+                    navigateToBookDetails = navController::navigateToBookDetails,
+                    navigateBack = navController::popBackStack
+                )
             }
         )
     }

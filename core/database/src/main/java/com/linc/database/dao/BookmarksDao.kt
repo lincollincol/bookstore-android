@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.linc.database.entity.book.BookAndBookmark
+import com.linc.database.entity.book.BookmarkAndBook
 import com.linc.database.entity.bookmark.BookmarkEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.Flow
 interface BookmarksDao {
 
     @Transaction
-    @Query("SELECT * FROM BookEntity")
-    fun getBookBookmarks() : Flow<BookAndBookmark>
+    @Query("SELECT * FROM BookmarkEntity")
+    fun getBookBookmarks() : Flow<List<BookmarkAndBook>>
 
     @Query("SELECT * FROM BookmarkEntity WHERE BookmarkEntity.targetId = :targetId")
     fun getBookmarkByTarget(targetId: String) : Flow<BookmarkEntity?>

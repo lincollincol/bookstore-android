@@ -106,8 +106,8 @@ private fun CartScreen(
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(32.dp),
             text = stringResource(id = R.string.orders_with_count, ordersCount),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.SemiBold,
         )
         CompletePurchaseBar(
             modifier = Modifier

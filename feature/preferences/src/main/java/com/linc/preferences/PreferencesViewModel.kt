@@ -20,21 +20,19 @@ class PreferencesViewModel @Inject constructor(
     subjectsRepository: SubjectsRepository
 ) : ViewModel(), UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
 
-    override val uiState: StateFlow<PreferencesUiState> = subjectsRepository.getPrimarySubjectsStream()
-        .map { PreferencesUiState(it.map(Subject::toUiState)) }
+    override val uiState: StateFlow<PreferencesUiState> = flowOf(PreferencesUiState())
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             PreferencesUiState()
         )
 
-
-    fun selectSubject(id: String) {
-
-    }
-
-    fun addNewSubject() {
-        navigateTo(PreferenceNavigationState.SubjectsEditor)
+    fun selectOption(option: OptionItemUiState) {
+        val destination = when(option) {
+            OptionItemUiState.Bookmarks -> PreferenceNavigationState.Bookmarks
+            OptionItemUiState.Interests -> PreferenceNavigationState.SubjectsEditor
+        }
+        navigateTo(destination)
     }
 
 }

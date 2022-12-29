@@ -17,12 +17,15 @@ object BookstoreIcons {
     val Star = Icons.Default.Star
     val StarOutlined = Icons.Outlined.StarOutline
     val ArrowBack = Icons.Rounded.ArrowBack
+    val ArrowForwardIos = Icons.Default.ArrowForwardIos
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
     val MoreVertical = Icons.Default.MoreVert
     val ArrowDropUp = Icons.Rounded.ArrowDropUp
     val OutlinedBookmark = R.drawable.ic_outlined_bookmark
+    val Interests = Icons.Default.Interests
     val BookmarkAdd = Icons.Default.BookmarkAdd
     val BookmarkAdded = Icons.Default.BookmarkAdded
+    val BookmarkRemove = Icons.Default.BookmarkRemove
     val Check = Icons.Rounded.Check
     val Close = Icons.Rounded.Close
     val Clear = Icons.Rounded.Clear

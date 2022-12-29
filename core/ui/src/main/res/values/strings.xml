@@ -14,4 +14,6 @@
     <string name="book_price_label">"Book price:"</string>
     <string name="total_price_label">"Total price:"</string>
     <string name="create_order">"Create order"</string>
+    <string name="bookmarks">"Bookmarks"</string>
+    <string name="interests">"Interests"</string>
 </resources>

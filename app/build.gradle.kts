@@ -55,6 +55,7 @@ dependencies {
     implementation(project(":feature:preferences"))
     implementation(project(":feature:editsubjects"))
     implementation(project(":feature:subjectbooks"))
+    implementation(project(":feature:bookmarks"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

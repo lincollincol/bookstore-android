@@ -4,12 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.linc.database.entity.bookmark.BookmarkEntity
 
-data class BookAndBookmark(
+data class BookmarkAndBook(
     @Embedded
-    val bookEntity: BookEntity,
+    val bookmarkEntity: BookmarkEntity,
     @Relation(
-        parentColumn = "bookId",
-        entityColumn = "targetId"
+        parentColumn = "targetId",
+        entityColumn = "bookId"
     )
-    val bookmarkEntity: BookmarkEntity
+    val bookEntity: BookEntity
+
 )

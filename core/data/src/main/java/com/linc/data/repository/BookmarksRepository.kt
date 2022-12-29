@@ -4,7 +4,9 @@ import com.linc.common.coroutines.AppDispatchers
 import com.linc.common.coroutines.Dispatcher
 import com.linc.data.model.asExternalModel
 import com.linc.database.dao.BookmarksDao
+import com.linc.database.entity.book.BookmarkAndBook
 import com.linc.database.entity.bookmark.BookmarkEntity
+import com.linc.model.BookBookmark
 import com.linc.model.Bookmark
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +23,11 @@ class BookmarksRepository @Inject constructor(
     fun getBookBookmarkStream(bookId: String): Flow<Bookmark?> =
         bookmarksDao.getBookmarkByTarget(bookId)
             .map { it?.asExternalModel() }
+            .flowOn(dispatcher)
+
+    fun getBookBookmarks(): Flow<List<BookBookmark>> =
+        bookmarksDao.getBookBookmarks()
+            .map { it.map(BookmarkAndBook::asExternalModel) }
             .flowOn(dispatcher)
 
     suspend fun bookmarkBook(bookId: String) {
