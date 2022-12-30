@@ -48,12 +48,12 @@ import com.linc.bookdetails.navigation.BookDetailsNavigationState
 import com.linc.ui.components.NothingFound
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.asIconWrapper
 import com.linc.designsystem.extensions.getVibrantColor
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
 import com.linc.ui.extensions.toAnnotatedString
-import com.linc.ui.icon.IconWrapper
+import com.linc.ui.theme.IconWrapper
+import com.linc.ui.theme.icons
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -246,7 +246,7 @@ fun OrderBuilderBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 CircleButton(
-                    icon = BookstoreIcons.Remove.asIconWrapper(),
+                    icon = MaterialTheme.icons.remove,
                     onClick = onDecCountClick
                 )
                 Text(
@@ -254,7 +254,7 @@ fun OrderBuilderBottomSheet(
                     text = count.toString()
                 )
                 CircleButton(
-                    icon = BookstoreIcons.Add.asIconWrapper(),
+                    icon = MaterialTheme.icons.add,
                     onClick = onIncCountClick
                 )
             }
@@ -321,7 +321,7 @@ private fun BookContent(
             CircularProgressIndicator()
         } else if(!book.isBookExist) {
             NothingFound(
-                icon = BookstoreIcons.BookNotFound.asIconWrapper(),
+                icon = MaterialTheme.icons.bookNotFound,
                 message = "Book not found"
             )
         } else {
@@ -464,9 +464,11 @@ private fun BookDetailsAppBar(
     var showMenu by remember {
         mutableStateOf(false)
     }
-    val bookmarkIcon = remember(isBookmarked) {
-        if(isBookmarked) BookstoreIcons.BookmarkAdded else BookstoreIcons.BookmarkAdd
+    // TODO: check doc for potential leaks or something
+    val bookmarkIcon = with(MaterialTheme.icons) {
+        remember { if(isBookmarked) bookmarkAdd else bookmarkAdd }
     }
+
     TopAppBar(
         modifier = Modifier
             .zIndex(1f)
@@ -474,27 +476,27 @@ private fun BookDetailsAppBar(
         title = {},
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
+                SimpleIcon(icon = MaterialTheme.icons.arrowBack)
             }
         },
         actions = {
             if(isSoldOut) {
-                SimpleIcon(icon = BookstoreIcons.SoldOut.asIconWrapper())
+                SimpleIcon(icon = MaterialTheme.icons.soldOut)
             }
             if(isBookExist) {
                 IconButton(onClick = onBookmarkClick) {
-                    SimpleIcon(icon = bookmarkIcon.asIconWrapper())
+                    SimpleIcon(icon = bookmarkIcon)
                 }
                 IconButton(onClick = { showMenu = true }) {
-                    SimpleIcon(icon = BookstoreIcons.MoreVertical.asIconWrapper())
+                    SimpleIcon(icon = MaterialTheme.icons.moreVertical)
                 }
             }
             DropdownMenu(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false }) {
                 DropdownMenuItem(
-                    leadingIcon = { SimpleIcon(icon = BookstoreIcons.Share.asIconWrapper()) },
-                    text = { Text(text = stringResource(id = R.string.share)) },
+                    leadingIcon = { SimpleIcon(icon = MaterialTheme.icons.share) },
+                    text = { Text(text = stringResource(id = com.linc.ui.R.string.share)) },
                     onClick = onShareClick
                 )
             }
@@ -540,7 +542,7 @@ private fun AddToCartButton(
 ) {
     val cartButtonText = remember(isOrdered) {
         when {
-            isOrdered -> R.string.pay_for_order
+            isOrdered -> com.linc.ui.R.string.pay_for_order
             else -> com.linc.ui.R.string.buy_with_price
         }
     }

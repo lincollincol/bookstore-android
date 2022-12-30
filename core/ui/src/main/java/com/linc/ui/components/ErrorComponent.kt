@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.linc.ui.icon.IconWrapper
+import com.linc.ui.theme.IconWrapper
 
 @Composable
 fun NothingFound(

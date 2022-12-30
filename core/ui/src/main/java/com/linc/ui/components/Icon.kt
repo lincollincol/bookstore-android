@@ -11,9 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.linc.ui.icon.IconWrapper
+import com.linc.ui.theme.IconWrapper
+
 
 @Composable
 fun SimpleIcon(

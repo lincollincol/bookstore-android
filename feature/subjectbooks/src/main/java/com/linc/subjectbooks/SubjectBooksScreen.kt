@@ -16,12 +16,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.linc.navigation.NavigationState
 import com.linc.ui.components.SimpleIcon
-import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.asIconWrapper
 import com.linc.navigation.observeNavigation
 import com.linc.subjectbooks.navigation.SubjectBooksNavigationState
 import com.linc.ui.components.DetailedBookItem
 import com.linc.ui.model.DetailedBookItemUiState
+import com.linc.ui.theme.icons
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -61,7 +60,7 @@ fun SubjectBooksScreen(
             title = { Text(text = title) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
-                    SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
+                    SimpleIcon(icon = MaterialTheme.icons.arrowBack)
                 }
             }
         )

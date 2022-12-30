@@ -9,11 +9,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.linc.ui.components.SimpleIcon
-import com.linc.ui.icon.IconWrapper
-import com.linc.ui.icon.buildComposable
 import com.linc.ui.theme.BookstoreTheme
+import com.linc.ui.theme.IconWrapper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,6 +23,7 @@ fun BookstoreTextField(
     onValueChange: (String) -> Unit,
     hint: String = "",
     maxLines: Int = 1,
+    overflow: TextOverflow = TextOverflow.Ellipsis,
     imeAction: ImeAction = ImeAction.Done,
     keyboardType: KeyboardType = KeyboardType.Text,
     capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
@@ -38,7 +39,7 @@ fun BookstoreTextField(
         value = value,
         onValueChange = onValueChange,
         shape = MaterialTheme.shapes.medium,
-        placeholder = { Text(text = hint, maxLines = maxLines) },
+        placeholder = { Text(text = hint, maxLines = maxLines, overflow = overflow,) },
         trailingIcon = trailingIcon.buildComposable {
             IconButton(onClick = onTrailingIconClick) {
                 SimpleIcon(icon = it)
@@ -66,6 +67,10 @@ fun BookstoreTextField(
         maxLines = maxLines
     )
 }
+
+private fun IconWrapper?.buildComposable(
+    icon: @Composable (IconWrapper) -> Unit
+) : @Composable (() -> Unit)? = this?.let { { icon(it) } }
 
 @Preview
 @Composable

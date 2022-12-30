@@ -34,13 +34,14 @@ import coil.compose.AsyncImage
 import com.linc.books.navigation.BooksNavigationState
 import com.linc.designsystem.component.BookstoreTextField
 import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.asIconWrapper
 import com.linc.navigation.observeNavigation
 import com.linc.ui.components.DetailedBookItem
 import com.linc.ui.components.NothingFound
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.model.DetailedBookItemUiState
+import com.linc.ui.theme.icons
+import com.linc.ui.theme.strings
 
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -93,9 +94,9 @@ internal fun BooksScreen(
         targetValue = if(showToolbarElevation) 4.dp else 0.dp
     )
     val searchFieldIcon = when {
-        isSearching -> BookstoreIcons.Clear
-        else -> BookstoreIcons.Search
-    }.asIconWrapper()
+        isSearching -> MaterialTheme.icons.clear
+        else -> MaterialTheme.icons.search
+    }
     ConstraintLayout {
         val (searchField, list) = createRefs()
         if(!isSearching) {
@@ -142,7 +143,8 @@ internal fun BooksScreen(
                     top.linkTo(parent.top)
                     linkTo(start = parent.start, end = parent.end)
                 },
-            hint = stringResource(id = R.string.search_books_hint),
+            hint = MaterialTheme.strings.searchBooksHint,
+//            hint = stringResource(id = com.linc.ui.R.string.search_books_hint),
             value = searchQuery,
             onValueChange = onSearchValueChange,
             trailingIcon = searchFieldIcon,
@@ -171,8 +173,8 @@ private fun SearchResultBooks(
             CircularProgressIndicator()
         } else if(loadState.refresh is LoadState.Error || searchBooks.itemCount == 0) {
             NothingFound(
-                icon = BookstoreIcons.Search.asIconWrapper(),
-                message = stringResource(R.string.not_found)
+                icon = MaterialTheme.icons.search,
+                message = stringResource(com.linc.ui.R.string.not_found)
             )
         } else {
             LazyColumn(
@@ -250,7 +252,7 @@ private fun BooksSection(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                    text = stringResource(R.string.see_all),
+                    text = stringResource(com.linc.ui.R.string.see_all),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -316,7 +318,7 @@ private fun LazyItemScope.BookItem(
             if(book.availableForSale) {
                 Text(text = book.price.toString())
             } else {
-                SimpleIcon(icon = BookstoreIcons.SoldOut.asIconWrapper())
+                SimpleIcon(icon = MaterialTheme.icons.soldOut)
             }
         }
     }

@@ -30,7 +30,7 @@ import com.linc.navigation.observeNavigation
 import com.linc.ui.R
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.asIconWrapper
+import com.linc.ui.theme.icons
 import okhttp3.internal.notifyAll
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -74,7 +74,7 @@ private fun BookmarksScreen(
             title = { Text(text = stringResource(id = R.string.bookmarks)) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
-                    SimpleIcon(icon = BookstoreIcons.ArrowBack.asIconWrapper())
+                    SimpleIcon(icon = MaterialTheme.icons.arrowBack)
                 }
             }
         )
@@ -143,7 +143,7 @@ private fun LazyItemScope.BookmarkedBookItem(
                 modifier = Modifier.align(Alignment.End),
                 onClick = onDeleteBookmarkClick
             ) {
-                SimpleIcon(icon = BookstoreIcons.BookmarkRemove.asIconWrapper())
+                SimpleIcon(icon = MaterialTheme.icons.bookmarkRemove)
             }
         }
     }

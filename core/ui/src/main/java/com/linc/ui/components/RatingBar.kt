@@ -1,14 +1,14 @@
-package com.linc.designsystem.component
+package com.linc.ui.components
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.asIconWrapper
 import com.linc.ui.theme.BookstoreTheme
+import com.linc.ui.theme.icons
 
 private const val DEFAULT_MAX_RATING = 5
 
@@ -25,7 +25,7 @@ fun RatingBar(
     ) {
         repeat(maxRate) {
             SimpleIcon(
-                icon = BookstoreIcons.Star.asIconWrapper(),
+                icon = MaterialTheme.icons.star,
                 tint = if(it < rating) selectedColor else color
             )
         }

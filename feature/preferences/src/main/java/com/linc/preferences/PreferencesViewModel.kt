@@ -1,7 +1,10 @@
 package com.linc.preferences
 
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.linc.data.repository.PreferencesRepository
 import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.SubjectsRepository
 import com.linc.model.Subject
@@ -17,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
     defaultRouteNavigator: DefaultRouteNavigator,
-    subjectsRepository: SubjectsRepository
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel(), UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
 
     override val uiState: StateFlow<PreferencesUiState> = flowOf(PreferencesUiState())
@@ -31,9 +34,24 @@ class PreferencesViewModel @Inject constructor(
         val destination = when(option) {
             OptionItemUiState.Bookmarks -> PreferenceNavigationState.Bookmarks
             OptionItemUiState.Interests -> PreferenceNavigationState.SubjectsEditor
+            OptionItemUiState.Language -> {
+                viewModelScope.launch {
+                    try {
+//                        preferencesRepository.saveLocale("uk_UA")
+                        val locale = listOf("uk_UA", "en").random()
+                        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("uk_UA"))
+//                        preferencesRepository.saveLocale("uk_UA")
+                        preferencesRepository.saveLocale(locale)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                return
+            }
         }
         navigateTo(destination)
     }
+
 
 }
 

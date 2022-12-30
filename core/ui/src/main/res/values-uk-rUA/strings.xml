@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="and">та</string>
+    <string name="and_spaced">" та "</string>
+    <string name="cancel">Скасувати</string>
+    <string name="pay">Оплатити</string>
+    <string name="add_to_cart">Додати в кошик</string>
+    <string name="make_order">Зробити замовлення</string>
+    <string name="pay_with_price">"Оплатити %s"</string>
+    <string name="buy_with_price">"Купити (%s)"</string>
+    <string name="orders_with_count">"Замовлення (%d)"</string>
+    <string name="purchase_all_orders">"Купити все"</string>
+    <string name="quantity_label">"Кількість:"</string>
+    <string name="book_price_label">"Ціна книги:"</string>
+    <string name="total_price_label">"Загальна ціна:"</string>
+    <string name="create_order">"Створити замовлення"</string>
+    <string name="bookmarks">"Закладки"</string>
+    <string name="interests">"Інтереси"</string>
+    <string name="about_book">Про книгу"</string>
+    <string name="buy_now">Купити зараз</string>
+    <string name="add_to_cart_with_price">Додати в кошик (%s)</string>
+    <string name="go_to_cart">Перейти до кошика</string>
+    <string name="pay_for_order">Оплатити замовлення</string>
+    <string name="share">Поширити</string>
+    <string name="books">Книги</string>
+    <string name="search_books_hint">Пошук книги за назвою, автором, ISBN …</string>
+    <string name="new_books_title">Нові книги</string>
+    <string name="for_you_title">For you</string>
+    <string name="see_all">Переглянути всі</string>
+    <string name="not_found">Не знайдено</string>
+    <string name="cart">Кошик</string>
+    <string name="preferences">Preferences</string>
+
+</resources>

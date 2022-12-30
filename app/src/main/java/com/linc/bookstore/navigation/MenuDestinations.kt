@@ -1,32 +1,34 @@
 package com.linc.bookstore.navigation
 
+import android.icu.text.CaseMap.Title
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import com.linc.books.navigation.booksRoute
-import com.linc.books.navigation.booksRouteGraph
 import com.linc.cart.navigation.cartRoute
-import com.linc.cart.navigation.cartRouteGraph
 import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.IconWrapper
-import com.linc.ui.icon.asIconWrapper
 import com.linc.preferences.navigation.preferencesRoute
+import com.linc.ui.theme.IconWrapper
+import com.linc.ui.theme.icons
+import com.linc.ui.theme.strings
 
 enum class MenuDestinations(
-    val icon: IconWrapper,
-    val iconTextId: Int,
+    val icon: @Composable () -> IconWrapper,
+    val title:  @Composable () -> String,
     val route: String
 ) {
-    BOOKS(
-        icon = BookstoreIcons.SearchBooks.asIconWrapper(),
-        iconTextId = com.linc.books.R.string.books,
+    Books(
+        icon = { MaterialTheme.icons.searchBooks },
+        title = { MaterialTheme.strings.books },
         route = booksRoute
     ),
-    CART(
-        icon = BookstoreIcons.Cart.asIconWrapper(),
-        iconTextId = com.linc.cart.R.string.cart,
+    Cart(
+        icon = { MaterialTheme.icons.cart },
+        title = { MaterialTheme.strings.cart },
         route = cartRoute
     ),
-    PREFERENCES(
-        icon = BookstoreIcons.StarOutlined.asIconWrapper(),
-        iconTextId = com.linc.preferences.R.string.preferences,
+    Preferences(
+        icon = { MaterialTheme.icons.starOutlined },
+        title = { MaterialTheme.strings.preferences },
         route = preferencesRoute
     );
     companion object {

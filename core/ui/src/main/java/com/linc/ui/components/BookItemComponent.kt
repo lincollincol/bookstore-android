@@ -13,7 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.linc.designsystem.component.RatingBar
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.ui.model.DetailedBookItemUiState
 

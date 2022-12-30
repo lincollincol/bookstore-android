@@ -40,7 +40,7 @@ plugin-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradl
 
 [libraries]
 androidx-core-ktx = "androidx.core:core-ktx:1.9.0"
-androidx-appcompat = "androidx.appcompat:appcompat:1.5.1"
+androidx-appcompat = "androidx.appcompat:appcompat:1.6.0-rc01"
 androidx-lifecycle = "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 # TODO: move verision of lifecycle library to versions section
 androidx-lifecycle-runtime-compose = "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha03"
@@ -103,6 +103,8 @@ okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-intercepto
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+# Datastore
+datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"
 # Dagger hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }

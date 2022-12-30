@@ -23,6 +23,7 @@ object BookstoreIcons {
     val ArrowDropUp = Icons.Rounded.ArrowDropUp
     val OutlinedBookmark = R.drawable.ic_outlined_bookmark
     val Interests = Icons.Default.Interests
+    val Language = Icons.Default.Language
     val BookmarkAdd = Icons.Default.BookmarkAdd
     val BookmarkAdded = Icons.Default.BookmarkAdded
     val BookmarkRemove = Icons.Default.BookmarkRemove
@@ -38,7 +39,7 @@ object BookstoreIcons {
     val Cart = Icons.Default.ShoppingCart
 }
 
-sealed interface IconWrapper {
+/*sealed interface IconWrapper {
     data class Vector(val imageVector: ImageVector) : IconWrapper
     data class Drawable(@DrawableRes val id: Int) : IconWrapper
 }
@@ -47,6 +48,7 @@ fun ImageVector.asIconWrapper() = IconWrapper.Vector(this)
 
 fun Int.asIconWrapper() = IconWrapper.Drawable(this)
 
-fun IconWrapper?.buildComposable(
-    icon: @Composable (IconWrapper) -> Unit
-) : @Composable (() -> Unit)? = this?.let { { icon(it) } }
+fun IconWrapper.unwrapDrawable(): Int? = (this as? IconWrapper.Drawable)?.id
+
+fun IconWrapper.unwrapVector(): ImageVector? = (this as? IconWrapper.Vector)?.imageVector*/
+

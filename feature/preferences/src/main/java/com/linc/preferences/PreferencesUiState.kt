@@ -1,11 +1,15 @@
 package com.linc.preferences
 
 import androidx.annotation.StringRes
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import com.linc.ui.state.UiState
 import com.linc.model.Subject
 import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.IconWrapper
-import com.linc.ui.icon.asIconWrapper
+import com.linc.ui.theme.IconWrapper
+import com.linc.ui.theme.icons
+import com.linc.ui.theme.strings
 
 data class PreferencesUiState(
     val options: List<OptionItemUiState> = OptionItemUiState.values().asList()
@@ -17,20 +21,19 @@ data class SubjectItemUiState(
 ) : UiState
 
 enum class OptionItemUiState(
-    val icon: IconWrapper,
-    @StringRes val title: Int
+    val icon: @Composable () -> IconWrapper,
+    val title: @Composable () -> String
 ) {
     Bookmarks(
-        BookstoreIcons.OutlinedBookmark.asIconWrapper(),
-        com.linc.ui.R.string.bookmarks
+        icon = { MaterialTheme.icons.outlinedBookmark },
+        title = { MaterialTheme.strings.bookmarks }
     ),
     Interests(
-        BookstoreIcons.Interests.asIconWrapper(),
-        com.linc.ui.R.string.interests
+        icon = { MaterialTheme.icons.interests },
+        title = { MaterialTheme.strings.interests }
+    ),
+    Language(
+        icon = { MaterialTheme.icons.language },
+        title = { MaterialTheme.strings.language }
     )
 }
-
-fun Subject.toUiState() = SubjectItemUiState(
-    id = id,
-    name = name
-)

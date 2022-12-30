@@ -1,6 +1,5 @@
 package com.linc.preferences
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,10 +19,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.flowlayout.FlowRow
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
-import com.linc.ui.icon.asIconWrapper
 import com.linc.navigation.observeNavigation
 import com.linc.preferences.navigation.PreferenceNavigationState
-import com.linc.ui.icon.IconWrapper
+import com.linc.ui.theme.IconWrapper
+import com.linc.ui.theme.icons
+import com.linc.ui.theme.strings
+import java.util.*
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -52,10 +52,9 @@ internal fun PreferencesScreen(
     onOptionClick: (OptionItemUiState) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-//        SubjectsGroup(subjects, onSubject, onNew)
         Text(
             modifier = Modifier.padding(32.dp),
-            text = "Preferences",
+            text = MaterialTheme.strings.preferences,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.SemiBold
         )
@@ -66,8 +65,8 @@ internal fun PreferencesScreen(
             ) {
                 SettingsOption(
                     modifier = Modifier.padding(horizontal = 32.dp),
-                    icon = it.icon,
-                    text = stringResource(id = it.title),
+                    icon = it.icon(),
+                    text = it.title(),
                     onClick = { onOptionClick(it) }
                 )
             }
@@ -97,7 +96,7 @@ private fun SubjectsGroup(
             }
             AssistChip(
                 onClick = onNew,
-                leadingIcon = { SimpleIcon(icon = BookstoreIcons.Add.asIconWrapper()) },
+                leadingIcon = { SimpleIcon(icon = MaterialTheme.icons.add) },
                 label = { Text("new") }
             )
         }
@@ -132,6 +131,6 @@ fun SettingsOption(
                 fontWeight = FontWeight.Medium
             )
         }
-        SimpleIcon(icon = BookstoreIcons.ArrowForwardIos.asIconWrapper())
+        SimpleIcon(icon = MaterialTheme.icons.arrowForwardIos)
     }
 }

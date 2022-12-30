@@ -6,6 +6,8 @@ import androidx.compose.material3.darkColorScheme
 
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import java.util.Locale
 
 private val DarkColorPalette = darkColorScheme(
     primary = Purple200,
@@ -29,17 +31,33 @@ private val LightColorPalette = lightColorScheme(
 )
 
 @Composable
-fun BookstoreTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun BookstoreTheme(
+    locale: Locale = Locale.getDefault(),
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
         LightColorPalette
     }
 
-    MaterialTheme(
-        colorScheme = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+    val localizedStrings = when(locale) {
+        Locale("uk_UA") -> ukrainianLocaleStrings
+        else -> englishLocaleStrings
+    }
+
+    CompositionLocalProvider(
+        LocalStringProvider provides localizedStrings,
+        LocalIconProvider provides defaultBookstoreIcons
+    ) {
+        MaterialTheme(
+            colorScheme = colors,
+            typography = Typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
+
 }
+

@@ -1,6 +1,5 @@
 package com.linc.bookstore.ui
 
-import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -9,14 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -30,7 +25,9 @@ import com.linc.preferences.navigation.navigateToPreferences
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun BookstoreApp() {
+fun BookstoreApp(
+
+) {
     val navController = rememberNavController()
     val menuDestinations: List<MenuDestinations> = MenuDestinations.values().asList()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -60,9 +57,9 @@ fun BookstoreApp() {
                             restoreState = true
                         }
                         when (it) {
-                            MenuDestinations.BOOKS -> navController.navigateToBooks(topLevelNavOptions)
-                            MenuDestinations.CART -> navController.navigateToCart(topLevelNavOptions)
-                            MenuDestinations.PREFERENCES -> navController.navigateToPreferences(topLevelNavOptions)
+                            MenuDestinations.Books -> navController.navigateToBooks(topLevelNavOptions)
+                            MenuDestinations.Cart -> navController.navigateToCart(topLevelNavOptions)
+                            MenuDestinations.Preferences -> navController.navigateToPreferences(topLevelNavOptions)
                         }
                     }
                 )
@@ -92,8 +89,8 @@ internal fun BookstoreNavigationBar(
         destinations.forEach {
             NavigationBarItem(
                 selected = it == MenuDestinations.fromRoute(currentDestination?.route),
-                icon = { SimpleIcon(icon = it.icon) },
-                label = { Text(stringResource(it.iconTextId)) },
+                icon = { SimpleIcon(icon = it.icon()) },
+                label = { Text(it.title()) },
                 onClick = { onNavigateToDestination(it) }
             )
         }

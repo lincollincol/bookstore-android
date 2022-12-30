@@ -16,4 +16,19 @@
     <string name="create_order">"Create order"</string>
     <string name="bookmarks">"Bookmarks"</string>
     <string name="interests">"Interests"</string>
+    <string name="about_book">About the book"</string>
+    <string name="buy_now">Buy now</string>
+    <string name="add_to_cart_with_price">Add to cart (%s)</string>
+    <string name="go_to_cart">Go to cart</string>
+    <string name="pay_for_order">Pay for order</string>
+    <string name="share">Share</string>
+    <string name="books">Books</string>
+    <string name="search_books_hint">Search books by title, author, ISBN …</string>
+    <string name="new_books_title">New books</string>
+    <string name="for_you_title">For you</string>
+    <string name="see_all">See all</string>
+    <string name="not_found">Not found</string>
+    <string name="cart">Cart</string>
+    <string name="preferences">Preferences</string>
+
 </resources>
