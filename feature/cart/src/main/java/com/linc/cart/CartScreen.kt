@@ -28,6 +28,7 @@ import com.linc.cart.navigation.CartNavigationState
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.navigation.observeNavigation
 import com.linc.ui.R
+import com.linc.ui.theme.strings
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -103,7 +104,7 @@ private fun CartScreen(
                 .shadow(toolbarElevation)
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(32.dp),
-            text = stringResource(id = R.string.orders_with_count, ordersCount),
+            text = MaterialTheme.strings.ordersWithCount.format(ordersCount),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.SemiBold,
         )
@@ -135,9 +136,9 @@ private fun CompletePurchaseBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = stringResource(id = R.string.purchase_all_orders))
+        Text(text = MaterialTheme.strings.purchaseAllOrders)
         TextButton(onClick = onPurchaseAllClick) {
-            Text(text = stringResource(id = R.string.pay_with_price, formattedTotalPrice))
+            Text(text = MaterialTheme.strings.payWithPrice.format(formattedTotalPrice))
         }
     }
 }
@@ -231,7 +232,7 @@ fun LazyItemScope.OrderItem(
                         onClick = { onCancelClick(item.orderId) }
                     ) {
                         Text(
-                            text = stringResource(id = R.string.cancel),
+                            text = MaterialTheme.strings.cancel,
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
@@ -241,7 +242,7 @@ fun LazyItemScope.OrderItem(
                         onClick = { onPayClick(item.orderId) }
                     ) {
                         Text(
-                            text = stringResource(id = R.string.pay),
+                            text = MaterialTheme.strings.pay,
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

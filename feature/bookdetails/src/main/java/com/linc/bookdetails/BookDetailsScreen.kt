@@ -54,6 +54,7 @@ import com.linc.navigation.observeNavigation
 import com.linc.ui.extensions.toAnnotatedString
 import com.linc.ui.theme.IconWrapper
 import com.linc.ui.theme.icons
+import com.linc.ui.theme.strings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -70,7 +71,6 @@ fun BookDetailsRoute(
 ) {
     val bookUiState: BookUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
-
     viewModel.observeNavigation {
         when(it) {
             is BookDetailsNavigationState.Cart -> navigateToCart()
@@ -184,9 +184,9 @@ internal fun BookDetailsScreen(
             if(bookUiState.canOrderBook) {
                 AddToCartButton(
                     modifier = Modifier.constrainAs(buyButton) {
+                        width = Dimension.fillToConstraints
                         bottom.linkTo(parent.bottom)
                         centerHorizontallyTo(parent)
-                        width = Dimension.fillToConstraints
                     },
                     formattedPrice = bookUiState.formattedPrice,
                     isOrdered = bookUiState.isOrdered,
@@ -220,7 +220,7 @@ fun OrderBuilderBottomSheet(
         Text(
             modifier = Modifier
                 .padding(vertical = 16.dp),
-            text = stringResource(id = com.linc.ui.R.string.create_order),
+            text = MaterialTheme.strings.createOrder,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold
         )
@@ -230,7 +230,7 @@ fun OrderBuilderBottomSheet(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = stringResource(id = com.linc.ui.R.string.book_price_label))
+            Text(text = MaterialTheme.strings.bookPriceLabel)
             Text(text = formattedPrice)
         }
         Row(
@@ -240,7 +240,7 @@ fun OrderBuilderBottomSheet(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = stringResource(id = com.linc.ui.R.string.quantity_label))
+            Text(text = MaterialTheme.strings.quantityLabel)
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -268,7 +268,7 @@ fun OrderBuilderBottomSheet(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(id = com.linc.ui.R.string.total_price_label),
+                text = MaterialTheme.strings.totalPriceLabel,
                 fontWeight = FontWeight.SemiBold
             )
             Text(
@@ -289,12 +289,12 @@ fun OrderBuilderBottomSheet(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 onClick = onCancelClick
             ) {
-                Text(text = stringResource(id = com.linc.ui.R.string.cancel))
+                Text(text = MaterialTheme.strings.cancel)
             }
             ElevatedButton(
                 onClick = onAddToCartClick
             ) {
-                Text(text = stringResource(id = com.linc.ui.R.string.add_to_cart))
+                Text(text = MaterialTheme.strings.addToCart)
             }
         }
     }
@@ -322,7 +322,7 @@ private fun BookContent(
         } else if(!book.isBookExist) {
             NothingFound(
                 icon = MaterialTheme.icons.bookNotFound,
-                message = "Book not found"
+                message = MaterialTheme.strings.bookNotFound
             )
         } else {
             Column(
@@ -367,7 +367,7 @@ fun BookDescription(
         )
         Text(
             modifier = Modifier.padding(top = 8.dp),
-            text = book.authors,
+            text = book.formattedAuthors,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium
         )
@@ -464,9 +464,8 @@ private fun BookDetailsAppBar(
     var showMenu by remember {
         mutableStateOf(false)
     }
-    // TODO: check doc for potential leaks or something
     val bookmarkIcon = with(MaterialTheme.icons) {
-        remember { if(isBookmarked) bookmarkAdd else bookmarkAdd }
+        remember(isBookmarked) { if(isBookmarked) bookmarkAdded else bookmarkAdd }
     }
 
     TopAppBar(
@@ -496,7 +495,7 @@ private fun BookDetailsAppBar(
                 onDismissRequest = { showMenu = false }) {
                 DropdownMenuItem(
                     leadingIcon = { SimpleIcon(icon = MaterialTheme.icons.share) },
-                    text = { Text(text = stringResource(id = com.linc.ui.R.string.share)) },
+                    text = { Text(text = MaterialTheme.strings.share) },
                     onClick = onShareClick
                 )
             }
@@ -540,10 +539,10 @@ private fun AddToCartButton(
     onAddToCartClick: () -> Unit,
     onOrderPayClick: () -> Unit,
 ) {
-    val cartButtonText = remember(isOrdered) {
-        when {
-            isOrdered -> com.linc.ui.R.string.pay_for_order
-            else -> com.linc.ui.R.string.buy_with_price
+    val cartButtonText = with(MaterialTheme.strings) {
+        remember(isOrdered, formattedPrice) {
+            if (isOrdered) payForOrder
+            else buyWithPrice.format(formattedPrice)
         }
     }
     ElevatedButton(
@@ -555,6 +554,6 @@ private fun AddToCartButton(
             defaultElevation = 4.dp
         )
     ) {
-        Text(text = stringResource(id = cartButtonText, formattedPrice))
+        Text(text = cartButtonText)
     }
 }

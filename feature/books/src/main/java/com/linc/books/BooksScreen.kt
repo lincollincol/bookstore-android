@@ -144,7 +144,6 @@ internal fun BooksScreen(
                     linkTo(start = parent.start, end = parent.end)
                 },
             hint = MaterialTheme.strings.searchBooksHint,
-//            hint = stringResource(id = com.linc.ui.R.string.search_books_hint),
             value = searchQuery,
             onValueChange = onSearchValueChange,
             trailingIcon = searchFieldIcon,
@@ -174,7 +173,7 @@ private fun SearchResultBooks(
         } else if(loadState.refresh is LoadState.Error || searchBooks.itemCount == 0) {
             NothingFound(
                 icon = MaterialTheme.icons.search,
-                message = stringResource(com.linc.ui.R.string.not_found)
+                message = MaterialTheme.strings.notFound
             )
         } else {
             LazyColumn(
@@ -252,7 +251,7 @@ private fun BooksSection(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                    text = stringResource(com.linc.ui.R.string.see_all),
+                    text = MaterialTheme.strings.seeAll,
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -307,7 +306,7 @@ private fun LazyItemScope.BookItem(
                         .clip(MaterialTheme.shapes.medium)
                         .background(Color.White)
                         .align(Alignment.TopEnd),
-                    text = "${book.averageRating}(${book.ratingsCount})"
+                    text = book.formattedRating
                 )
             }
             Text(

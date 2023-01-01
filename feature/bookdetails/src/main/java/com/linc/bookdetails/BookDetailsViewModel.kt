@@ -17,7 +17,6 @@ import com.linc.data.repository.OrdersRepository
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import com.linc.ui.state.UiStateHolder
-import com.linc.ui.util.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -27,7 +26,6 @@ import javax.inject.Inject
 class BookDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     defaultRouteNavigator: DefaultRouteNavigator,
-    private val resourceProvider: ResourceProvider,
     private val booksRepository: BooksRepository,
     private val ordersRepository: OrdersRepository,
     private val bookmarksRepository: BookmarksRepository,
@@ -48,7 +46,6 @@ class BookDetailsViewModel @Inject constructor(
         orderCountState
     ) { book, order, bookmark, orderCount ->
         book?.toUiState(
-            resourceProvider = resourceProvider,
             orderCount = orderCount,
             isOrdered = order != null,
             isBookmarked = bookmark != null,

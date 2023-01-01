@@ -1,11 +1,13 @@
 package com.linc.bookdetails
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import com.linc.common.coroutines.extensions.EMPTY
 import com.linc.common.coroutines.extensions.replaceLast
 import com.linc.model.Book
 import com.linc.ui.extensions.PRICE_WITH_CURRENCY_FORMAT
 import com.linc.ui.state.UiState
-import com.linc.ui.util.ResourceProvider
+import com.linc.ui.theme.strings
 
 
 data class BookUiState(
@@ -13,7 +15,7 @@ data class BookUiState(
     val title: String = String.EMPTY,
     val description: String = String.EMPTY,
     val imageUrl: String = String.EMPTY,
-    val authors: String = String.EMPTY,
+    val authors: List<String> = emptyList(),
     val categories: List<String> = emptyList(),
     val averageRating: Float = 0f,
     val ratingsCount: Float = 0f,
@@ -37,13 +39,12 @@ val BookUiState.totalOrderPrice: Double get() = price * orderCount
 val BookUiState.canOrderBook: Boolean get() = availableForSale && isBookExist
 
 val BookUiState.formattedPrice: String get() =
-    String.format(PRICE_WITH_CURRENCY_FORMAT, price, currency)
+    PRICE_WITH_CURRENCY_FORMAT.format(price, currency)
 
 val BookUiState.formattedTotalOrderPrice: String get() =
-    String.format(PRICE_WITH_CURRENCY_FORMAT, totalOrderPrice, currency)
+    PRICE_WITH_CURRENCY_FORMAT.format(totalOrderPrice, currency)
 
 fun Book.toUiState(
-    resourceProvider: ResourceProvider,
     orderCount: Int,
     isOrdered: Boolean,
     isBookmarked: Boolean,
@@ -53,7 +54,7 @@ fun Book.toUiState(
     title = title,
     description = description,
     imageUrl = hiqImageUrl,
-    authors = formatAuthors(resourceProvider, authors),
+    authors = authors,
     categories = categories,
     averageRating = averageRating,
     ratingsCount = ratingsCount,
@@ -71,13 +72,14 @@ fun Book.toUiState(
     isLoading = isLoading
 )
 
-private fun formatAuthors(
-    resourceProvider: ResourceProvider,
-    authors: List<String>
-): String {
-    if(authors.count() == 1) {
-        return authors.first()
+val BookUiState.formattedAuthors: String
+    @Composable
+    get() {
+        if(authors.count() == 1) {
+            return authors.first()
+        }
+        val separator = ", "
+        return authors
+            .joinToString(separator)
+            .replaceLast(separator, MaterialTheme.strings.andSpaced)
     }
-    return authors.joinToString()
-        .replaceLast(", ", resourceProvider.getString(com.linc.ui.R.string.and_spaced))
-}

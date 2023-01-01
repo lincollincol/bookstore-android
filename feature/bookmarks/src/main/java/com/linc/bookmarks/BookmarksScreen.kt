@@ -31,6 +31,7 @@ import com.linc.ui.R
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.theme.icons
+import com.linc.ui.theme.strings
 import okhttp3.internal.notifyAll
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -71,7 +72,7 @@ private fun BookmarksScreen(
             .then(modifier)
     ) {
         CenterAlignedTopAppBar(
-            title = { Text(text = stringResource(id = R.string.bookmarks)) },
+            title = { Text(text = MaterialTheme.strings.bookmarks) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     SimpleIcon(icon = MaterialTheme.icons.arrowBack)

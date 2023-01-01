@@ -22,6 +22,7 @@ fun Book.toUiState() = DetailedBookItemUiState(
     id = id,
     imageUrl = imageUrl,
     price = price,
+    currency = currency,
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     title = title,

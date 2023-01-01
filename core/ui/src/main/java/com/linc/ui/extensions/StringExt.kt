@@ -14,6 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 
 const val PRICE_WITH_CURRENCY_FORMAT: String = "%.2f %s"
+const val ZERO_DECIMAL_DIGITS_FORMAT: String = "%.0f"
+const val ONE_DECIMAL_DIGITS_FORMAT: String = "%.1f"
+const val TWO_DECIMAL_DIGITS_FORMAT: String = "%.2f"
 
 fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
     val spanned = this@toAnnotatedString
