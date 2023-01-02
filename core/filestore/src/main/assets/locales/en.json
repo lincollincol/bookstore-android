@@ -1,0 +1,120 @@
+{
+  "strings": [
+    {
+      "value":"Cancel",
+      "key":"cancel"
+    },
+    {
+      "value":"Pay",
+      "key":"pay"
+    },
+    {
+      "value":"Add to cart",
+      "key":"addToCart"
+    },
+    {
+      "value":"Make order",
+      "key":"makeOrder"
+    },
+    {
+      "value":"Pay %s",
+      "key":"payWithPrice"
+    },
+    {
+      "value":"Buy (%s)",
+      "key":"buyWithPrice"
+    },
+    {
+      "value":"Orders (%d)",
+      "key":"ordersWithCount"
+    },
+    {
+      "value":"%.2f (%d)",
+      "key":"ratingWithCount"
+    },
+    {
+      "value":"Purchase all",
+      "key":"purchaseAllOrders"
+    },
+    {
+      "value":"Quantity:",
+      "key":"quantityLabel"
+    },
+    {
+      "value":"Book price:",
+      "key":"bookPriceLabel"
+    },
+    {
+      "value":"Total price:",
+      "key":"totalPriceLabel"
+    },
+    {
+      "value":"Create order",
+      "key":"createOrder"
+    },
+    {
+      "value":"Bookmarks",
+      "key":"bookmarks"
+    },
+    {
+      "value":"Interests",
+      "key":"interests"
+    },
+    {
+      "value":"About book",
+      "key":"aboutBook"
+    },
+    {
+      "value":"Buy now",
+      "key":"buyNow"
+    },
+    {
+      "value":"Add to cart (%s)",
+      "key":"addToCartWithPrice"
+    },
+    {
+      "value":"Go to cart",
+      "key":"goToCart"
+    },
+    {
+      "value":"Pay for order",
+      "key":"payForOrder"
+    },
+    {
+      "value":"Share",
+      "key":"share"
+    },
+    {
+      "value":"Books",
+      "key":"books"
+    },
+    {
+      "value":"Search books by title, author, ISBN \u2026",
+      "key":"searchBooksHint"
+    },
+    {
+      "value":"See all",
+      "key":"seeAll"
+    },
+    {
+      "value":"Not found!",
+      "key":"notFound"
+    },
+    {
+      "value":"Book not found!",
+      "key":"bookNotFound"
+    },
+    {
+      "value":"Cart",
+      "key":"cart"
+    },
+    {
+      "value":"Preferences",
+      "key":"preferences"
+    },
+    {
+      "value":"Language",
+      "key":"language"
+    }
+  ]
+}

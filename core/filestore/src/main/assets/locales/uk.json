@@ -1,0 +1,128 @@
+{
+  "strings": [
+    {
+      "value":"та",
+      "key":"and"
+    },
+    {
+      "value":" та ",
+      "key":"andSpaced"
+    },
+    {
+      "value":"Скасувати",
+      "key":"cancel"
+    },
+    {
+      "value":"Оплатити",
+      "key":"pay"
+    },
+    {
+      "value":"Додати в кошик",
+      "key":"addToCart"
+    },
+    {
+      "value":"Зробити замовлення",
+      "key":"makeOrder"
+    },
+    {
+      "value":"Оплатити %s",
+      "key":"payWithPrice"
+    },
+    {
+      "value":"Купити (%s)",
+      "key":"buyWithPrice"
+    },
+    {
+      "value":"Замовлення (%d)",
+      "key":"ordersWithCount"
+    },
+    {
+      "value":"%.2f (%d)",
+      "key":"ratingWithCount"
+    },
+    {
+      "value":"Купити все",
+      "key":"purchaseAllOrders"
+    },
+    {
+      "value":"Кількість:",
+      "key":"quantityLabel"
+    },
+    {
+      "value":"Вартість книги:",
+      "key":"bookPriceLabel"
+    },
+    {
+      "value":"Загальна вартість:",
+      "key":"totalPriceLabel"
+    },
+    {
+      "value":"Створити замовлення",
+      "key":"createOrder"
+    },
+    {
+      "value":"Закладки",
+      "key":"bookmarks"
+    },
+    {
+      "value":"Інтереси",
+      "key":"interests"
+    },
+    {
+      "value":"Про книгу",
+      "key":"aboutBook"
+    },
+    {
+      "value":"Купити зараз",
+      "key":"buyNow"
+    },
+    {
+      "value":"Додати в кошик (%s)",
+      "key":"addToCartWithPrice"
+    },
+    {
+      "value":"Перейти до кошика",
+      "key":"goToCart"
+    },
+    {
+      "value":"Оплатити замовлення",
+      "key":"payForOrder"
+    },
+    {
+      "value":"Поширити",
+      "key":"share"
+    },
+    {
+      "value":"Книги",
+      "key":"books"
+    },
+    {
+      "value":"Пошук книги за назвою, автором, ISBN \u2026",
+      "key":"searchBooksHint"
+    },
+    {
+      "value":"Переглянути все",
+      "key":"seeAll"
+    },
+    {
+      "value":"Не знайдено!",
+      "key":"notFound"
+    },
+    {
+      "value":"Книгу не знайдено!",
+      "key":"bookNotFound"
+    },
+    {
+      "value":"Кошик",
+      "key":"cart"
+    },
+    {
+      "value":"Уподобання",
+      "key":"preferences"
+    },
+    {
+      "value":"Мова",
+      "key":"language"
+    }
+  ]
+}

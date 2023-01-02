@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.map
 import java.util.*
 import javax.inject.Inject
 
-class BookstorePreferencesDataSource @Inject constructor(
+class PreferencesLocalDataSource @Inject constructor(
     private val preferencesDataStore: DataStore<Preferences>
 ) {
 
     private val LOCALE = stringPreferencesKey("locale")
 
-    val localeStream: Flow<Locale?> get() =
-        preferencesDataStore.data.map { it[LOCALE]?.let(::Locale) }
+    val localeStream: Flow<Locale> get() =
+        preferencesDataStore.data.map { it[LOCALE]?.let(::Locale) ?: Locale.getDefault() }
 
     suspend fun setLocale(locale: String) {
         preferencesDataStore.edit { it[LOCALE] = locale }

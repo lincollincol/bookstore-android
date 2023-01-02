@@ -53,7 +53,6 @@ fun CartRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CartScreen(
     modifier: Modifier = Modifier,
@@ -228,7 +227,7 @@ fun LazyItemScope.OrderItem(
                         modifier = Modifier
                             .defaultMinSize(minHeight = 24.dp)
                             .padding(horizontal = 4.dp),
-                        contentPadding = PaddingValues(),
+                        contentPadding = PaddingValues(horizontal = 8.dp),
                         onClick = { onCancelClick(item.orderId) }
                     ) {
                         Text(
@@ -238,7 +237,7 @@ fun LazyItemScope.OrderItem(
                     }
                     ElevatedButton(
                         modifier = Modifier.defaultMinSize(minHeight = 24.dp),
-                        contentPadding = PaddingValues(),
+                        contentPadding = PaddingValues(horizontal = 8.dp),
                         onClick = { onPayClick(item.orderId) }
                     ) {
                         Text(

@@ -5,5 +5,5 @@ import com.linc.ui.state.UiStateHolder
 import java.util.Locale
 
 data class MainUiState(
-    val locale: Locale = Locale.getDefault()
+    val localeStrings: Map<String, String> = mapOf()
 ) : UiState

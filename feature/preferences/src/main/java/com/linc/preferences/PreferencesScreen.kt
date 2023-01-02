@@ -21,6 +21,7 @@ import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.navigation.observeNavigation
 import com.linc.preferences.navigation.PreferenceNavigationState
+import com.linc.ui.resources.BookstoreStrings
 import com.linc.ui.theme.IconWrapper
 import com.linc.ui.theme.icons
 import com.linc.ui.theme.strings
@@ -32,12 +33,14 @@ fun PreferencesRoute(
     viewModel: PreferencesViewModel = hiltViewModel(),
     navigateToBookmarks: () -> Unit,
     navigateToSubjectsEditor: () -> Unit,
+    navigateToLanguagePicker: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
         when(it) {
             PreferenceNavigationState.SubjectsEditor -> navigateToSubjectsEditor()
             PreferenceNavigationState.Bookmarks -> navigateToBookmarks()
+            PreferenceNavigationState.LanguagePicker -> navigateToLanguagePicker()
         }
     }
     PreferencesScreen(
@@ -54,7 +57,8 @@ internal fun PreferencesScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(32.dp),
-            text = MaterialTheme.strings.preferences,
+//            text = MaterialTheme.strings.preferences,
+            text = BookstoreStrings.Preferences,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.SemiBold
         )
@@ -70,35 +74,6 @@ internal fun PreferencesScreen(
                     onClick = { onOptionClick(it) }
                 )
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SubjectsGroup(
-    subjects: List<SubjectItemUiState>,
-    onSubject: (String) -> Unit,
-    onNew: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(text = "Primary subjects")
-        FlowRow(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            subjects.forEach {
-                AssistChip(
-                    label = { Text(text = it.name) },
-                    onClick = { onSubject(it.id) }
-                )
-            }
-            AssistChip(
-                onClick = onNew,
-                leadingIcon = { SimpleIcon(icon = MaterialTheme.icons.add) },
-                label = { Text("new") }
-            )
         }
     }
 }

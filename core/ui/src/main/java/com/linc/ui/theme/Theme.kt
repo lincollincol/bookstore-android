@@ -32,7 +32,7 @@ private val LightColorPalette = lightColorScheme(
 
 @Composable
 fun BookstoreTheme(
-    locale: Locale = Locale.getDefault(),
+    strings: Map<String, String> = emptyMap(),
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -42,13 +42,17 @@ fun BookstoreTheme(
         LightColorPalette
     }
 
-    val localizedStrings = when(locale) {
-        Locale("uk_UA") -> ukrainianLocaleStrings
+    /*val localizedStrings = when(locale) {
+        Locale("uk") -> ukrainianLocaleStrings
+        Locale("pl") -> polishLocaleStrings
+        Locale("sk") -> slovakLocaleStrings
         else -> englishLocaleStrings
-    }
+    }*/
+
+
 
     CompositionLocalProvider(
-        LocalStringProvider provides localizedStrings,
+        LocalStringProvider provides fromMap(strings),
         LocalIconProvider provides defaultBookstoreIcons
     ) {
         MaterialTheme(

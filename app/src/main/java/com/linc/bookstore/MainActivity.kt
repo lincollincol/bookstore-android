@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import com.linc.bookstore.ui.BookstoreApp
+import com.linc.ui.resources.BookstoreStrings
 import com.linc.ui.theme.BookstoreTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
@@ -22,13 +23,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        Locale.setDefault(Locale.ENGLISH)
 
         var uiState: MainUiState by mutableStateOf(MainUiState())
 
         lifecycleScope.launchWhenStarted {
             viewModel.uiState
                 .onEach {
+                    BookstoreStrings.setStrings(it.localeStrings)
                     uiState = it
                 }
                 .catch { it.printStackTrace() }
@@ -37,7 +38,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             BookstoreTheme(
-                locale = uiState.locale
+                strings = uiState.localeStrings
+//                locale = uiState.locale
             ) {
                 BookstoreApp()
             }

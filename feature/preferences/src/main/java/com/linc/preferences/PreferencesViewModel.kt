@@ -1,7 +1,5 @@
 package com.linc.preferences
 
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linc.data.repository.PreferencesRepository
@@ -34,20 +32,7 @@ class PreferencesViewModel @Inject constructor(
         val destination = when(option) {
             OptionItemUiState.Bookmarks -> PreferenceNavigationState.Bookmarks
             OptionItemUiState.Interests -> PreferenceNavigationState.SubjectsEditor
-            OptionItemUiState.Language -> {
-                viewModelScope.launch {
-                    try {
-//                        preferencesRepository.saveLocale("uk_UA")
-                        val locale = listOf("uk_UA", "en").random()
-                        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("uk_UA"))
-//                        preferencesRepository.saveLocale("uk_UA")
-                        preferencesRepository.saveLocale(locale)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-                return
-            }
+            OptionItemUiState.Language -> PreferenceNavigationState.LanguagePicker
         }
         navigateTo(destination)
     }

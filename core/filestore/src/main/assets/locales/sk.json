@@ -1,0 +1,128 @@
+{
+  "strings": [
+    {
+      "value":"a",
+      "key":"and"
+    },
+    {
+      "value":" a ",
+      "key":"andSpaced"
+    },
+    {
+      "value":"Zrušiť",
+      "key":"cancel"
+    },
+    {
+      "value":"Platiť",
+      "key":"pay"
+    },
+    {
+      "value":"Pridať do košíka",
+      "key":"addToCart"
+    },
+    {
+      "value":"Urobiť objednávku",
+      "key":"makeOrder"
+    },
+    {
+      "value":"Platiť %s",
+      "key":"payWithPrice"
+    },
+    {
+      "value":"Kúpiť (%s)",
+      "key":"buyWithPrice"
+    },
+    {
+      "value":"Objednávky (%d)",
+      "key":"ordersWithCount"
+    },
+    {
+      "value":"%.2f (%d)",
+      "key":"ratingWithCount"
+    },
+    {
+      "value":"Kúpiť všetky",
+      "key":"purchaseAllOrders"
+    },
+    {
+      "value":"Množstvo:",
+      "key":"quantityLabel"
+    },
+    {
+      "value":"Cena knihy:",
+      "key":"bookPriceLabel"
+    },
+    {
+      "value":"Celková cena:",
+      "key":"totalPriceLabel"
+    },
+    {
+      "value":"Vytvoriť objednávku",
+      "key":"createOrder"
+    },
+    {
+      "value":"Záložky",
+      "key":"bookmarks"
+    },
+    {
+      "value":"Záujmy",
+      "key":"interests"
+    },
+    {
+      "value":"O knihe",
+      "key":"aboutBook"
+    },
+    {
+      "value":"Kúpiť teraz",
+      "key":"buyNow"
+    },
+    {
+      "value":"Pridať do košíka (%s)",
+      "key":"addToCartWithPrice"
+    },
+    {
+      "value":"Prejsť do košíka",
+      "key":"goToCart"
+    },
+    {
+      "value":"Zaplatiť za objednávku",
+      "key":"payForOrder"
+    },
+    {
+      "value":"Zdieľať",
+      "key":"share"
+    },
+    {
+      "value":"Knihy",
+      "key":"books"
+    },
+    {
+      "value":"Пошук книги за назвою, автором, ISBN \u2026",
+      "key":"searchBooksHint"
+    },
+    {
+      "value":"Zobraziť všetky",
+      "key":"seeAll"
+    },
+    {
+      "value":"Nenájdené!",
+      "key":"notFound"
+    },
+    {
+      "value":"Kniha nebola nájdená!",
+      "key":"bookNotFound"
+    },
+    {
+      "value":"Kôš",
+      "key":"cart"
+    },
+    {
+      "value":"Preferencie",
+      "key":"preferences"
+    },
+    {
+      "value":"Jazyk",
+      "key":"language"
+    }
+  ]
+}

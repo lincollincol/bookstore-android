@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":feature:editsubjects"))
     implementation(project(":feature:subjectbooks"))
     implementation(project(":feature:bookmarks"))
+    implementation(project(":feature:languagepicker"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

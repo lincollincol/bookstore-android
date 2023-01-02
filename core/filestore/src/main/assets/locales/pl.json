@@ -1,0 +1,128 @@
+{
+  "strings": [
+    {
+      "value":"a",
+      "key":"and"
+    },
+    {
+      "value":" a ",
+      "key":"andSpaced"
+    },
+    {
+      "value":"Anulować",
+      "key":"cancel"
+    },
+    {
+      "value":"Płacić",
+      "key":"pay"
+    },
+    {
+      "value":"Dodaj do koszyka",
+      "key":"addToCart"
+    },
+    {
+      "value":"Złóż zamówienie",
+      "key":"makeOrder"
+    },
+    {
+      "value":"Płacić %s",
+      "key":"payWithPrice"
+    },
+    {
+      "value":"Kupić (%s)",
+      "key":"buyWithPrice"
+    },
+    {
+      "value":"Zamówienia (%d)",
+      "key":"ordersWithCount"
+    },
+    {
+      "value":"%.2f (%d)",
+      "key":"ratingWithCount"
+    },
+    {
+      "value":"Kup wszystko",
+      "key":"purchaseAllOrders"
+    },
+    {
+      "value":"Ilość:",
+      "key":"quantityLabel"
+    },
+    {
+      "value":"Cena książki:",
+      "key":"bookPriceLabel"
+    },
+    {
+      "value":"Cena całkowita:",
+      "key":"totalPriceLabel"
+    },
+    {
+      "value":"Utwórz zamówienie",
+      "key":"createOrder"
+    },
+    {
+      "value":"Zakładki",
+      "key":"bookmarks"
+    },
+    {
+      "value":"Zainteresowania",
+      "key":"interests"
+    },
+    {
+      "value":"O książce",
+      "key":"aboutBook"
+    },
+    {
+      "value":"Kup teraz",
+      "key":"buyNow"
+    },
+    {
+      "value":"Dodaj do koszyka (%s)",
+      "key":"addToCartWithPrice"
+    },
+    {
+      "value":"Przejdź do koszyka",
+      "key":"goToCart"
+    },
+    {
+      "value":"Zapłać za zamówienie",
+      "key":"payForOrder"
+    },
+    {
+      "value":"Udostępnij",
+      "key":"share"
+    },
+    {
+      "value":"Książki",
+      "key":"books"
+    },
+    {
+      "value":"Пошук книги за назвою, автором, ISBN \u2026",
+      "key":"searchBooksHint"
+    },
+    {
+      "value":"Zobacz wszystko",
+      "key":"seeAll"
+    },
+    {
+      "value":"Nie znaleziono!",
+      "key":"notFound"
+    },
+    {
+      "value":"Nie znaleziono książki!",
+      "key":"bookNotFound"
+    },
+    {
+      "value":"Wóz",
+      "key":"cart"
+    },
+    {
+      "value":"Preferencje",
+      "key":"preferences"
+    },
+    {
+      "value":"Język",
+      "key":"language"
+    }
+  ]
+}

@@ -4,13 +4,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
+import com.linc.ui.resources.BookstoreStrings
 
 val MaterialTheme.strings: LocalizedStrings
     @Composable
     @ReadOnlyComposable
     get() = LocalStringProvider.current
 
+val MaterialTheme.strings2: BookstoreStrings
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalStringProvider2.current
+
 val LocalStringProvider = staticCompositionLocalOf { englishLocaleStrings }
+val LocalStringProvider2 = staticCompositionLocalOf { BookstoreStrings }
 
 data class LocalizedStrings(
     val and: String,
@@ -45,6 +52,41 @@ data class LocalizedStrings(
     val preferences: String,
     val language: String,
 )
+
+fun fromMap(strings: Map<String, String>) =     LocalizedStrings(
+    and = strings["and"] ?: "and",
+    andSpaced = strings["andSpaced"] ?: "andSpaced",
+    cancel = strings["cancel"] ?: "cancel",
+    pay = strings["pay"] ?: "pay",
+    addToCart = strings["addToCart"] ?: "addToCart",
+    makeOrder = strings["makeOrder"] ?: "makeOrder",
+    payWithPrice = strings["payWithPrice"] ?: "payWithPrice",
+    buyWithPrice = strings["buyWithPrice"] ?: "buyWithPrice",
+    ordersWithCount = strings["ordersWithCount"] ?: "ordersWithCount",
+    ratingWithCount = strings["ratingWithCount"] ?: "ratingWithCount",
+    purchaseAllOrders = strings["purchaseAllOrders"] ?: "purchaseAllOrders",
+    quantityLabel = strings["quantityLabel"] ?: "quantityLabel",
+    bookPriceLabel = strings["bookPriceLabel"] ?: "bookPriceLabel",
+    totalPriceLabel = strings["totalPriceLabel"] ?: "totalPriceLabel",
+    createOrder = strings["createOrder"] ?: "createOrder",
+    bookmarks = strings["bookmarks"] ?: "bookmarks",
+    interests = strings["interests"] ?: "interests",
+    aboutBook = strings["aboutBook"] ?: "aboutBook",
+    buyNow = strings["buyNow"] ?: "buyNow",
+    addToCartWithPrice = strings["addToCartWithPrice"] ?: "addToCartWithPrice",
+    goToCart = strings["goToCart"] ?: "goToCart",
+    payForOrder = strings["payForOrder"] ?: "payForOrder",
+    share = strings["share"] ?: "share",
+    books = strings["books"] ?: "books",
+    searchBooksHint = strings["searchBooksHint"] ?: "searchBooksHint",
+    seeAll = strings["seeAll"] ?: "seeAll",
+    notFound = strings["notFound"] ?: "notFound",
+    bookNotFound = strings["bookNotFound"] ?: "bookNotFound",
+    cart = strings["cart"] ?: "cart",
+    preferences = strings["preferences"] ?: "preferences",
+    language = strings["language"] ?: "language"
+)
+
 
 val englishLocaleStrings = LocalizedStrings(
     and = "and",
@@ -97,7 +139,7 @@ val ukrainianLocaleStrings = LocalizedStrings(
     totalPriceLabel = "Загальна вартість:",
     createOrder = "Створити замовлення",
     bookmarks = "Закладки",
-    interests = "інтереси",
+    interests = "Інтереси",
     aboutBook = "Про книгу",
     buyNow = "Купити зараз",
     addToCartWithPrice = "Додати в кошик (%s)",
@@ -112,4 +154,72 @@ val ukrainianLocaleStrings = LocalizedStrings(
     cart = "Кошик",
     preferences = "Уподобання",
     language = "Мова"
+)
+
+val polishLocaleStrings = LocalizedStrings(
+    and = "a",
+    andSpaced = " a ",
+    cancel = "Anulować",
+    pay = "Płacić",
+    addToCart = "Dodaj do koszyka",
+    makeOrder = "Złóż zamówienie",
+    payWithPrice = "Płacić %s",
+    buyWithPrice = "Kupić (%s)",
+    ordersWithCount = "Zamówienia (%d)",
+    ratingWithCount = "%.2f (%d)",
+    purchaseAllOrders = "Kup wszystko",
+    quantityLabel = "Ilość:",
+    bookPriceLabel = "Cena książki:",
+    totalPriceLabel = "Cena całkowita:",
+    createOrder = "Utwórz zamówienie",
+    bookmarks = "Zakładki",
+    interests = "Zainteresowania",
+    aboutBook = "O książce",
+    buyNow = "Kup teraz",
+    addToCartWithPrice = "Dodaj do koszyka (%s)",
+    goToCart = "Przejdź do koszyka",
+    payForOrder = "Zapłać za zamówienie",
+    share = "Udostępnij",
+    books = "Książki",
+    searchBooksHint = "Пошук книги за назвою, автором, ISBN …",
+    seeAll = "Zobacz wszystko",
+    notFound = "Nie znaleziono!",
+    bookNotFound = "Nie znaleziono książki!",
+    cart = "Wóz",
+    preferences = "Preferencje",
+    language = "Język"
+)
+
+val slovakLocaleStrings = LocalizedStrings(
+    and = "a",
+    andSpaced = " a ",
+    cancel = "Zrušiť",
+    pay = "Platiť",
+    addToCart = "Pridať do košíka",
+    makeOrder = "Urobiť objednávku",
+    payWithPrice = "Platiť %s",
+    buyWithPrice = "Kúpiť (%s)",
+    ordersWithCount = "Objednávky (%d)",
+    ratingWithCount = "%.2f (%d)",
+    purchaseAllOrders = "Kúpiť všetky",
+    quantityLabel = "Množstvo:",
+    bookPriceLabel = "Cena knihy:",
+    totalPriceLabel = "Celková cena:",
+    createOrder = "Vytvoriť objednávku",
+    bookmarks = "Záložky",
+    interests = "Záujmy",
+    aboutBook = "O knihe",
+    buyNow = "Kúpiť teraz",
+    addToCartWithPrice = "Pridať do košíka (%s)",
+    goToCart = "Prejsť do košíka",
+    payForOrder = "Zaplatiť za objednávku",
+    share = "Zdieľať",
+    books = "Knihy",
+    searchBooksHint = "Пошук книги за назвою, автором, ISBN …",
+    seeAll = "Zobraziť všetky",
+    notFound = "Nenájdené!",
+    bookNotFound = "Kniha nebola nájdená!",
+    cart = "Kôš",
+    preferences = "Preferencie",
+    language = "Jazyk"
 )

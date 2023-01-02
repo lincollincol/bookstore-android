@@ -22,6 +22,8 @@ import com.linc.cart.navigation.cartScreen
 import com.linc.cart.navigation.navigateToCart
 import com.linc.editsubjects.navigation.editSubjectsScreen
 import com.linc.editsubjects.navigation.navigateToEditSubjects
+import com.linc.languagepicker.navigation.languagePickerScreen
+import com.linc.languagepicker.navigation.navigateToLanguagePicker
 import com.linc.navigation.navigate
 import com.linc.preferences.navigation.preferencesGraph
 import com.linc.preferences.navigation.preferencesScreen
@@ -71,8 +73,12 @@ fun BookstoreNavHost(
         preferencesGraph(
             navigateToBookmarks = navController::navigateToBookmarks,
             navigateToSubjectsEditor = navController::navigateToEditSubjects,
+            navigateToLanguagePicker = navController::navigateToLanguagePicker,
             nestedGraphs = {
                 editSubjectsScreen()
+                languagePickerScreen(
+                    navigateBack = navController::popBackStack
+                )
                 bookmarksScreen(
                     navigateToBookDetails = navController::navigateToBookDetails,
                     navigateBack = navController::popBackStack

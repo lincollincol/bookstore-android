@@ -6,15 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.linc.database.converters.StringListConverter
-import com.linc.database.dao.BookmarksDao
-import com.linc.database.dao.OrdersDao
-import com.linc.database.dao.BooksDao
-import com.linc.database.dao.SubjectDao
+import com.linc.database.dao.*
 import com.linc.database.entity.book.BookEntity
 import com.linc.database.entity.bookmark.BookmarkEntity
+import com.linc.database.entity.localization.LocaleEntity
+import com.linc.database.entity.localization.LocaleStringEntity
 import com.linc.database.entity.order.OrderEntity
 import com.linc.database.entity.subject.SubjectBookCrossRef
 import com.linc.database.entity.subject.SubjectEntity
+import java.util.Locale
 
 private const val BOOKSTORE_DATABASE = "bookstore_database.db"
 private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.db"
@@ -28,6 +28,8 @@ private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.
         SubjectBookCrossRef::class,
         OrderEntity::class,
         BookmarkEntity::class,
+        LocaleEntity::class,
+        LocaleStringEntity::class,
     ]
 )
 @TypeConverters(
@@ -38,6 +40,7 @@ abstract class BookstoreDatabase : RoomDatabase() {
     abstract val booksDao: BooksDao
     abstract val subjectDao: SubjectDao
     abstract val bookmarksDao: BookmarksDao
+    abstract val localeDao: LocaleDao
 
     companion object {
         @JvmStatic
