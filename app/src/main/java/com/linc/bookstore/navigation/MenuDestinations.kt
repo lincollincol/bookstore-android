@@ -13,22 +13,18 @@ import com.linc.ui.theme.strings
 
 enum class MenuDestinations(
     val icon: @Composable () -> IconWrapper,
-    val title:  @Composable () -> String,
     val route: String
 ) {
     Books(
         icon = { MaterialTheme.icons.searchBooks },
-        title = { MaterialTheme.strings.books },
         route = booksRoute
     ),
     Cart(
         icon = { MaterialTheme.icons.cart },
-        title = { MaterialTheme.strings.cart },
         route = cartRoute
     ),
     Preferences(
         icon = { MaterialTheme.icons.starOutlined },
-        title = { MaterialTheme.strings.preferences },
         route = preferencesRoute
     );
     companion object {

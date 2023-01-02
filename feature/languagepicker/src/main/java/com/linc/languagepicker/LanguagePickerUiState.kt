@@ -6,7 +6,6 @@ import com.linc.ui.state.UiState
 import java.util.*
 
 data class LanguagePickerUiState(
-    val locale: String = String.EMPTY,
     val languages: List<LanguageItemUiState> = emptyList()
 ) : UiState
 

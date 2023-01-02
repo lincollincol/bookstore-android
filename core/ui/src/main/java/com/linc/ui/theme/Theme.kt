@@ -7,6 +7,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import java.util.Locale
 
 private val DarkColorPalette = darkColorScheme(
@@ -42,17 +43,8 @@ fun BookstoreTheme(
         LightColorPalette
     }
 
-    /*val localizedStrings = when(locale) {
-        Locale("uk") -> ukrainianLocaleStrings
-        Locale("pl") -> polishLocaleStrings
-        Locale("sk") -> slovakLocaleStrings
-        else -> englishLocaleStrings
-    }*/
-
-
-
     CompositionLocalProvider(
-        LocalStringProvider provides fromMap(strings),
+        LocalStringProvider provides LocalizedStrings.fromMap(strings),
         LocalIconProvider provides defaultBookstoreIcons
     ) {
         MaterialTheme(
@@ -64,4 +56,3 @@ fun BookstoreTheme(
     }
 
 }
-

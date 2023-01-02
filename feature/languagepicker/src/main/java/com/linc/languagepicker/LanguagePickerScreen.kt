@@ -20,10 +20,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
 import com.linc.ui.components.SimpleIcon
-import com.linc.ui.resources.BookstoreStrings
 import com.linc.ui.theme.icons
 import com.linc.ui.theme.strings
-import com.linc.ui.theme.strings2
+
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -38,7 +37,6 @@ fun LanguagePickerRoute(
         }
     }
     LanguagePickerScreen(
-        locale = uiState.locale,
         languages = uiState.languages,
         onLanguageClick = viewModel::selectLanguage,
         onBackClick = viewModel::navigateBack
@@ -48,38 +46,37 @@ fun LanguagePickerRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LanguagePickerScreen(
-    locale: String,
     languages: List<LanguageItemUiState>,
     onLanguageClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-//    key(locale) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            CenterAlignedTopAppBar(
-                title = { Text(text = BookstoreStrings.Language) },
+    Column(modifier = Modifier.fillMaxSize()) {
+        CenterAlignedTopAppBar(
+//            title = { Text(text = BookstoreStrings.Language) },
 //            title = { Text(text = MaterialTheme.strings2.Language) },
-//            title = { Text(text = MaterialTheme.strings.language) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        SimpleIcon(icon = MaterialTheme.icons.arrowBack)
-                    }
-                }
-            )
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(
-                    items = languages,
-                    key = { it.name }
-                ) {
-                    LanguageItemUiState(
-                        modifier = Modifier.padding(horizontal = 32.dp),
-                        item = it,
-                        onClick = { onLanguageClick(it.code) }
-                    )
+            title = { Text(text = MaterialTheme.strings.language) },
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    SimpleIcon(icon = MaterialTheme.icons.arrowBack)
                 }
             }
+        )
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(
+                items = languages,
+                key = { it.name }
+            ) {
+                LanguageItemUiState(
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    item = it,
+                    onClick = { onLanguageClick(it.code) }
+                )
+            }
         }
-//    }
+    }
+
+
 }
 
 @Composable

@@ -34,18 +34,8 @@ class PreferencesRepository @Inject constructor(
         .flowOn(ioDispatcher)
 
     suspend fun saveLocale(locale: String) {
-        fetchLatestLocale()
         preferencesLocalDataSource.setLocale(locale)
     }
-
-//    fun getAvailableLocalesStream(): Flow<List<AppLocale>> = flowOf(
-//        listOf(
-//            Locale.US,
-//            Locale("uk", "UA"),
-//            Locale("pl", "PL"),
-//            Locale("sk","SK")
-//        ).map { it.asExternalModel() }
-//    ).flowOn(ioDispatcher)
 
     suspend fun fetchLatestLocale() = withContext(ioDispatcher) {
         val code = preferencesLocalDataSource.localeStream.first().language
@@ -67,10 +57,6 @@ class PreferencesRepository @Inject constructor(
                 .map { it.asEntity(code) }
                 .also { localeDao.insertLocaleStrings(it) }
         }
-    }
-
-    fun printLocale(code: String) {
-        localizationLocalDataSource.getLocale(code).joinToString()
     }
 
     fun getAvailableLocalesStream(): Flow<List<Locale>> =

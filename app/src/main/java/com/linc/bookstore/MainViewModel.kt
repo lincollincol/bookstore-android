@@ -16,7 +16,6 @@ class MainViewModel @Inject constructor(
     override val uiState: StateFlow<MainUiState> = preferencesRepository.getAppLocaleStringsStream()
         .filter { it.isNotEmpty() }
         .map{ localeStrings ->
-            println(localeStrings.toString())
             MainUiState(localeStrings = localeStrings)
         }
         .onStart { preferencesRepository.fetchLatestLocale() }

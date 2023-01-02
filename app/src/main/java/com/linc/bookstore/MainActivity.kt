@@ -5,11 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import com.linc.bookstore.ui.BookstoreApp
-import com.linc.ui.resources.BookstoreStrings
 import com.linc.ui.theme.BookstoreTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launchWhenStarted {
             viewModel.uiState
                 .onEach {
-                    BookstoreStrings.setStrings(it.localeStrings)
                     uiState = it
                 }
                 .catch { it.printStackTrace() }
@@ -37,10 +36,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            BookstoreTheme(
-                strings = uiState.localeStrings
-//                locale = uiState.locale
-            ) {
+            BookstoreTheme(strings = uiState.localeStrings) {
                 BookstoreApp()
             }
         }

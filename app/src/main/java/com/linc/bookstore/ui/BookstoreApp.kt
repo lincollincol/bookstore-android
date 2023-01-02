@@ -90,7 +90,6 @@ internal fun BookstoreNavigationBar(
             NavigationBarItem(
                 selected = it == MenuDestinations.fromRoute(currentDestination?.route),
                 icon = { SimpleIcon(icon = it.icon()) },
-                label = { Text(it.title()) },
                 onClick = { onNavigateToDestination(it) }
             )
         }

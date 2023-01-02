@@ -24,15 +24,9 @@ class LanguagePickerViewModel @Inject constructor(
         preferencesRepository.getAvailableLocalesStream(),
         preferencesRepository.getAppLocaleStream()
     ) { availableLocales, appLocale ->
-        LanguagePickerUiState(
-            locale = appLocale?.language.orEmpty(),
-            languages = availableLocales.map { it.toUiState(it.languagesEquals(appLocale)) }
-        )
+        val locales = availableLocales.map { it.toUiState(it.languagesEquals(appLocale)) }
+        LanguagePickerUiState(locales)
     }
-        /*preferencesRepository.getAvailableLocalesStream().map { availableLocales ->
-            Locale.ENGLISH
-            LanguagePickerUiState(availableLocales.map { it.toUiState(false) })
-        }*/
         .catch { it.printStackTrace() }
         .stateIn(
             scope = viewModelScope,

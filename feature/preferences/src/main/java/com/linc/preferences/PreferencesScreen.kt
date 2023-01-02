@@ -21,7 +21,6 @@ import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.navigation.observeNavigation
 import com.linc.preferences.navigation.PreferenceNavigationState
-import com.linc.ui.resources.BookstoreStrings
 import com.linc.ui.theme.IconWrapper
 import com.linc.ui.theme.icons
 import com.linc.ui.theme.strings
@@ -57,8 +56,7 @@ internal fun PreferencesScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(32.dp),
-//            text = MaterialTheme.strings.preferences,
-            text = BookstoreStrings.Preferences,
+            text = MaterialTheme.strings.preferences,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.SemiBold
         )
