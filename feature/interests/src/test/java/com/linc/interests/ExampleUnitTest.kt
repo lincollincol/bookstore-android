@@ -1,4 +1,4 @@
-package com.linc.editsubjects
+package com.linc.interests
 
 import org.junit.Test
 

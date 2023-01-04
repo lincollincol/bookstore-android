@@ -4,8 +4,5 @@ plugins {
 }
 
 android {
-    namespace = "com.linc.editsubjects"
-}
-
-dependencies {
+    namespace = "com.linc.interests"
 }

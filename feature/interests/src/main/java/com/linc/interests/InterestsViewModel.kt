@@ -1,14 +1,12 @@
-package com.linc.editsubjects
+package com.linc.interests
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linc.ui.state.UiStateHolder
 import com.linc.data.repository.SubjectsRepository
-import com.linc.model.Subject
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject

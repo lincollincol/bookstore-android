@@ -1,10 +1,10 @@
-package com.linc.editsubjects.navigation
+package com.linc.interests.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import com.linc.editsubjects.EditSubjectsRoute
+import com.linc.interests.EditSubjectsRoute
 import com.linc.navigation.defaultAxisZEnterTransition
 import com.linc.navigation.defaultAxisZExitTransition
 import soup.compose.material.motion.navigation.composable

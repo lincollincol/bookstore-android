@@ -1,4 +1,4 @@
-package com.linc.editsubjects
+package com.linc.interests
 
 import com.linc.ui.state.UiState
 import com.linc.model.Subject

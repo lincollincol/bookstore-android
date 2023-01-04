@@ -17,8 +17,8 @@ import com.linc.payments.navigation.navigateToPayments
 import com.linc.payments.navigation.paymentsScreen
 import com.linc.cart.navigation.cartGraph
 import com.linc.cart.navigation.navigateToCart
-import com.linc.editsubjects.navigation.interestsScreen
-import com.linc.editsubjects.navigation.navigateToInterests
+import com.linc.interests.navigation.interestsScreen
+import com.linc.interests.navigation.navigateToInterests
 import com.linc.languagepicker.navigation.languagePickerScreen
 import com.linc.languagepicker.navigation.navigateToLanguagePicker
 import com.linc.navigation.navigate

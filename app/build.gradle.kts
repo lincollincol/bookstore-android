@@ -58,7 +58,7 @@ dependencies {
     implementation(project(":feature:bookdetails"))
     implementation(project(":feature:cart"))
     implementation(project(":feature:preferences"))
-    implementation(project(":feature:editsubjects"))
+    implementation(project(":feature:interests"))
     implementation(project(":feature:subjectbooks"))
     implementation(project(":feature:bookmarks"))
     implementation(project(":feature:languagepicker"))

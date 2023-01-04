@@ -1,6 +1,7 @@
 package com.linc.bookmarks
 
 import android.widget.Space
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
 import com.linc.ui.R
+import com.linc.ui.components.NothingFound
 import com.linc.ui.components.SimpleIcon
 import com.linc.ui.icon.BookstoreIcons
 import com.linc.ui.theme.icons
@@ -79,6 +81,34 @@ private fun BookmarksScreen(
                 }
             }
         )
+        BookmarksList(
+            bookmarks = bookmarks,
+            onBookmarkClick = onBookmarkClick,
+            onDeleteBookmarkClick = onDeleteBookmarkClick
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun BookmarksList(
+    modifier: Modifier = Modifier,
+    bookmarks: List<BookmarkItemUiState>,
+    onBookmarkClick: (String) -> Unit,
+    onDeleteBookmarkClick: (String) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier),
+        contentAlignment = Alignment.Center
+    ) {
+        AnimatedVisibility(bookmarks.isEmpty()) {
+            NothingFound(
+                icon = MaterialTheme.icons.outlinedBookmark,
+                message = "Bookmarks not found!"
+            )
+        }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(horizontal = 32.dp)
