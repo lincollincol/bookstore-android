@@ -1,4 +1,4 @@
-package com.linc.designsystem.extensions
+package com.linc.ui.extensions
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
@@ -8,6 +8,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
+
+const val SLIDE_DISTANCE = 70
 
 @SuppressLint("UnrememberedMutableState")
 @Composable

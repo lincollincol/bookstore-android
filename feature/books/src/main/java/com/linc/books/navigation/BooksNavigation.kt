@@ -1,10 +1,10 @@
 package com.linc.books.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.*
-import androidx.navigation.compose.composable
 import com.linc.books.BooksRoute
-import com.linc.navigation.DEEPLINK_URI
-import com.linc.navigation.NavigationState
+import com.linc.navigation.*
+import soup.compose.material.motion.navigation.composable
 
 const val booksRouteGraph = "books_route_graph"
 const val booksRoute = "books_route"
@@ -18,13 +18,16 @@ fun NavController.navigateToBooks(navOptions: NavOptions? = null) {
     this.navigate(booksRoute, navOptions)
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.booksScreen(
     navigateToBookDetails: (String) -> Unit,
     navigateToSubjectBook: (String) -> Unit,
 ) {
     composable(
         route = booksRoute,
-        deepLinks = listOf(navDeepLink { uriPattern = "$DEEPLINK_URI/books" })
+        deepLinks = listOf(navDeepLink { uriPattern = "$DEEPLINK_URI/books" }),
+        enterTransition = defaultHostEnterTransition,
+        exitTransition = defaultHostExitTransition
     ) {
         BooksRoute(navigateToBookDetails, navigateToSubjectBook)
     }

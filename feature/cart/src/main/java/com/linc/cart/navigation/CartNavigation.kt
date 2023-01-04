@@ -1,10 +1,10 @@
 package com.linc.cart.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.*
-import androidx.navigation.compose.composable
 import com.linc.cart.CartRoute
-import com.linc.navigation.DEEPLINK_URI
-import com.linc.navigation.NavigationState
+import com.linc.navigation.*
+import soup.compose.material.motion.navigation.composable
 
 const val cartRouteGraph: String = "cart_route_graph"
 const val cartRoute: String = "cart_route"
@@ -19,13 +19,15 @@ fun NavController.navigateToCart(
     navigate(cartRoute, navOptions)
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.cartScreen(
     navigateToBookDetails: (String) -> Unit
 ) {
-
     composable(
         route = cartRoute,
-        deepLinks = listOf(navDeepLink { uriPattern = "$DEEPLINK_URI/cart" })
+        deepLinks = listOf(navDeepLink { uriPattern = "$DEEPLINK_URI/cart" }),
+        enterTransition = defaultHostEnterTransition,
+        exitTransition = defaultHostExitTransition
     ) {
         CartRoute(
             navigateToBookDetails = navigateToBookDetails

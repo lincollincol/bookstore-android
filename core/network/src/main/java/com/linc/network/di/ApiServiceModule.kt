@@ -1,6 +1,7 @@
 package com.linc.network.di
 
 import com.linc.network.api.BooksApiService
+import com.linc.network.api.StripeApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +14,12 @@ internal object ApiServiceModule {
 
     @Provides
     fun provideBooksApiService(
-        retrofit: Retrofit
+        @BaseUrlType(Url.BOOKS_API) retrofit: Retrofit
     ): BooksApiService = retrofit.create(BooksApiService::class.java)
+
+    @Provides
+    fun provideStripeApiService(
+        @BaseUrlType(Url.STRIPE_API) retrofit: Retrofit
+    ): StripeApiService = retrofit.create(StripeApiService::class.java)
 
 }

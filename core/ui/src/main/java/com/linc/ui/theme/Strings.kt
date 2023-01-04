@@ -46,6 +46,8 @@ data class LocalizedStrings(
     val cart: String,
     val preferences: String,
     val language: String,
+    val selectedWithCount: String,
+    val available: String,
 ) {
     companion object
 }
@@ -81,7 +83,9 @@ fun LocalizedStrings.Companion.fromMap(strings: Map<String, String>) = Localized
     bookNotFound = strings.getOrEmpty("bookNotFound"),
     cart = strings.getOrEmpty("cart"),
     preferences = strings.getOrEmpty("preferences"),
-    language = strings.getOrEmpty("language")
+    language = strings.getOrEmpty("language"),
+    selectedWithCount = "Selected %s",
+    available = "Available",
 )
 
 private fun <K> Map<K, String>.getOrEmpty(key: K): String = get(key) ?: ""

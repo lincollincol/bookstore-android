@@ -98,7 +98,7 @@ class BookDetailsViewModel @Inject constructor(
         val content = String.format(
             "%s\n\n%s/books/%s",
             rawUiState.title,
-            BuildConfig.BASE_BACKEND_URL,
+            BuildConfig.DEEPLINK_BASE_URL,
             rawUiState.id
         )
         val intent = Intent().apply {

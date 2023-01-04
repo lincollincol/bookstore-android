@@ -17,8 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
-    defaultRouteNavigator: DefaultRouteNavigator,
-    private val preferencesRepository: PreferencesRepository
+    defaultRouteNavigator: DefaultRouteNavigator
 ) : ViewModel(), UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
 
     override val uiState: StateFlow<PreferencesUiState> = flowOf(PreferencesUiState())
@@ -33,6 +32,7 @@ class PreferencesViewModel @Inject constructor(
             OptionItemUiState.Bookmarks -> PreferenceNavigationState.Bookmarks
             OptionItemUiState.Interests -> PreferenceNavigationState.SubjectsEditor
             OptionItemUiState.Language -> PreferenceNavigationState.LanguagePicker
+            OptionItemUiState.PaymentCards -> PreferenceNavigationState.Cards
         }
         navigateTo(destination)
     }

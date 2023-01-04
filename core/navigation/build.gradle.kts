@@ -9,6 +9,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:common"))
     compileOnly(libs.androidx.lifecycle.runtime.compose)
     compileOnly(libs.androidx.navigation.compose)
+    compileOnly(libs.motion.compose.navigation)
 }

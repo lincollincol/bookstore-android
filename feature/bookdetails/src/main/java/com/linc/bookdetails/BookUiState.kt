@@ -23,7 +23,7 @@ data class BookUiState(
     val publishedDate: String = String.EMPTY,
     val language: String = String.EMPTY,
     val publisher: String = String.EMPTY,
-    val availableForSale: Boolean = true,
+    val availableForSale: Boolean = false,
     val price: Double = 0.0,
     val currency: String = String.EMPTY,
     val webResourceUrl: String = String.EMPTY,

@@ -1,14 +1,11 @@
 package com.linc.bookstore.navigation
 
 import android.content.Intent
-import androidx.activity.compose.BackHandler
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.linc.bookdetails.navigation.bookDetailsScreen
 import com.linc.bookdetails.navigation.navigateToBookDetails
@@ -16,20 +13,21 @@ import com.linc.bookmarks.navigation.bookmarksScreen
 import com.linc.bookmarks.navigation.navigateToBookmarks
 import com.linc.books.navigation.booksGraph
 import com.linc.books.navigation.booksRouteGraph
-import com.linc.books.navigation.navigateToBooks
+import com.linc.payments.navigation.navigateToPayments
+import com.linc.payments.navigation.paymentsScreen
 import com.linc.cart.navigation.cartGraph
-import com.linc.cart.navigation.cartScreen
 import com.linc.cart.navigation.navigateToCart
-import com.linc.editsubjects.navigation.editSubjectsScreen
-import com.linc.editsubjects.navigation.navigateToEditSubjects
+import com.linc.editsubjects.navigation.interestsScreen
+import com.linc.editsubjects.navigation.navigateToInterests
 import com.linc.languagepicker.navigation.languagePickerScreen
 import com.linc.languagepicker.navigation.navigateToLanguagePicker
 import com.linc.navigation.navigate
 import com.linc.preferences.navigation.preferencesGraph
-import com.linc.preferences.navigation.preferencesScreen
 import com.linc.subjectbooks.navigation.navigateToSubjectBooks
 import com.linc.subjectbooks.navigation.subjectBooksScreen
+import soup.compose.material.motion.navigation.MaterialMotionNavHost
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BookstoreNavHost(
     modifier: Modifier = Modifier,
@@ -37,7 +35,7 @@ fun BookstoreNavHost(
     startDestination: String = booksRouteGraph
 ) {
     println(navController.backQueue.joinToString { it.destination.route.orEmpty() })
-    NavHost(
+    MaterialMotionNavHost(
         modifier = modifier,
         navController = navController,
         startDestination = startDestination
@@ -72,13 +70,13 @@ fun BookstoreNavHost(
         )
         preferencesGraph(
             navigateToBookmarks = navController::navigateToBookmarks,
-            navigateToSubjectsEditor = navController::navigateToEditSubjects,
+            navigateToSubjectsEditor = navController::navigateToInterests,
             navigateToLanguagePicker = navController::navigateToLanguagePicker,
+            navigateToCards = navController::navigateToPayments,
             nestedGraphs = {
-                editSubjectsScreen()
-                languagePickerScreen(
-                    navigateBack = navController::popBackStack
-                )
+                paymentsScreen()
+                interestsScreen(navigateBack = navController::popBackStack)
+                languagePickerScreen(navigateBack = navController::popBackStack)
                 bookmarksScreen(
                     navigateToBookDetails = navController::navigateToBookDetails,
                     navigateBack = navController::popBackStack

@@ -35,5 +35,9 @@ enum class OptionItemUiState(
     Language(
         icon = { MaterialTheme.icons.language },
         title = { MaterialTheme.strings.language }
+    ),
+    PaymentCards(
+        icon = { MaterialTheme.icons.addCard },
+        title = { MaterialTheme.strings.language }
     )
 }

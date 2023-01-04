@@ -2,6 +2,7 @@ plugins {
     id("bookstore.android.application")
     id("bookstore.android.application.compose")
     id("bookstore.android.hilt")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -41,6 +42,10 @@ android {
     }
 }
 
+secrets {
+    defaultPropertiesFileName = "secrets.defaults.properties"
+}
+
 dependencies {
 
     implementation(project(":core:common"))
@@ -57,6 +62,7 @@ dependencies {
     implementation(project(":feature:subjectbooks"))
     implementation(project(":feature:bookmarks"))
     implementation(project(":feature:languagepicker"))
+    implementation(project(":feature:payments"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -65,5 +71,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.motion.compose.core)
+    implementation(libs.stripe)
+
 
 }

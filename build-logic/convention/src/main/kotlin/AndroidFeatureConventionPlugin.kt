@@ -30,6 +30,9 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", project(":core:ui"))
                 add("implementation", project(":core:navigation"))
 
+                add("implementation", libs.findLibrary("motion-compose-core").get())
+                add("implementation", libs.findLibrary("motion-compose-navigation").get())
+                add("implementation", libs.findLibrary("hilt.navigation.compose").get())
                 add("implementation", libs.findLibrary("hilt.navigation.compose").get())
                 add("implementation", libs.findLibrary("androidx-lifecycle-runtime-compose").get())
                 add("implementation", libs.findLibrary("androidx-lifecycle-viewmodel-compose").get())

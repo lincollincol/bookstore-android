@@ -22,13 +22,17 @@ import com.linc.cart.navigation.navigateToCart
 import com.linc.ui.components.SimpleIcon
 import com.linc.navigation.currentRouteIsOneOf
 import com.linc.preferences.navigation.navigateToPreferences
+import soup.compose.material.motion.navigation.rememberMaterialMotionNavController
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun BookstoreApp(
 
 ) {
-    val navController = rememberNavController()
+//    val navController = rememberNavController()
+    val navController = rememberMaterialMotionNavController()
     val menuDestinations: List<MenuDestinations> = MenuDestinations.values().asList()
     val backStackEntry by navController.currentBackStackEntryAsState()
     Scaffold(

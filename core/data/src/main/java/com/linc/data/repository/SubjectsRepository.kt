@@ -38,17 +38,13 @@ class SubjectsRepository @Inject constructor(
         return@withContext subjectDao.getNonPrimarySubjects().map(SubjectEntity::asExternalModel)
     }
 
-    fun getPrimarySubjectsStream(): Flow<List<Subject>> {
-        return subjectDao.getPrimarySubjectsStream()
-            .map { it.map(SubjectEntity::asExternalModel) }
-            .flowOn(dispatcher)
-    }
+    fun getPrimarySubjectsStream(): Flow<List<Subject>> = subjectDao.getPrimarySubjectsStream()
+        .map { it.map(SubjectEntity::asExternalModel) }
+        .flowOn(dispatcher)
 
-    fun getNonPrimarySubjectsStream(): Flow<List<Subject>> {
-        return subjectDao.getNonPrimarySubjectsStream()
-            .map { it.map(SubjectEntity::asExternalModel) }
-            .flowOn(dispatcher)
-    }
+    fun getNonPrimarySubjectsStream(): Flow<List<Subject>> = subjectDao.getNonPrimarySubjectsStream()
+        .map { it.map(SubjectEntity::asExternalModel) }
+        .flowOn(dispatcher)
 
     suspend fun updateSubjectPrimary(
         subjectId: String,

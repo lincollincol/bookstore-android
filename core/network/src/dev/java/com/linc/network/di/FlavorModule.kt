@@ -13,6 +13,6 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 internal object FlavorModule {
 
     @Provides
-    fun provideBaseUrl(): HttpUrl = BuildConfig.DEV_BOOKS_BACKEND_URL.toHttpUrl()
+    fun provideBaseUrl(): HttpUrl = BuildConfig.DEV_BOOKS_BASE_URL.toHttpUrl()
 
 }

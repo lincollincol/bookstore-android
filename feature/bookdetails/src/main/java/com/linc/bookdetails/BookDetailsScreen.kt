@@ -2,9 +2,7 @@ package com.linc.bookdetails
 
 import android.content.Intent
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,10 +55,16 @@ import com.linc.ui.theme.icons
 import com.linc.ui.theme.strings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import soup.compose.material.motion.MaterialMotion
+import soup.compose.material.motion.MaterialSharedAxisY
+import soup.compose.material.motion.MaterialSharedAxisZ
+import soup.compose.material.motion.animation.materialSharedAxisY
+import soup.compose.material.motion.animation.materialSharedAxisYIn
+import soup.compose.material.motion.animation.rememberSlideDistance
 import java.util.*
 
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun BookDetailsRoute(
     modifier: Modifier = Modifier,
