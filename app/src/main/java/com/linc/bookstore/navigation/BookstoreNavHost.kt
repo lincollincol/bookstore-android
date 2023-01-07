@@ -4,9 +4,13 @@ import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
+import androidx.navigation.navigation
+import com.linc.auth.navigation.authRoute
+import com.linc.auth.navigation.authScreen
 import com.linc.bookdetails.navigation.bookDetailsScreen
 import com.linc.bookdetails.navigation.navigateToBookDetails
 import com.linc.bookmarks.navigation.bookmarksScreen
@@ -27,12 +31,14 @@ import com.linc.subjectbooks.navigation.navigateToSubjectBooks
 import com.linc.subjectbooks.navigation.subjectBooksScreen
 import soup.compose.material.motion.navigation.MaterialMotionNavHost
 
+private const val mainRouteGraph = "main_route_graph"
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BookstoreNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = booksRouteGraph
+    startDestination: String = authRoute
 ) {
     println(navController.backQueue.joinToString { it.destination.route.orEmpty() })
     MaterialMotionNavHost(
@@ -40,48 +46,63 @@ fun BookstoreNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        booksGraph(
-            navigateToBookDetails = navController::navigateToBookDetails,
-            navigateToSubjectBook = navController::navigateToSubjectBooks,
-            nestedGraphs = {
-                subjectBooksScreen(
-                    navigateToBookDetails = navController::navigateToBookDetails,
-                    navigateBack = navController::popBackStack
-                )
-                bookDetailsScreen(
-                    navigateToCart = {
-                        navController.navigateToCart(
-                            navOptions {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+        authScreen(
+            navigateToMain = navController::navigateToMain,
+            navigateToInterests = navController::navigateToInterests
+        )
+        navigation(
+            route = mainRouteGraph,
+            startDestination = booksRouteGraph
+        ) {
+            booksGraph(
+                navigateToBookDetails = navController::navigateToBookDetails,
+                navigateToSubjectBook = navController::navigateToSubjectBooks,
+                nestedGraphs = {
+                    subjectBooksScreen(
+                        navigateToBookDetails = navController::navigateToBookDetails,
+                        navigateBack = navController::popBackStack
+                    )
+                    bookDetailsScreen(
+                        navigateToCart = {
+                            navController.navigateToCart(
+                                navOptions {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
                                 }
-                            }
-                        )
-                    },
-                    navigateToChooser = {
-                        navController.navigate(intent = Intent.createChooser(it, null))
-                    },
-                    navigateBack = navController::popBackStack
-                )
-            }
-        )
-        cartGraph(
-            navigateToBookDetails = navController::navigateToBookDetails
-        )
-        preferencesGraph(
-            navigateToBookmarks = navController::navigateToBookmarks,
-            navigateToSubjectsEditor = navController::navigateToInterests,
-            navigateToLanguagePicker = navController::navigateToLanguagePicker,
-            navigateToCards = navController::navigateToPayments,
-            nestedGraphs = {
-                paymentsScreen()
-                interestsScreen(navigateBack = navController::popBackStack)
-                languagePickerScreen(navigateBack = navController::popBackStack)
-                bookmarksScreen(
-                    navigateToBookDetails = navController::navigateToBookDetails,
-                    navigateBack = navController::popBackStack
-                )
-            }
-        )
+                            )
+                        },
+                        navigateToChooser = {
+                            navController.navigate(intent = Intent.createChooser(it, null))
+                        },
+                        navigateBack = navController::popBackStack
+                    )
+                }
+            )
+            cartGraph(
+                navigateToBookDetails = navController::navigateToBookDetails
+            )
+            preferencesGraph(
+                navigateToBookmarks = navController::navigateToBookmarks,
+                navigateToSubjectsEditor = navController::navigateToInterests,
+                navigateToLanguagePicker = navController::navigateToLanguagePicker,
+                navigateToCards = navController::navigateToPayments,
+                nestedGraphs = {
+                    paymentsScreen()
+                    interestsScreen(navigateBack = navController::popBackStack)
+                    languagePickerScreen(navigateBack = navController::popBackStack)
+                    bookmarksScreen(
+                        navigateToBookDetails = navController::navigateToBookDetails,
+                        navigateBack = navController::popBackStack
+                    )
+                }
+            )
+        }
+    }
+}
+
+private fun NavController.navigateToMain() {
+    navigate(mainRouteGraph) {
+        popUpTo(graph.id) { inclusive = true }
     }
 }

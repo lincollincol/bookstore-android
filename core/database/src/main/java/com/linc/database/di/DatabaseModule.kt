@@ -50,4 +50,16 @@ object DatabaseModule {
         database: BookstoreDatabase
     ): LocaleDao = database.localeDao
 
+    @Singleton
+    @Provides
+    fun providePaymentsDao(
+        database: BookstoreDatabase
+    ): PaymentsDao = database.paymentsDao
+
+    @Singleton
+    @Provides
+    fun provideUsersDao(
+        database: BookstoreDatabase
+    ): UsersDao = database.usersDao
+
 }

@@ -19,7 +19,9 @@ interface StripeApiService {
         "Stripe-Version: 2022-08-01"
     )
     @POST("v1/customers")
-    suspend fun createCustomer() : CustomerApiModel
+    suspend fun createCustomer(
+        @Query("name") name: String
+    ) : CustomerApiModel
 
     @Headers(
         "Authorization: Bearer $SECRET",

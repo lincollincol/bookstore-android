@@ -1,11 +1,32 @@
 package com.linc.data.repository
 
+import com.linc.common.coroutines.AppDispatchers
+import com.linc.common.coroutines.Dispatcher
+import com.linc.database.dao.PaymentsDao
+import com.linc.database.dao.UsersDao
+import com.linc.database.entity.payment.CustomerEntity
 import com.linc.network.api.StripeApiService
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PaymentsRepository @Inject constructor(
-    private val stripeApiService: StripeApiService
+    private val stripeApiService: StripeApiService,
+    private val paymentsDao: PaymentsDao,
+    private val usersDao: UsersDao,
+    @Dispatcher(AppDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) {
+
+    suspend fun createCustomer() = withContext(ioDispatcher) {
+        val user = usersDao.getUser() ?: return@withContext
+        val customer = stripeApiService.createCustomer(user.name)
+        paymentsDao.insertCustomer(
+            CustomerEntity(
+                customerId = customer.id,
+                userId = user.userId
+            )
+        )
+    }
 
     /*suspend fun refreshEphemeralKeys(customerId: String) {
         val request = Request.Builder()

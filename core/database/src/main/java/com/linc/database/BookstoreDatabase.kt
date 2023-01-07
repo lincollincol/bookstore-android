@@ -12,8 +12,10 @@ import com.linc.database.entity.bookmark.BookmarkEntity
 import com.linc.database.entity.localization.LocaleEntity
 import com.linc.database.entity.localization.LocaleStringEntity
 import com.linc.database.entity.order.OrderEntity
+import com.linc.database.entity.payment.CustomerEntity
 import com.linc.database.entity.subject.SubjectBookCrossRef
 import com.linc.database.entity.subject.SubjectEntity
+import com.linc.database.entity.user.UserEntity
 import java.util.Locale
 
 private const val BOOKSTORE_DATABASE = "bookstore_database.db"
@@ -23,6 +25,8 @@ private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.
     version = 1,
     exportSchema = false,
     entities = [
+        UserEntity::class,
+        CustomerEntity::class,
         BookEntity::class,
         SubjectEntity::class,
         SubjectBookCrossRef::class,
@@ -36,6 +40,8 @@ private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.
     StringListConverter::class
 )
 abstract class BookstoreDatabase : RoomDatabase() {
+    abstract val usersDao: UsersDao
+    abstract val paymentsDao: PaymentsDao
     abstract val ordersDao: OrdersDao
     abstract val booksDao: BooksDao
     abstract val subjectDao: SubjectDao
