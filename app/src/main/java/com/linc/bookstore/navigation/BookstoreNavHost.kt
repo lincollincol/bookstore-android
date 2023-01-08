@@ -14,6 +14,7 @@ import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.linc.auth.navigation.authRoute
 import com.linc.auth.navigation.authScreen
+import com.linc.auth.navigation.navigateToAuth
 import com.linc.bookdetails.navigation.bookDetailsScreen
 import com.linc.bookdetails.navigation.navigateToBookDetails
 import com.linc.bookmarks.navigation.bookmarksScreen
@@ -95,6 +96,11 @@ fun BookstoreNavHost(
                 navigateToSubjectsEditor = navController::navigateToInterests,
                 navigateToLanguagePicker = navController::navigateToLanguagePicker,
                 navigateToPayments = navController::navigateToPayments,
+                navigateToAuth = {
+                    navController.navigateToAuth(
+                        navOptions { popUpTo(navController.graph.id) { inclusive = true } }
+                    )
+                },
                 nestedGraphs = {
                     paymentsScreen(navigateBack = navController::popBackStack)
                     interestsScreen(navigateBack = navController::popBackStack)

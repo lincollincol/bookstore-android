@@ -15,9 +15,6 @@ interface LocaleDao {
     @Query("SELECT * FROM LocaleEntity")
     suspend fun getLocales(): List<LocaleEntity>
 
-//    @Query("SELECT * FROM LocaleEntity")
-//    suspend fun getLocaleStream(code: String): Flow<LocaleEntity?>
-
     @Query("SELECT * FROM LocaleEntity WHERE LocaleEntity.code = :code")
     suspend fun getLocaleByCode(code: String): LocaleEntity?
 
@@ -34,15 +31,17 @@ interface LocaleDao {
     suspend fun insertLocaleStrings(strings: List<LocaleStringEntity>)
 
     @Query("DELETE FROM LocaleEntity")
-    suspend fun deleteLocale()
+    suspend fun clearLocale()
 
     @Query("DELETE FROM LocaleStringEntity")
-    suspend fun deleteLocaleStrings()
+    suspend fun clearLocaleStrings()
 
     @Transaction
-    suspend fun deleteLocaleData() {
-        deleteLocale()
-        deleteLocaleStrings()
+    suspend fun clearTable() {
+        clearLocale()
+        clearLocaleStrings()
     }
+
+
 
 }

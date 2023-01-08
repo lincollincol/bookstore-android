@@ -22,5 +22,9 @@ class PreferencesLocalDataSource @Inject constructor(
         preferencesDataStore.edit { it[LOCALE] = locale }
     }
 
+    suspend fun clearData() {
+        preferencesDataStore.edit { it.clear() }
+    }
+
 }
 

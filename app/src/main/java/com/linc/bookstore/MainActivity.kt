@@ -46,8 +46,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             BookstoreTheme(strings = uiState.localeStrings) {
-                uiState.isAuthorized?.let {
-                    BookstoreApp(isAuthorizedUser = uiState.isAuthorized!!)
+                uiState.isAuthorized?.let { isAuthorized ->
+                    BookstoreApp(isAuthorizedUser = isAuthorized)
                 }
             }
         }

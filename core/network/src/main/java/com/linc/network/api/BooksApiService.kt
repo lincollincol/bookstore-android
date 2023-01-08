@@ -9,10 +9,6 @@ import retrofit2.http.Query
 
 interface BooksApiService {
 
-//    @GET("/1.0/new")
-//    suspend fun getNewBooks(): BaseBooksResponse
-
-    //https://developers.google.com/books/docs/v1/using
 
     @GET("v1/volumes")
     suspend fun getBooks(

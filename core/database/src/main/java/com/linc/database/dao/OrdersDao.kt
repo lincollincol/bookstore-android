@@ -37,4 +37,7 @@ interface OrdersDao {
     @Query("DELETE FROM OrderEntity WHERE OrderEntity.orderId = :orderId")
     suspend fun deleteOrder(orderId: String)
 
+    @Query("DELETE FROM OrderEntity")
+    suspend fun clearTable()
+
 }

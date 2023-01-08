@@ -93,9 +93,9 @@ internal fun BooksScreen(
     val showToolbarElevation by remember {
         derivedStateOf { booksListState.firstVisibleItemScrollOffset > 0 }
     }
-    val toolbarElevation by animateDpAsState(
-        targetValue = if(showToolbarElevation) 4.dp else 0.dp
-    )
+//    val toolbarElevation by animateDpAsState(
+//        targetValue = if(showToolbarElevation) 4.dp else 0.dp
+//    )
     val searchFieldIcon = when {
         isSearching -> MaterialTheme.icons.clear
         else -> MaterialTheme.icons.search
@@ -139,7 +139,7 @@ internal fun BooksScreen(
         BookstoreTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(toolbarElevation)
+//                .shadow(toolbarElevation)
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
                 .constrainAs(searchField) {

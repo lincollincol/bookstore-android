@@ -33,7 +33,8 @@ fun PreferencesRoute(
     navigateToBookmarks: () -> Unit,
     navigateToSubjectsEditor: () -> Unit,
     navigateToLanguagePicker: () -> Unit,
-    navigateToPayments: () -> Unit
+    navigateToPayments: () -> Unit,
+    navigateToAuth: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.observeNavigation {
@@ -42,6 +43,7 @@ fun PreferencesRoute(
             PreferenceNavigationState.Bookmarks -> navigateToBookmarks()
             PreferenceNavigationState.LanguagePicker -> navigateToLanguagePicker()
             PreferenceNavigationState.Payments -> navigateToPayments()
+            PreferenceNavigationState.Auth -> navigateToAuth()
         }
     }
     PreferencesScreen(

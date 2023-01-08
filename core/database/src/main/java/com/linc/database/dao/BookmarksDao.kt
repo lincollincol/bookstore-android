@@ -28,4 +28,7 @@ interface BookmarksDao {
     @Query("DELETE FROM BookmarkEntity WHERE BookmarkEntity.targetId = :targetId")
     suspend fun deleteBookmarkByTarget(targetId: String)
 
+    @Query("DELETE FROM BookmarkEntity")
+    suspend fun clearTable()
+
 }

@@ -39,5 +39,9 @@ enum class OptionItemUiState(
     Payments(
         icon = { MaterialTheme.icons.payments },
         title = { "Payments" }
+    ),
+    Logout(
+        icon = { MaterialTheme.icons.logout },
+        title = { "Logout" }
     )
 }

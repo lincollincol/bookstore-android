@@ -3,8 +3,11 @@ package com.linc.data.repository
 import android.util.Log
 import com.linc.common.coroutines.AppDispatchers
 import com.linc.common.coroutines.Dispatcher
+import com.linc.common.coroutines.extensions.EMPTY
 import com.linc.data.model.asEntity
 import com.linc.data.model.asExternalModel
+import com.linc.database.AppDatabaseManager
+import com.linc.database.BookstoreDatabase
 import com.linc.database.dao.LocaleDao
 import com.linc.database.entity.localization.LocaleEntity
 import com.linc.datastore.PreferencesLocalDataSource
@@ -23,8 +26,14 @@ class PreferencesRepository @Inject constructor(
     private val preferencesLocalDataSource: PreferencesLocalDataSource,
     private val localizationLocalDataSource: LocalizationLocalDataSource,
     private val localeDao: LocaleDao,
+    private val databaseManager: AppDatabaseManager,
     @Dispatcher(AppDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) {
+
+    suspend fun clearAppData() = withContext(ioDispatcher) {
+        databaseManager.clearDatabase()
+        preferencesLocalDataSource.clearData()
+    }
 
     fun getAppLocaleStream(): Flow<Locale?> = preferencesLocalDataSource.localeStream
 
@@ -51,7 +60,7 @@ class PreferencesRepository @Inject constructor(
         }
 
         with(localeDao) {
-            deleteLocaleData()
+            clearTable()
             insertLocale(LocaleEntity(code, localeVersion))
             localizationLocalDataSource.getLocale(code)
                 .map { it.asEntity(code) }

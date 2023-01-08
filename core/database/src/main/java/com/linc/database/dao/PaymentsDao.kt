@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.linc.database.entity.payment.CustomerEntity
 import com.linc.database.entity.payment.EphemeralKeyEntity
 import com.linc.database.entity.payment.PaymentIntentEntity
@@ -41,5 +42,21 @@ interface PaymentsDao {
 
     @Query("DELETE FROM PaymentIntentEntity WHERE PaymentIntentEntity.orderId = :orderId")
     suspend fun deleteOrderPaymentIntent(orderId: String)
+
+    @Query("DELETE FROM CustomerEntity")
+    suspend fun clearCustomerTable()
+
+    @Query("DELETE FROM EphemeralKeyEntity")
+    suspend fun clearEphemeralKeyTable()
+
+    @Query("DELETE FROM PaymentIntentEntity")
+    suspend fun clearPaymentIntentTable()
+
+    @Transaction
+    suspend fun clearTable() {
+        clearPaymentIntentTable()
+        clearEphemeralKeyTable()
+        clearCustomerTable()
+    }
 
 }

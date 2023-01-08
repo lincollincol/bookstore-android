@@ -64,6 +64,7 @@ data class BookstoreIcons(
     val language: IconWrapper = Icons.Default.Language.asIconWrapper(),
     val addCard: IconWrapper = Icons.Default.AddCard.asIconWrapper(),
     val payments: IconWrapper = Icons.Default.Payments.asIconWrapper(),
+    val logout: IconWrapper = Icons.Default.Logout.asIconWrapper(),
     val bookmarkAdd: IconWrapper = Icons.Default.BookmarkAdd.asIconWrapper(),
     val bookmarkAdded: IconWrapper = Icons.Default.BookmarkAdded.asIconWrapper(),
     val bookmarkRemove: IconWrapper = Icons.Default.BookmarkRemove.asIconWrapper(),

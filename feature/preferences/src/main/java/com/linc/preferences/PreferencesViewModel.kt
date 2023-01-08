@@ -14,10 +14,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
-    defaultRouteNavigator: DefaultRouteNavigator
+    defaultRouteNavigator: DefaultRouteNavigator,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel(), UiStateHolder<PreferencesUiState>, RouteNavigator by defaultRouteNavigator {
 
     override val uiState: StateFlow<PreferencesUiState> = flowOf(PreferencesUiState())
@@ -33,8 +35,22 @@ class PreferencesViewModel @Inject constructor(
             OptionItemUiState.Interests -> PreferenceNavigationState.SubjectsEditor
             OptionItemUiState.Language -> PreferenceNavigationState.LanguagePicker
             OptionItemUiState.Payments -> PreferenceNavigationState.Payments
+            OptionItemUiState.Logout -> {
+                logout()
+                PreferenceNavigationState.Auth
+            }
         }
         navigateTo(destination)
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            try {
+                preferencesRepository.clearAppData()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
 }

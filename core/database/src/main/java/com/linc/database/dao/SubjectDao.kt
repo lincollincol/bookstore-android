@@ -63,4 +63,10 @@ interface SubjectDao {
     @Update(entity = SubjectEntity::class)
     suspend fun updateSubjectPrimary(primaryUpdate: UpdateSubjectPrimary)
 
+    @Transaction
+    suspend fun resetSubjects() {
+        getPrimarySubjects().forEach {
+            updateSubjectPrimary(UpdateSubjectPrimary(it.subjectId, false))
+        }
+    }
 }

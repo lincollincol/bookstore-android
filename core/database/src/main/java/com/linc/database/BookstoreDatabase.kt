@@ -52,6 +52,16 @@ abstract class BookstoreDatabase : RoomDatabase() {
     abstract val bookmarksDao: BookmarksDao
     abstract val localeDao: LocaleDao
 
+    suspend fun clearUserDataTables() {
+        paymentsDao.clearTable()
+        bookmarksDao.clearTable()
+        ordersDao.clearTable()
+        localeDao.clearTable()
+        booksDao.clearTable()
+        usersDao.clearTable()
+        subjectDao.resetSubjects()
+    }
+
     companion object {
         @JvmStatic
         fun create(context: Context): BookstoreDatabase = Room
