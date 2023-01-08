@@ -13,5 +13,6 @@ fun OrderAndBook.asExternalModel() = BookOrder(
 fun OrderEntity.asExternalModel() = Order(
     id= orderId,
     targetId = targetId,
-    count = count
+    count = count,
+    lastModifiedMillis = lastModifiedMillis
 )

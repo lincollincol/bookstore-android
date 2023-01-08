@@ -8,9 +8,6 @@ import com.linc.data.repository.PaymentsRepository
 import com.linc.navigation.DefaultRouteNavigator
 import com.linc.navigation.RouteNavigator
 import com.linc.ui.state.UiStateHolder
-import com.stripe.android.model.ConfirmPaymentIntentParams
-import com.stripe.android.model.PaymentMethodCreateParams
-import com.stripe.android.payments.paymentlauncher.PaymentResult
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -24,11 +21,13 @@ class CartViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository
 ) : ViewModel(), UiStateHolder<CartUiState>, RouteNavigator by defaultRouteNavigator {
 
+    private var orderToPayIds: List<String> = listOf()
+
     private val paymentClientSecret = MutableStateFlow<String?>(null)
 
     override val uiState: StateFlow<CartUiState> = combine(
         paymentClientSecret,
-        ordersRepository.getBookOrdersStream()
+        ordersRepository.getActiveBookOrdersStream()
     ) { paymentClientSecret, bookOrders ->
         CartUiState(
             paymentClientSecret = paymentClientSecret,
@@ -47,13 +46,18 @@ class CartViewModel @Inject constructor(
         navigateTo(CartNavigationState.BookDetails(bookId))
     }
 
-    fun purchaseOrder(orderId: String) {
+    fun purchaseAllOrders() = createOrdersPayment(rawUiState.orders.map(OrderItemUiState::orderId))
+
+    fun purchaseOrder(orderId: String) = createOrdersPayment(listOf(orderId))
+
+    private fun createOrdersPayment(orderIds: List<String>) {
         viewModelScope.launch {
             try {
                 val paymentSecret = with(paymentsRepository) {
-                    createSingleOrderPayment(orderId)
-                    getOrderPaymentClientSecret(orderId)
+                    createOrdersPayment(orderIds)
+                    getOrdersPaymentClientSecret(orderIds)
                 } ?: return@launch
+                orderToPayIds = orderIds
                 paymentClientSecret.update { paymentSecret }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -71,15 +75,11 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun purchaseAllOrders() {
-
-    }
-
     fun handlePaymentResult(result: PaymentSheetResult) {
         when(result) {
             PaymentSheetResult.Completed -> completeOrderPayment()
-            PaymentSheetResult.Canceled -> {}
             is PaymentSheetResult.Failed -> println("Payment: Failed(${result.error.message})")
+            else -> { /* ignored */ }
         }
     }
 
@@ -90,7 +90,9 @@ class CartViewModel @Inject constructor(
     private fun completeOrderPayment() {
         viewModelScope.launch {
             try {
-//                paymentsRepository.deleteOrderPaymentIntent()
+                ordersRepository.makeOrdersActive(orderToPayIds, false)
+                paymentsRepository.deleteOrdersPaymentIntent(orderToPayIds)
+                orderToPayIds = listOf()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

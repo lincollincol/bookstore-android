@@ -2,12 +2,14 @@ package com.linc.bookstore.navigation
 
 import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.linc.auth.navigation.authRoute
@@ -26,11 +28,14 @@ import com.linc.interests.navigation.interestsScreen
 import com.linc.interests.navigation.navigateToInterests
 import com.linc.languagepicker.navigation.languagePickerScreen
 import com.linc.languagepicker.navigation.navigateToLanguagePicker
+import com.linc.navigation.defaultAxisZEnterTransition
+import com.linc.navigation.defaultAxisZExitTransition
 import com.linc.navigation.navigate
 import com.linc.preferences.navigation.preferencesGraph
 import com.linc.subjectbooks.navigation.navigateToSubjectBooks
 import com.linc.subjectbooks.navigation.subjectBooksScreen
 import soup.compose.material.motion.navigation.MaterialMotionNavHost
+import soup.compose.material.motion.navigation.composable
 
 private const val mainRouteGraph = "main_route_graph"
 
@@ -41,7 +46,6 @@ fun BookstoreNavHost(
     navController: NavHostController,
     isAuthorizedUser: Boolean
 ) {
-    println(navController.backQueue.joinToString { it.destination.route.orEmpty() })
     val startDestination = remember(isAuthorizedUser) {
         if(isAuthorizedUser) mainRouteGraph else authRoute
     }
@@ -90,9 +94,9 @@ fun BookstoreNavHost(
                 navigateToBookmarks = navController::navigateToBookmarks,
                 navigateToSubjectsEditor = navController::navigateToInterests,
                 navigateToLanguagePicker = navController::navigateToLanguagePicker,
-                navigateToCards = navController::navigateToPayments,
+                navigateToPayments = navController::navigateToPayments,
                 nestedGraphs = {
-                    paymentsScreen()
+                    paymentsScreen(navigateBack = navController::popBackStack)
                     interestsScreen(navigateBack = navController::popBackStack)
                     languagePickerScreen(navigateBack = navController::popBackStack)
                     bookmarksScreen(

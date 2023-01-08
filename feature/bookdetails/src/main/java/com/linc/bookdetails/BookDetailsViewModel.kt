@@ -1,10 +1,6 @@
 package com.linc.bookdetails
 
-import android.content.ClipData
-import android.content.ContentResolver.MimeTypeInfo
 import android.content.Intent
-import android.net.Uri
-import androidx.core.os.bundleOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,7 +37,7 @@ class BookDetailsViewModel @Inject constructor(
 
     override val uiState: StateFlow<BookUiState> = combine(
         booksRepository.getBookStream(bookDetailsArgs.bookId),
-        ordersRepository.getBookOrderStream(bookDetailsArgs.bookId),
+        ordersRepository.getActiveBookOrderStream(bookDetailsArgs.bookId),
         bookmarksRepository.getBookBookmarkStream(bookDetailsArgs.bookId),
         orderCountState
     ) { book, order, bookmark, orderCount ->

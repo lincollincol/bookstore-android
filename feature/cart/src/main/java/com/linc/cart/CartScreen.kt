@@ -1,6 +1,7 @@
 package com.linc.cart
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -33,6 +34,8 @@ import com.linc.navigation.observeNavigation
 import com.linc.payments.launch
 import com.linc.payments.rememberPaymentLauncher
 import com.linc.ui.R
+import com.linc.ui.components.NothingFound
+import com.linc.ui.theme.icons
 import com.linc.ui.theme.strings
 import com.stripe.android.model.ConfirmPaymentIntentParams
 import com.stripe.android.model.PaymentMethodCreateParams
@@ -61,6 +64,7 @@ fun CartRoute(
     )
     uiState.paymentClientSecret?.let {
         stripeLauncher.launch(it)
+        viewModel.onPaymentConfirmed()
     }
     viewModel.observeNavigation {
         when(it) {
@@ -167,6 +171,7 @@ private fun CompletePurchaseBar(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OrdersList(
     modifier: Modifier = Modifier,
@@ -176,23 +181,35 @@ private fun OrdersList(
     onCancelOrderClick: (String) -> Unit,
     onPayOrderClick: (String) -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(modifier),
-        contentPadding = PaddingValues(horizontal = 32.dp),
-        state = listState
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        items(
-            items = orders,
-            key = { it.orderId }
-        ) {
-            OrderItem(
-                item = it,
-                onClick = onOrderClick,
-                onCancelClick = onCancelOrderClick,
-                onPayClick = onPayOrderClick
+        AnimatedVisibility(visible = orders.isEmpty()) {
+            NothingFound(
+                icon = MaterialTheme.icons.cart,
+                message = "Empty cart"
             )
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .then(modifier),
+            contentPadding = PaddingValues(horizontal = 32.dp),
+            state = listState
+        ) {
+            items(
+                items = orders,
+                key = { it.orderId }
+            ) {
+                OrderItem(
+                    modifier = Modifier.animateItemPlacement(),
+                    item = it,
+                    onClick = onOrderClick,
+                    onCancelClick = onCancelOrderClick,
+                    onPayClick = onPayOrderClick
+                )
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ sealed interface PreferenceNavigationState : NavigationState {
     object SubjectsEditor : PreferenceNavigationState
     object Bookmarks : PreferenceNavigationState
     object LanguagePicker : PreferenceNavigationState
-    object Cards : PreferenceNavigationState
+    object Payments : PreferenceNavigationState
 }
 
 fun NavController.navigateToPreferences(navOptions: NavOptions? = null) {
@@ -30,7 +30,7 @@ fun NavGraphBuilder.preferencesScreen(
     navigateToBookmarks: () -> Unit,
     navigateToSubjectsEditor: () -> Unit,
     navigateToLanguagePicker: () -> Unit,
-    navigateToCards: () -> Unit
+    navigateToPayments: () -> Unit
 ) {
     composable(
         route = preferencesRoute,
@@ -41,7 +41,7 @@ fun NavGraphBuilder.preferencesScreen(
             navigateToBookmarks = navigateToBookmarks,
             navigateToSubjectsEditor = navigateToSubjectsEditor,
             navigateToLanguagePicker = navigateToLanguagePicker,
-            navigateToCards = navigateToCards
+            navigateToPayments = navigateToPayments
         )
     }
 }
@@ -50,7 +50,7 @@ fun NavGraphBuilder.preferencesGraph(
     navigateToBookmarks: () -> Unit,
     navigateToSubjectsEditor: () -> Unit,
     navigateToLanguagePicker: () -> Unit,
-    navigateToCards: () -> Unit,
+    navigateToPayments: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit
 ) {
     navigation(
@@ -61,7 +61,7 @@ fun NavGraphBuilder.preferencesGraph(
             navigateToBookmarks = navigateToBookmarks,
             navigateToSubjectsEditor = navigateToSubjectsEditor,
             navigateToLanguagePicker = navigateToLanguagePicker,
-            navigateToCards = navigateToCards
+            navigateToPayments = navigateToPayments
         )
         nestedGraphs()
     }

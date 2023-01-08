@@ -4,4 +4,5 @@ data class Order(
     val id: String,
     val targetId: String,
     val count: Int,
+    val lastModifiedMillis: Long
 )

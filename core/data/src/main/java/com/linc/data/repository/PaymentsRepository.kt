@@ -11,6 +11,8 @@ import com.linc.database.entity.payment.EphemeralKeyEntity
 import com.linc.database.entity.payment.isExpired
 import com.linc.network.api.StripeApiService
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -48,29 +50,36 @@ class PaymentsRepository @Inject constructor(
         }
     }
 
-    suspend fun createSingleOrderPayment(orderId: String) = withContext(ioDispatcher) {
-        val localPaymentIntent = paymentsDao.getPaymentIntentByOrderId(orderId)
+    suspend fun createOrdersPayment(orderIds: List<String>) = withContext(ioDispatcher) {
+        val ordersGroupId = orderIds.joinToString()
+        val localPaymentIntent = paymentsDao.getPaymentIntentByOrderId(ordersGroupId)
         val customer = paymentsDao.getCustomer()
         if(localPaymentIntent != null || customer == null) {
             return@withContext
         }
         refreshCustomerEphemeralKey()
-        val order = ordersDao.getOrderAndBookById(orderId) ?: return@withContext
+        val orders = orderIds.map { async { ordersDao.getOrderAndBookById(it) } }
+            .awaitAll()
+            .filterNotNull()
+        val totalPrice = orders.sumOf { it.book.price * it.order.count * 100 }.roundToInt()
+        val currency = orders.first { it.book.currency.isNotEmpty() }.book.currency.lowercase()
         val paymentIntent = stripeApiService.createPaymentIntent(
             customerId = customer.customerId,
-            amount = (order.book.price * 100).roundToInt(),
-            currency = order.book.currency.lowercase(),
-            description = orderId,
+            amount = totalPrice,
+            currency = currency,
+            description = ordersGroupId,
             autoPaymentMethodsEnable = true
         )
-        paymentsDao.insertPaymentIntent(paymentIntent.asEntity(orderId))
+        paymentsDao.insertPaymentIntent(paymentIntent.asEntity(ordersGroupId))
     }
 
-    suspend fun getOrderPaymentClientSecret(orderId: String): String? = withContext(ioDispatcher) {
-        return@withContext paymentsDao.getPaymentIntentByOrderId(orderId)?.clientSecret
+    suspend fun getOrdersPaymentClientSecret(
+        orderIds: List<String>
+    ): String? = withContext(ioDispatcher) {
+        return@withContext paymentsDao.getPaymentIntentByOrderId(orderIds.joinToString())?.clientSecret
     }
 
-    suspend fun deleteOrderPaymentIntent(orderId: String) = withContext(ioDispatcher) {
-        paymentsDao.deleteOrderPaymentIntent(orderId)
+    suspend fun deleteOrdersPaymentIntent(orderIds: List<String>) = withContext(ioDispatcher) {
+        paymentsDao.deleteOrderPaymentIntent(orderIds.joinToString())
     }
 }

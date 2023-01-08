@@ -25,14 +25,14 @@ fun NothingFound(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SimpleIcon(
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(36.dp),
             icon = icon
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = message,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center
         )
     }

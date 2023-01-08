@@ -32,11 +32,10 @@ class PreferencesViewModel @Inject constructor(
             OptionItemUiState.Bookmarks -> PreferenceNavigationState.Bookmarks
             OptionItemUiState.Interests -> PreferenceNavigationState.SubjectsEditor
             OptionItemUiState.Language -> PreferenceNavigationState.LanguagePicker
-            OptionItemUiState.PaymentCards -> PreferenceNavigationState.Cards
+            OptionItemUiState.Payments -> PreferenceNavigationState.Payments
         }
         navigateTo(destination)
     }
-
 
 }
 

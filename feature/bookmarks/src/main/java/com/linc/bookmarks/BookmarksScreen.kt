@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -74,6 +75,7 @@ private fun BookmarksScreen(
             .then(modifier)
     ) {
         CenterAlignedTopAppBar(
+            modifier = Modifier.shadow(4.dp),
             title = { Text(text = MaterialTheme.strings.bookmarks) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {

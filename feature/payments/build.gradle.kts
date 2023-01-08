@@ -4,9 +4,5 @@ plugins {
 }
 
 android {
-    namespace = "com.linc.payments"
-}
-
-dependencies {
-    implementation(libs.stripe)
+    namespace = "com.linc.feature.payments"
 }

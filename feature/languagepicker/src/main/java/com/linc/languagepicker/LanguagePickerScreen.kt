@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,8 +54,7 @@ private fun LanguagePickerScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         CenterAlignedTopAppBar(
-//            title = { Text(text = BookstoreStrings.Language) },
-//            title = { Text(text = MaterialTheme.strings2.Language) },
+            modifier = Modifier.shadow(4.dp),
             title = { Text(text = MaterialTheme.strings.language) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
