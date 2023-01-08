@@ -78,7 +78,6 @@ class CartViewModel @Inject constructor(
     fun handlePaymentResult(result: PaymentSheetResult) {
         when(result) {
             PaymentSheetResult.Completed -> completeOrderPayment()
-            is PaymentSheetResult.Failed -> println("Payment: Failed(${result.error.message})")
             else -> { /* ignored */ }
         }
     }

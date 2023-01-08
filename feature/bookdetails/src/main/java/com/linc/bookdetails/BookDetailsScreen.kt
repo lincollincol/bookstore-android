@@ -2,6 +2,7 @@ package com.linc.bookdetails
 
 import android.content.Intent
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -49,10 +50,12 @@ import com.linc.ui.icon.BookstoreIcons
 import com.linc.designsystem.extensions.getVibrantColor
 import com.linc.navigation.NavigationState
 import com.linc.navigation.observeNavigation
+import com.linc.payments.launch
 import com.linc.ui.extensions.toAnnotatedString
 import com.linc.ui.theme.IconWrapper
 import com.linc.ui.theme.icons
 import com.linc.ui.theme.strings
+import com.stripe.android.paymentsheet.PaymentSheetContract
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import soup.compose.material.motion.MaterialMotion
@@ -73,8 +76,16 @@ fun BookDetailsRoute(
     navigateToChooser: (Intent) -> Unit,
     navigateBack: () -> Unit,
 ) {
-    val bookUiState: BookUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
+    val stripeLauncher = rememberLauncherForActivityResult(
+        contract = PaymentSheetContract(),
+        onResult = { viewModel.handlePaymentResult(it) }
+    )
+    val uiState: BookUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    uiState.paymentClientSecret?.let {
+        stripeLauncher.launch(it)
+        viewModel.onPaymentConfirmed()
+    }
     viewModel.observeNavigation {
         when(it) {
             is BookDetailsNavigationState.Cart -> navigateToCart()
@@ -85,10 +96,10 @@ fun BookDetailsRoute(
     BookDetailsScreen(
         modifier = modifier,
         coroutineScope = coroutineScope,
-        bookUiState = bookUiState,
+        bookUiState = uiState,
         onBackClick = viewModel::navigateBack,
         onAddToCartClick = viewModel::addToCart,
-        onOrderPayClick = {},
+        onOrderPayClick = viewModel::confirmPayment,
         onBookmarkClick = viewModel::bookmarkBook,
         onShareClick = viewModel::shareBook,
         onIncCountClick = viewModel::increaseOrderCount,
@@ -193,6 +204,7 @@ internal fun BookDetailsScreen(
                         centerHorizontallyTo(parent)
                     },
                     formattedPrice = bookUiState.formattedPrice,
+                    formattedTotalPrice = bookUiState.formattedTotalOrderPrice,
                     isOrdered = bookUiState.isOrdered,
                     onAddToCartClick = {
                         coroutineScope.launch {
@@ -540,12 +552,13 @@ private fun AddToCartButton(
     modifier: Modifier = Modifier,
     isOrdered: Boolean,
     formattedPrice: String,
+    formattedTotalPrice: String,
     onAddToCartClick: () -> Unit,
     onOrderPayClick: () -> Unit,
 ) {
     val cartButtonText = with(MaterialTheme.strings) {
         remember(isOrdered, formattedPrice) {
-            if (isOrdered) payForOrder
+            if (isOrdered) confirmPaymentWithPrice.format(formattedTotalPrice)
             else buyWithPrice.format(formattedPrice)
         }
     }

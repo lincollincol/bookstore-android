@@ -4,5 +4,5 @@ plugins {
 }
 
 android {
-    namespace = "com.linc.feature.payments"
+    namespace = "com.linc.payments"
 }

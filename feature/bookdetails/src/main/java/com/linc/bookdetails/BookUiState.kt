@@ -11,7 +11,8 @@ import com.linc.ui.theme.strings
 
 
 data class BookUiState(
-    val id: String = String.EMPTY,
+    val bookId: String = String.EMPTY,
+    val orderId: String? = null,
     val title: String = String.EMPTY,
     val description: String = String.EMPTY,
     val imageUrl: String = String.EMPTY,
@@ -28,6 +29,7 @@ data class BookUiState(
     val currency: String = String.EMPTY,
     val webResourceUrl: String = String.EMPTY,
     val orderCount: Int = 0,
+    val paymentClientSecret: String? = null,
     val isOrdered: Boolean = false,
     val isBookmarked: Boolean = false,
     val isLoading: Boolean = false,
@@ -46,11 +48,14 @@ val BookUiState.formattedTotalOrderPrice: String get() =
 
 fun Book.toUiState(
     orderCount: Int,
+    orderId: String?,
+    paymentClientSecret: String?,
     isOrdered: Boolean,
     isBookmarked: Boolean,
     isLoading: Boolean,
 ) = BookUiState(
-    id = id,
+    bookId = id,
+    orderId = orderId,
     title = title,
     description = description,
     imageUrl = hiqImageUrl,
@@ -66,6 +71,7 @@ fun Book.toUiState(
     price = price,
     currency = currency,
     webResourceUrl = webResourceUrl,
+    paymentClientSecret = paymentClientSecret,
     orderCount = orderCount,
     isOrdered = isOrdered,
     isBookmarked = isBookmarked,

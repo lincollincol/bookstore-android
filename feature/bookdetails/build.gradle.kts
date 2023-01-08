@@ -13,5 +13,6 @@ secrets {
 }
 
 dependencies {
+    implementation(project(":core:payments"))
     implementation(libs.palette)
 }
