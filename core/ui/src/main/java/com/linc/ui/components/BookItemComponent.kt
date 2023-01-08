@@ -23,13 +23,15 @@ import com.linc.ui.model.formattedPrice
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LazyItemScope.DetailedBookItem(
+    modifier: Modifier = Modifier,
     item: DetailedBookItemUiState,
     onBookClick: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
             .clickable(onClick = { onBookClick(item.id) })
-            .padding(8.dp),
+            .padding(8.dp)
+            .then(modifier),
         verticalAlignment = Alignment.Top
     ) {
         AsyncImage(

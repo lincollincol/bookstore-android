@@ -1,5 +1,6 @@
 package com.linc.cart
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -21,14 +22,29 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.linc.cart.navigation.CartNavigationState
+import com.linc.data.repository.PaymentsRepository
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.navigation.observeNavigation
+import com.linc.payments.launch
+import com.linc.payments.rememberPaymentLauncher
 import com.linc.ui.R
 import com.linc.ui.theme.strings
+import com.stripe.android.model.ConfirmPaymentIntentParams
+import com.stripe.android.model.PaymentMethodCreateParams
+import com.stripe.android.payments.paymentlauncher.PaymentResult
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.PaymentSheetContract
+import com.stripe.android.paymentsheet.PaymentSheetResult
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -37,6 +53,15 @@ fun CartRoute(
     navigateToBookDetails: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val stripeLauncher = rememberLauncherForActivityResult(
+        contract = PaymentSheetContract(),
+        onResult = {
+            viewModel.handlePaymentResult(it)
+        }
+    )
+    uiState.paymentClientSecret?.let {
+        stripeLauncher.launch(it)
+    }
     viewModel.observeNavigation {
         when(it) {
             is CartNavigationState.BookDetails -> navigateToBookDetails(it.bookId)

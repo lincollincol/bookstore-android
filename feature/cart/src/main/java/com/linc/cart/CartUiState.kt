@@ -5,8 +5,10 @@ import com.linc.data.model.asExternalModel
 import com.linc.model.BookOrder
 import com.linc.ui.extensions.PRICE_WITH_CURRENCY_FORMAT
 import com.linc.ui.state.UiState
+import com.stripe.android.model.ConfirmPaymentIntentParams
 
 data class CartUiState(
+    val paymentClientSecret: String? = null,
     val orders: List<OrderItemUiState> = emptyList(),
 ) : UiState
 

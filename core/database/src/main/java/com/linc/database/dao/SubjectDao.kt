@@ -44,6 +44,10 @@ interface SubjectDao {
     @Query("SELECT * FROM SubjectEntity WHERE SubjectEntity.name IN (:subjects)")
     fun getSubjectBooksStream(subjects: List<String>): Flow<List<SubjectWithBooks>>
 
+    @Transaction
+    @Query("SELECT * FROM SubjectEntity WHERE SubjectEntity.isPrimary = 1")
+    fun getPrimarySubjectsBooksStream(): Flow<List<SubjectWithBooks>>
+
     @Query("SELECT COUNT(*) FROM SubjectEntity WHERE SubjectEntity.isPrimary = 1")
     suspend fun getPrimarySubjectsCount(): Int
 

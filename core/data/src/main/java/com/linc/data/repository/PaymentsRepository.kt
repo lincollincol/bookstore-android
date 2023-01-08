@@ -2,67 +2,75 @@ package com.linc.data.repository
 
 import com.linc.common.coroutines.AppDispatchers
 import com.linc.common.coroutines.Dispatcher
+import com.linc.data.model.asEntity
+import com.linc.database.dao.OrdersDao
 import com.linc.database.dao.PaymentsDao
 import com.linc.database.dao.UsersDao
 import com.linc.database.entity.payment.CustomerEntity
+import com.linc.database.entity.payment.EphemeralKeyEntity
+import com.linc.database.entity.payment.isExpired
 import com.linc.network.api.StripeApiService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 class PaymentsRepository @Inject constructor(
     private val stripeApiService: StripeApiService,
     private val paymentsDao: PaymentsDao,
     private val usersDao: UsersDao,
+    private val ordersDao: OrdersDao,
     @Dispatcher(AppDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) {
 
     suspend fun createCustomer() = withContext(ioDispatcher) {
-        val user = usersDao.getUser() ?: return@withContext
+        val user = usersDao.getUser()
+        if(paymentsDao.getCustomer() != null || user == null) {
+            return@withContext
+        }
         val customer = stripeApiService.createCustomer(user.name)
-        paymentsDao.insertCustomer(
-            CustomerEntity(
-                customerId = customer.id,
-                userId = user.userId
-            )
+        with(paymentsDao) {
+            deleteAllCustomers()
+            insertCustomer(customer.asEntity(user.userId))
+        }
+    }
+
+    suspend fun refreshCustomerEphemeralKey() {
+        val customer = paymentsDao.getCustomer() ?: return
+        val localeKey = paymentsDao.getEphemeralKey()
+        if(localeKey != null && !localeKey.isExpired) {
+            return
+        }
+        val key = stripeApiService.createEphemeralKey(customer.customerId).asEntity()
+        with(paymentsDao) {
+            deleteAllEphemeralKeys()
+            insertEphemeralKey(key)
+        }
+    }
+
+    suspend fun createSingleOrderPayment(orderId: String) = withContext(ioDispatcher) {
+        val localPaymentIntent = paymentsDao.getPaymentIntentByOrderId(orderId)
+        val customer = paymentsDao.getCustomer()
+        if(localPaymentIntent != null || customer == null) {
+            return@withContext
+        }
+        refreshCustomerEphemeralKey()
+        val order = ordersDao.getOrderAndBookById(orderId) ?: return@withContext
+        val paymentIntent = stripeApiService.createPaymentIntent(
+            customerId = customer.customerId,
+            amount = (order.book.price * 100).roundToInt(),
+            currency = order.book.currency.lowercase(),
+            description = orderId,
+            autoPaymentMethodsEnable = true
         )
+        paymentsDao.insertPaymentIntent(paymentIntent.asEntity(orderId))
     }
 
-    /*suspend fun refreshEphemeralKeys(customerId: String) {
-        val request = Request.Builder()
-            .url("https://api.stripe.com/v1/ephemeral_keys?customer=$customerId")
-            .addHeader("Authorization", "Bearer ${Constants.SECRET_KEY}")
-            .addHeader("Stripe-Version", "2022-08-01")
-            .post(EMPTY_REQUEST)
-            .build()
-        val response = okHttpClient.newCall(request).execute()
-        val ephemeralKey = JSONObject(response.body?.string())
-        val secret = ephemeralKey.getString("secret")
-        val expires = ephemeralKey.getLong("expires")
-        authPreferences.run {
-            putEphemeralSecret(secret)
-            putEphemeralSecretExpiration(expires)
-        }
+    suspend fun getOrderPaymentClientSecret(orderId: String): String? = withContext(ioDispatcher) {
+        return@withContext paymentsDao.getPaymentIntentByOrderId(orderId)?.clientSecret
     }
 
-    suspend fun createPayment(
-        customerId: String,
-        amount: Int,
-        currency: String = "eur",
-        automaticPaymentMethod: Boolean = true
-    ): String {
-        val keyExpired = authPreferences.getEphemeralSecretExpiration() < System.currentTimeMillis() / 1000
-        if(keyExpired) {
-            refreshEphemeralKeys(customerId)
-        }
-        val request = Request.Builder()
-            .url("https://api.stripe.com/v1/payment_intents?customer=$customerId&amount=$amount&currency=$currency&automatic_payment_methods[enabled]=$automaticPaymentMethod")
-            .addHeader("Authorization", "Bearer ${Constants.SECRET_KEY}")
-            .post(EMPTY_REQUEST)
-            .build()
-        val response = okHttpClient.newCall(request).execute()
-        val paymentSecret = JSONObject(response.body?.string()).getString("client_secret")
-        return paymentSecret
-    }*/
-
+    suspend fun deleteOrderPaymentIntent(orderId: String) = withContext(ioDispatcher) {
+        paymentsDao.deleteOrderPaymentIntent(orderId)
+    }
 }

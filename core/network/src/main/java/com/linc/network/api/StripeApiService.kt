@@ -32,11 +32,15 @@ interface StripeApiService {
         @Query("customer") customerId: String
     ): EphemeralKeyApiModel
 
+    @Headers(
+        "Authorization: Bearer $SECRET"
+    )
     @POST("v1/payment_intents")
     suspend fun createPaymentIntent(
         @Query("customer") customerId: String,
         @Query("amount") amount: Int,
         @Query("currency") currency: String,
+        @Query("description") description: String,
         @Query("automatic_payment_methods[enabled]") autoPaymentMethodsEnable: Boolean,
     ): PaymentIntentApiModel
 

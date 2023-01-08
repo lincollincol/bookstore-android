@@ -12,9 +12,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface OrdersDao {
 
-    @Transaction
     @Query("SELECT * FROM OrderEntity WHERE OrderEntity.targetId = :targetId")
     fun getOrderByTarget(targetId: String): Flow<OrderEntity?>
+
+    @Query("SELECT * FROM OrderEntity WHERE OrderEntity.orderId = :id")
+    fun getOrderById(id: String): OrderEntity?
+
+    @Transaction
+    @Query("SELECT * FROM OrderEntity WHERE OrderEntity.orderId = :orderId")
+    fun getOrderAndBookById(orderId: String): OrderAndBook?
 
     @Transaction
     @Query("SELECT * FROM OrderEntity")

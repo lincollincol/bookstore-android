@@ -9,7 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,7 @@ fun AuthRoute(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun AuthScreen(
     modifier: Modifier = Modifier,
@@ -58,6 +61,7 @@ private fun AuthScreen(
     onEditInterestsClick: () -> Unit,
     onNameChange: (String) -> Unit,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = Modifier
             .padding(32.dp)
@@ -83,7 +87,10 @@ private fun AuthScreen(
                 .fillMaxWidth()
                 .animateContentSize(),
             enabled = isDataFilled,
-            onClick = onFinishClick
+            onClick = {
+                keyboardController?.hide()
+                onFinishClick()
+            }
         ) {
             AnimatedVisibility(visible = isLoading) {
                 CircularProgressIndicator(

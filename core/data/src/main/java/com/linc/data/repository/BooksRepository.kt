@@ -84,28 +84,18 @@ class BooksRepository @Inject constructor(
             ?.also { booksDao.insertBook(it) }
     }
 
-    suspend fun fff() = withContext(dispatcher) {
+    fun getPrimarySubjectsBooksStream(): Flow<List<SubjectBooks>> = subjectDao
+        .getPrimarySubjectsBooksStream()
+        .map { it.map(SubjectWithBooks::asExternalModel) }
+        .flowOn(dispatcher)
 
-    }
+    fun getBooksStream(): Flow<List<Book>> = booksDao.getBooksStream()
+        .map { it.map(BookEntity::asExternalModel) }
+        .flowOn(dispatcher)
 
-    fun getPrimarySubjectsBooksStream(): Flow<List<SubjectBooks>> = flow {
-        val subjects = subjectDao.getPrimarySubjects().map { it.name }
-        subjectDao.getSubjectBooksStream(subjects)
-            .map { it.map(SubjectWithBooks::asExternalModel) }
-            .collect(this)
-    }
-
-    fun getBooksStream(): Flow<List<Book>> {
-        return booksDao.getBooksStream()
-            .map { it.map(BookEntity::asExternalModel) }
-            .flowOn(dispatcher)
-    }
-
-    fun getBooksStream(categories: List<String>): Flow<List<Book>> {
-        return booksDao.getBooksStream(categories)
-            .map { it.map(BookEntity::asExternalModel) }
-            .flowOn(dispatcher)
-    }
+    fun getBooksStream(categories: List<String>): Flow<List<Book>> = booksDao.getBooksStream(categories)
+        .map { it.map(BookEntity::asExternalModel) }
+        .flowOn(dispatcher)
 
     fun getBookStream(id: String): Flow<Book?> = booksDao.getBookStream(id)
         .map { it?.asExternalModel() }

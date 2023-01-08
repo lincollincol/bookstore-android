@@ -13,6 +13,8 @@ import com.linc.database.entity.localization.LocaleEntity
 import com.linc.database.entity.localization.LocaleStringEntity
 import com.linc.database.entity.order.OrderEntity
 import com.linc.database.entity.payment.CustomerEntity
+import com.linc.database.entity.payment.EphemeralKeyEntity
+import com.linc.database.entity.payment.PaymentIntentEntity
 import com.linc.database.entity.subject.SubjectBookCrossRef
 import com.linc.database.entity.subject.SubjectEntity
 import com.linc.database.entity.user.UserEntity
@@ -34,6 +36,8 @@ private const val INITIAL_ASSET_DATABASE = "database/initial_bookstore_database.
         BookmarkEntity::class,
         LocaleEntity::class,
         LocaleStringEntity::class,
+        EphemeralKeyEntity::class,
+        PaymentIntentEntity::class,
     ]
 )
 @TypeConverters(

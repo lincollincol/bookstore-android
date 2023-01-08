@@ -1,6 +1,8 @@
 package com.linc.books
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -16,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -177,6 +180,7 @@ private fun SearchResultBooks(
             )
         } else {
             LazyColumn(
+                modifier = Modifier.animateContentSize(),
                 contentPadding = PaddingValues(horizontal = 32.dp),
                 state = listState
             ) {
@@ -202,6 +206,7 @@ private fun SubjectBooks(
 ) {
     LazyColumn(
         modifier = Modifier
+            .animateContentSize()
             .fillMaxSize()
             .then(modifier),
         state = listState
@@ -221,7 +226,7 @@ private fun SubjectBooks(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun BooksSection(
     modifier: Modifier = Modifier,
@@ -259,7 +264,6 @@ private fun BooksSection(
         }
         LazyRow(
             modifier = Modifier.padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = listPadding
         ) {
             items(
@@ -267,8 +271,11 @@ private fun BooksSection(
                 key = { it.id }
             ) {
                 BookItem(
+                    modifier = Modifier
+                        .animateItemPlacement()
+                        .padding(horizontal = 8.dp),
                     book = it,
-                    onBook = onBookClick
+                    onBookClick = { onBookClick(it.id) }
                 )
             }
         }
@@ -280,8 +287,47 @@ private fun BooksSection(
 private fun LazyItemScope.BookItem(
     modifier: Modifier = Modifier,
     book: BookItemUiState,
-    onBook: (String) -> Unit
+    onBookClick: () -> Unit
 ) {
+    Column(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.medium)
+            .clickable(onClick = onBookClick)
+            .fillParentMaxWidth(0.35f)
+            .then(modifier)
+    ) {
+        Box {
+            AsyncImage(
+                modifier = Modifier
+                    .animateContentSize(tween(500))
+                    .clip(MaterialTheme.shapes.medium)
+                    .fillMaxWidth()
+                    .aspectRatio(ASPECT_RATIO_3_4)
+                    .background(Color.White),
+                model = book.imageUrl,
+                contentDescription = book.title,
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(Color.White)
+                    .align(Alignment.TopEnd),
+                text = book.formattedRating
+            )
+        }
+        Text(
+            text = book.title,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+        if(book.availableForSale) {
+            Text(text = book.price.toString())
+        } else {
+            SimpleIcon(icon = MaterialTheme.icons.soldOut)
+        }
+    }
+/*
     Surface(
         modifier = Modifier
             .fillParentMaxWidth(0.35f)
@@ -321,4 +367,5 @@ private fun LazyItemScope.BookItem(
             }
         }
     }
+*/
 }

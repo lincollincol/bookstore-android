@@ -1,13 +1,22 @@
 package com.linc.bookstore
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.window.SplashScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import com.linc.bookstore.ui.BookstoreApp
 import com.linc.ui.theme.BookstoreTheme
@@ -37,7 +46,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             BookstoreTheme(strings = uiState.localeStrings) {
-                BookstoreApp()
+                uiState.isAuthorized?.let {
+                    BookstoreApp(isAuthorizedUser = uiState.isAuthorized!!)
+                }
             }
         }
     }

@@ -1,7 +1,11 @@
 package com.linc.subjectbooks
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -77,6 +81,7 @@ fun SubjectBooksScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BooksList(
     modifier: Modifier = Modifier,
@@ -98,7 +103,9 @@ fun BooksList(
                 message = MaterialTheme.strings.notFound
             )
         } else {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 items(items = books) {
                     if(it == null) {
                         return@items

@@ -29,9 +29,8 @@ import soup.compose.material.motion.navigation.rememberMaterialMotionNavControll
 )
 @Composable
 fun BookstoreApp(
-
+    isAuthorizedUser: Boolean
 ) {
-//    val navController = rememberNavController()
     val navController = rememberMaterialMotionNavController()
     val menuDestinations: List<MenuDestinations> = MenuDestinations.values().asList()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -74,7 +73,8 @@ fun BookstoreApp(
             navController = navController,
             modifier = Modifier
                 .padding(paddings)
-                .consumedWindowInsets(paddings)
+                .consumedWindowInsets(paddings),
+            isAuthorizedUser = isAuthorizedUser
         )
     }
 

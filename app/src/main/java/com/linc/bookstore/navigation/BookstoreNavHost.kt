@@ -3,6 +3,7 @@ package com.linc.bookstore.navigation
 import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -38,9 +39,12 @@ private const val mainRouteGraph = "main_route_graph"
 fun BookstoreNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = authRoute
+    isAuthorizedUser: Boolean
 ) {
     println(navController.backQueue.joinToString { it.destination.route.orEmpty() })
+    val startDestination = remember(isAuthorizedUser) {
+        if(isAuthorizedUser) mainRouteGraph else authRoute
+    }
     MaterialMotionNavHost(
         modifier = modifier,
         navController = navController,
