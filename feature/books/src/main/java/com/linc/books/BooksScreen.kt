@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -90,12 +91,6 @@ internal fun BooksScreen(
     onKeyboardDoneClick: () -> Unit
 ) {
     val booksListState = rememberLazyListState()
-    val showToolbarElevation by remember {
-        derivedStateOf { booksListState.firstVisibleItemScrollOffset > 0 }
-    }
-//    val toolbarElevation by animateDpAsState(
-//        targetValue = if(showToolbarElevation) 4.dp else 0.dp
-//    )
     val searchFieldIcon = when {
         isSearching -> MaterialTheme.icons.clear
         else -> MaterialTheme.icons.search
@@ -139,7 +134,6 @@ internal fun BooksScreen(
         BookstoreTextField(
             modifier = Modifier
                 .fillMaxWidth()
-//                .shadow(toolbarElevation)
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
                 .constrainAs(searchField) {
@@ -181,7 +175,6 @@ private fun SearchResultBooks(
         } else {
             LazyColumn(
                 modifier = Modifier.animateContentSize(),
-                contentPadding = PaddingValues(horizontal = 32.dp),
                 state = listState
             ) {
                 items(
@@ -189,7 +182,11 @@ private fun SearchResultBooks(
                     key = { it.id }
                 ) {
                     if(it == null) return@items
-                    DetailedBookItem(item = it, onBookClick = onBookClick)
+                    DetailedBookItem(
+                        modifier = Modifier.padding(horizontal = 32.dp),
+                        item = it,
+                        onBookClick = onBookClick
+                    )
                 }
             }
         }
@@ -251,13 +248,13 @@ private fun BooksSection(
             Surface(
                 modifier = Modifier.padding(titlePadding),
                 shape = MaterialTheme.shapes.large,
-                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
                 onClick = { onSeeAllClick(sectionItemUiState.subjectId) }
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                     text = MaterialTheme.strings.seeAll,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -282,13 +279,14 @@ private fun BooksSection(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LazyItemScope.BookItem(
     modifier: Modifier = Modifier,
     book: BookItemUiState,
     onBookClick: () -> Unit
 ) {
+    val rateShape = remember { RoundedCornerShape(0.dp, 8.dp, 0.dp, 8.dp) }
+    val priceShape = remember { RoundedCornerShape(0.dp, 0.dp, 8.dp, 8.dp) }
     Column(
         modifier = Modifier
             .clip(MaterialTheme.shapes.medium)
@@ -308,64 +306,50 @@ private fun LazyItemScope.BookItem(
                 contentDescription = book.title,
                 contentScale = ContentScale.Crop
             )
-            Text(
+            Row(
                 modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(Color.White)
+                    .clip(rateShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(horizontal = 4.dp, vertical = 2.dp)
                     .align(Alignment.TopEnd),
-                text = book.formattedRating
-            )
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = book.formattedRating,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Medium
+                )
+                SimpleIcon(
+                    modifier = Modifier.size(12.dp),
+                    icon = MaterialTheme.icons.starOutlined
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .clip(priceShape)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(vertical = 4.dp)
+                    .align(Alignment.BottomCenter),
+                contentAlignment = Alignment.Center
+            ) {
+                if(book.availableForSale) {
+                    Text(
+                        text = book.formattedPrice,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.Medium,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                } else {
+                    SimpleIcon(icon = MaterialTheme.icons.soldOut)
+                }
+            }
         }
         Text(
             text = book.title,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1
         )
-        if(book.availableForSale) {
-            Text(text = book.price.toString())
-        } else {
-            SimpleIcon(icon = MaterialTheme.icons.soldOut)
-        }
     }
-/*
-    Surface(
-        modifier = Modifier
-            .fillParentMaxWidth(0.35f)
-            .then(modifier),
-        onClick = { onBook(book.id) },
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Column {
-            Box {
-                AsyncImage(
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.medium)
-                        .fillMaxWidth()
-                        .aspectRatio(ASPECT_RATIO_3_4)
-                        .background(Color.White),
-                    model = book.imageUrl,
-                    contentDescription = book.title,
-                    contentScale = ContentScale.Crop
-                )
-                Text(
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(Color.White)
-                        .align(Alignment.TopEnd),
-                    text = book.formattedRating
-                )
-            }
-            Text(
-                text = book.title,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
-            if(book.availableForSale) {
-                Text(text = book.price.toString())
-            } else {
-                SimpleIcon(icon = MaterialTheme.icons.soldOut)
-            }
-        }
-    }
-*/
 }

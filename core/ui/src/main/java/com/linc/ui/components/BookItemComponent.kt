@@ -19,6 +19,8 @@ import coil.compose.AsyncImage
 import com.linc.designsystem.extensions.ASPECT_RATIO_3_4
 import com.linc.ui.model.DetailedBookItemUiState
 import com.linc.ui.model.formattedPrice
+import com.linc.ui.model.isAuthorsListed
+import com.linc.ui.theme.icons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,9 +54,13 @@ fun LazyItemScope.DetailedBookItem(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            Text(text = item.authors)
-            RatingBar(maxRate = 5, rating = item.averageRating.toInt())
-            Text(text = item.formattedPrice)
+            if(item.isAuthorsListed) Text(text = item.authors)
+            RatingBar(rating = item.averageRating.toInt())
+            if(item.isAvailable) {
+                Text(text = item.formattedPrice)
+            } else {
+                SimpleIcon(icon = MaterialTheme.icons.soldOut)
+            }
         }
     }
 }

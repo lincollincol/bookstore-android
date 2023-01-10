@@ -26,5 +26,6 @@ fun Book.toUiState() = DetailedBookItemUiState(
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     title = title,
-    authors = authors.joinToString()
+    authors = authors.joinToString(),
+    isAvailable = availableForSale
 )

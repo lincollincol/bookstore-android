@@ -6,6 +6,7 @@ import com.linc.ui.state.UiState
 import com.linc.model.Book
 import com.linc.model.SubjectBooks
 import com.linc.ui.extensions.ONE_DECIMAL_DIGITS_FORMAT
+import com.linc.ui.extensions.PRICE_WITH_CURRENCY_FORMAT
 import com.linc.ui.extensions.TWO_DECIMAL_DIGITS_FORMAT
 import com.linc.ui.extensions.ZERO_DECIMAL_DIGITS_FORMAT
 import com.linc.ui.model.DetailedBookItemUiState
@@ -26,6 +27,7 @@ data class BookItemUiState(
     val id: String,
     val imageUrl: String,
     val price: Double,
+    val currency: String,
     val availableForSale: Boolean,
     val averageRating: Float,
     val ratingsCount: Int,
@@ -42,6 +44,7 @@ internal fun Book.toUiState() = BookItemUiState(
     id = id,
     imageUrl = imageUrl,
     price = price,
+    currency = currency,
     availableForSale = availableForSale,
     averageRating = averageRating,
     ratingsCount = ratingsCount.toInt(),
@@ -56,7 +59,8 @@ fun Book.toDetailedItemUiState() = DetailedBookItemUiState(
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     title = title,
-    authors = authors.joinToString()
+    authors = authors.joinToString(),
+    isAvailable = availableForSale
 )
 
 val BooksUiState.isSearching: Boolean get() = searchQuery.isNotEmpty()
@@ -66,3 +70,6 @@ val BookItemUiState.formattedRating: String
         0f -> ZERO_DECIMAL_DIGITS_FORMAT
         else -> ONE_DECIMAL_DIGITS_FORMAT
     }.format(averageRating)
+
+val BookItemUiState.formattedPrice: String get() =
+    PRICE_WITH_CURRENCY_FORMAT.format(price, currency)

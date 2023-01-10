@@ -17,8 +17,8 @@ fun RatingBar(
     modifier: Modifier = Modifier,
     rating: Int,
     maxRate: Int = DEFAULT_MAX_RATING,
-    selectedColor: Color = Color.Yellow,
-    color: Color = Color.LightGray
+    selectedColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+    color: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
 ) {
     Row(
         modifier = modifier

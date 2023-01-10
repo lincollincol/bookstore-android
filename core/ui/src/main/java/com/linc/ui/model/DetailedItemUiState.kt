@@ -11,8 +11,12 @@ data class DetailedBookItemUiState(
     val currency: String,
     val averageRating: Float,
     val ratingsCount: Float,
-    val title: String
+    val title: String,
+    val isAvailable: Boolean,
 ) : UiState
 
 val DetailedBookItemUiState.formattedPrice: String get() =
     PRICE_WITH_CURRENCY_FORMAT.format(price, currency)
+
+val DetailedBookItemUiState.isAuthorsListed: Boolean get() = authors.isNotEmpty()
+

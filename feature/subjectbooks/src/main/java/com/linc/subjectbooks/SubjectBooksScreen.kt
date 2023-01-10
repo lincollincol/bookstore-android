@@ -111,6 +111,7 @@ fun BooksList(
                         return@items
                     }
                     DetailedBookItem(
+                        modifier = Modifier.padding(horizontal = 32.dp),
                         item = it,
                         onBookClick = onBookClick
                     )
