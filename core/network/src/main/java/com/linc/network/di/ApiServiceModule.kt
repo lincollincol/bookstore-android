@@ -14,12 +14,12 @@ internal object ApiServiceModule {
 
     @Provides
     fun provideBooksApiService(
-        @BaseUrlType(Url.BOOKS_API) retrofit: Retrofit
+        @ApiInstance(Type.BOOKS) retrofit: Retrofit
     ): BooksApiService = retrofit.create(BooksApiService::class.java)
 
     @Provides
     fun provideStripeApiService(
-        @BaseUrlType(Url.STRIPE_API) retrofit: Retrofit
+        @ApiInstance(Type.STRIPE) retrofit: Retrofit
     ): StripeApiService = retrofit.create(StripeApiService::class.java)
 
 }

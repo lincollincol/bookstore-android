@@ -5,8 +5,8 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class BaseUrlType(val url: Url)
+internal annotation class ApiInstance(val type: Type)
 
-enum class Url {
-    BOOKS_API, STRIPE_API
+internal enum class Type {
+    BOOKS, STRIPE
 }

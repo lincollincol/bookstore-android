@@ -1,7 +1,7 @@
 package com.linc.network.di
 
-import com.google.gson.Gson
 import com.linc.network.BuildConfig
+import com.linc.network.utils.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,14 +15,14 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object RetrofitModule {
+internal object GoogleBooksModule {
 
-    @BaseUrlType(Url.BOOKS_API)
+    @ApiInstance(Type.BOOKS)
     @Provides
     @Singleton
-    fun provideBooksRetrofit(
+    fun provideRetrofit(
         url: HttpUrl,
-        client: OkHttpClient,
+        @ApiInstance(Type.BOOKS) client: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit = Retrofit.Builder()
         .baseUrl(url)
@@ -30,36 +30,24 @@ internal object RetrofitModule {
         .client(client)
         .build()
 
-    @BaseUrlType(Url.STRIPE_API)
-    @Provides
-    @Singleton
-    fun provideStripeRetrofit(
-        client: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.STRIPE_BASE_URL)
-        .addConverterFactory(gsonConverterFactory)
-        .client(client)
-        .build()
-
+    @ApiInstance(Type.BOOKS)
     @Provides
     fun provideOkHttpClient(
+        @ApiInstance(Type.BOOKS) authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
+        .addNetworkInterceptor(authInterceptor)
         .build()
 
+    @ApiInstance(Type.BOOKS)
     @Provides
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply {
-            level = when {
-                BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
-                else -> HttpLoggingInterceptor.Level.NONE
-            }
-        }
+    fun provideAuthInterceptor(
+        @ApiInstance(Type.BOOKS) token: String
+    ): AuthInterceptor = AuthInterceptor(token, isBearer = false)
 
+    @ApiInstance(Type.BOOKS)
     @Provides
-    fun provideGsonConverterFactory(): GsonConverterFactory =
-        GsonConverterFactory.create()
+    fun provideGoogleApiKey(): String = BuildConfig.GOOGLE_BOOKS_API_KEY
 
 }
