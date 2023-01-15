@@ -4,7 +4,8 @@
 ![GitHub stars](https://img.shields.io/github/stars/lincollincol/bookstore-android?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/lincollincol/bookstore-android?style=social)
 
-Jetpack Compose sample project with latest technologies. 
+Jetpack Compose sample project with latest technologies.  
+  
 Used technologies:
 * Kotlin
 * MVVM
