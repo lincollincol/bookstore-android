@@ -1,10 +1,7 @@
 package com.linc.interests
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -80,7 +77,7 @@ fun InterestsScreen(
                     }
                 }
                 SubjectsComponent(
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 32.dp),
+                    modifier = Modifier.padding(vertical = 8.dp),
                     title = title,
                     subjects = it.items,
                     onSubjectClick = onSubjectClick

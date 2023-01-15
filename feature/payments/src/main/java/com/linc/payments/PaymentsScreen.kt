@@ -85,11 +85,12 @@ private fun PaymentsList(
             )
         }
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 32.dp)
         ) {
             items(
                 items = orders,
-                key = { it.orderId }
+                key = { it.orderId },
             ) {
                 OrderItem(item = it)
             }

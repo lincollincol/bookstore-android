@@ -104,14 +104,14 @@ fun BooksList(
             )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 32.dp)
             ) {
                 items(items = books) {
                     if(it == null) {
                         return@items
                     }
                     DetailedBookItem(
-                        modifier = Modifier.padding(horizontal = 32.dp),
                         item = it,
                         onBookClick = onBookClick
                     )
