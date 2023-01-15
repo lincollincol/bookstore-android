@@ -20,9 +20,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = rootProject.file("keystore/bookstore.jks")
-            keyAlias = "bookstore"
-            keyPassword = "bookstore"
-            storePassword = "bookstore"
+            keyAlias = "-"
+            keyPassword = "-"
+            storePassword = "-"
         }
     }
     buildTypes {
